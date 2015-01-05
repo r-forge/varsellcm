@@ -1,3 +1,4 @@
+## ajout test pour svn
 logdinvgamma <- function(x, alpha, beta){
   alpha*log(beta) - lgamma(alpha) - (alpha+1)*log(x) - beta/x
 }
