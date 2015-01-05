@@ -1,0 +1,16 @@
+{
+    "contents" : "rm(list=ls())\nrequire(VarSelLCM)\n\ndata(coffee)\n\nx <- coffee[, -c(1,2)]\n\nres1 <- VarSelCluster(x, 1, nbinit =50)\nres2 <- VarSelCluster(x, 2, nbinit =5)\nres3 <- VarSelCluster(x, 3, nbinit =50)\nres4 <- VarSelCluster(x, 4, nbinit =50)\n\nres1@criteria\nres2@criteria\nres3@criteria\nres4@criteria\n",
+    "created" : 1417169231516.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2899272943",
+    "id" : "EA0C01EB",
+    "lastKnownWriteTime" : 1417167981,
+    "path" : "~/Documents/Recherche/variable_selection/simulations/Applications/coffee_analysis.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

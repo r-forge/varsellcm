@@ -1,0 +1,16 @@
+{
+    "contents" : "setwd(\"~/Documents/Recherche/variable_selection/simulations/Simulation3/Scenario2/\")\nrequire(flexclust)\n\n\n### K means\n# T1 <- Sys.time()\n# \n# randok <- rep(0, 25)\n# for (it in 1:25){\n#   x <- as.matrix(read.table(paste(\"ech\",it,\".txt\",sep=\"\")))\n#   z <- as.numeric(t(read.table(paste(\"partition\",it,\".txt\",sep=\"\"))))\n#   x <- scale(x, TRUE, TRUE)\n#   res <- kmeans(x,3)\n#   randok[it] <- randIndex(z, res$cluster,  correct = TRUE)\n# }\n# T2 <- Sys.time()\n# \n# ti <- difftime(T2, T1)\n# \n# results <- list(randok=randok, ti=ti)\n# save(results, file = \"kmeans.Rdata\")\n\n### PGMM\n\n\n#require(pgmm)\n#T1 <- Sys.time()\n\n#randok <- rep(0, 25)\n#for (it in 1:25){\n # x <- read.table(paste(\"ech\",it,\".txt\",sep=\"\"))\n # z <- as.numeric(t(read.table(paste(\"partition\",it,\".txt\",sep=\"\"))))\n # res <- pgmmEM(x, rG=3:3, rq=1:10)\n # randok[it] <- randIndex(z, res$map,  correct = TRUE)\n#}\n#T2 <- Sys.time()\n\n#ti <- difftime(T2, T1)\n\n#results <- list(randok=randok, ti=ti)\n#save(results, file = \"PGMM.Rdata\")\n\n\n### SparseKmeans\n\nrequire(sparcl)\n\nT1 <- Sys.time()\nejectok <- rep(0, 25)\nconserveok <- rep(0, 25)\nrandok <- rep(0, 25)\nconservetotal <- rep(0, 25)\nfor (it in 1:25){\n  x <- read.table(paste(\"ech\",it,\".txt\",sep=\"\"))\n  z <- as.numeric(t(read.table(paste(\"partition\",it,\".txt\",sep=\"\"))))\n  x <- scale(x, TRUE, TRUE)\n  km.perm <- KMeansSparseCluster.permute(x, K=3, wbounds=seq(3,7,len=15), nperms=5)\n  # run sparse k-means\n  km.out <- KMeansSparseCluster(x,K=3,wbounds=km.perm$bestw)\n  \n  ejectok[it] <- sum(km.out[[1]]$ws[-c(1:5)] == 0) / (ncol(x)-5)\n  conserveok[it] <- sum(km.out[[1]]$ws[1:5] != 0) / 5\n  conservetotal[it] <- sum(km.out[[1]]$ws != 0)\n  randok[it] <- randIndex(z, km.out[[1]]$Cs,  correct = TRUE)\n\n}\nT2 <- Sys.time()\n\nti <- difftime(T2, T1)\n\nresults <- list(randok=randok, conserveok=conserveok, ejectok=ejectok, ti=ti, conservetotal=conservetotal)\nsave(results, file = \"SparseKmeans.Rdata\")\n\n### VarSelLCM\nrequire(VarSelLCM)\n\nT1 <- Sys.time()\nejectok <- rep(0, 25)\nconserveok <- rep(0, 25)\nrandok <- rep(0, 25)\nconsertotal <- rep(0, 25)\nfor (it in 1:25){\n  x <- read.table(paste(\"ech\",it,\".txt\",sep=\"\"))\n  z <- as.numeric(t(read.table(paste(\"partition\",it,\".txt\",sep=\"\"))))\n  res <- VarSelCluster(x, 3)\n  \n  ejectok[it] <- sum(res@model@omega[-c(1:5)] == 0) / (ncol(x)-5)\n  conserveok[it] <- sum(res@model@omega[1:5] == 1) / 5\n  randok[it] <- randIndex(z, res@partitions@zMAP+1,  correct = TRUE)\n  consertotal[it] <- sum(res@model@omega)\n  \n}\nT2 <- Sys.time()\n\nti <- difftime(T2, T1)\n\nresults <- list(randok=randok, conserveok=conserveok, ejectok=ejectok, ti=ti, conservetotal=consertotal)\nsave(results, file = \"VarSelLCM.Rdata\")\n\n",
+    "created" : 1417168846119.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "554811572",
+    "id" : "E2E6198A",
+    "lastKnownWriteTime" : 1417172343,
+    "path" : "~/Documents/Recherche/variable_selection/simulations/Simulation3/AnalyzeScenario.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

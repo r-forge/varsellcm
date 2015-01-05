@@ -1,0 +1,16 @@
+{
+    "contents" : "setClass(\n  Class = \"VSLCMcriteria\", \n  representation = representation(\n    likelihood=\"numeric\",\n    BIC=\"numeric\",\n    ICLbic=\"numeric\",\n    ICLexact=\"numeric\",\n    MICL=\"numeric\"\n  ), \n  prototype = prototype(\n    likelihood=numeric(),\n    BIC=numeric(),\n    ICLbic=numeric(),\n    ICLexact=numeric(),\n    MICL=numeric()\n  )\n)\n\nsetClass(\n  Class = \"VSLCMpartitions\", \n  representation = representation(\n    zMAP=\"numeric\",\n    zOPT=\"numeric\",\n    tik=\"matrix\"\n  ), \n  prototype = prototype(\n    zMAP=numeric(),\n    zOPT=numeric(),\n    tik=matrix(0,0,0)\n  )\n)\n\n\n\n\nsetClass(\n  Class = \"VSLCMmodel\", \n  representation = representation(\n    g=\"numeric\",\n    omega=\"numeric\"\n  ), \n  prototype = prototype(\n    g=numeric(),\n    omega=numeric()\n  )\n)\n\n\nsetClass(\n  Class = \"VSLCMparameters\", \n  representation = representation(\n    proportions=\"numeric\",\n    means=\"matrix\",\n    variances=\"matrix\"\n  ), \n  prototype = prototype(\n    proportions=numeric(),\n    means=matrix(),\n    variances=matrix()\n  )\n)\n\n\n\nsetClass(\n  Class = \"VSLCMresults\", \n  representation = representation(\n    data=\"matrix\",\n    priors=\"matrix\",\n    criteria=\"VSLCMcriteria\",\n    partitions=\"VSLCMpartitions\",\n    model=\"VSLCMmodel\",\n    parameters=\"VSLCMparameters\"\n  ), \n  prototype = prototype(\n    data=matrix(),\n    priors=matrix(),\n    criteria=new(\"VSLCMcriteria\"),\n    partitions=new(\"VSLCMpartitions\"),\n    model=new(\"VSLCMmodel\"),\n    parameters=new(\"VSLCMparameters\")\n  )\n)\n\n\n\n\n\n\n\n",
+    "created" : 1418131936846.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4124250964",
+    "id" : "86313653",
+    "lastKnownWriteTime" : 1417688694,
+    "path" : "~/Documents/Recherche/variable_selection/package/VarSelLCM/R/VSLCM_Classes.R",
+    "project_path" : "R/VSLCM_Classes.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
