@@ -23,7 +23,8 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       reference <- parLapply(cl = cl, 
                              X  = reference, 
-                             fun = OptimizeMICL)
+                             fun = OptimizeMICL,
+                             optimize=1)
       stopCluster(cl)
       
     }
