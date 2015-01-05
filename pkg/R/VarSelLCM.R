@@ -1,18 +1,14 @@
-
-
-
-
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
   if (parallel == FALSE){
     
-     reference <- new("VSLCMresults", criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf))
-     for (it in 1:nbinit){
-       where <- VarSelStartingPoint(x, g)
-       cand <- OptimizeMICL(where, 1)
-       if (cand@criteria@MICL > reference@criteria@MICL)
-         reference <- cand
-     }
-     
+    reference <- new("VSLCMresults", criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf))
+    for (it in 1:nbinit){
+      where <- VarSelStartingPoint(x, g)
+      cand <- OptimizeMICL(where, 1)
+      if (cand@criteria@MICL > reference@criteria@MICL)
+        reference <- cand
+    }
+    
   }else{
     
     reference <- list()
@@ -20,26 +16,38 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
       reference[[it]] <- VarSelStartingPoint(x, g)
     
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , nbinit)
-    reference <- mclapply(X = reference,
-                        FUN = OptimizeMICL,
-                        optimize=1,
-                        mc.cores = nb.cpus,
-                        mc.preschedule = TRUE,
-                        mc.cleanup = TRUE
-    )
+    if(Sys.info()["sysname"] == "Windows")
+    {
+      cl <- makeCluster(nb.cpus)
+      common.objects <- c("reference")
+      clusterExport(cl=cl, varlist = common.objects, envir = environment())
+      reference <- parLapply(cl = cl, 
+                             X  = reference, 
+                             fun = OptimizeMICL)
+      stopCluster(cl)
+      
+    }
+    else
+      reference <- mclapply(X = reference,
+                            FUN = OptimizeMICL,
+                            optimize=1,
+                            mc.cores = nb.cpus,
+                            mc.preschedule = TRUE,
+                            mc.cleanup = TRUE
+      )
     tmp <- rep(0, nbinit)
     for (it in 1:nbinit){
       tmp[it] <- reference[[it]]@criteria@MICL
     }
-
-      
     
-   
-      reference <- reference[[which(tmp == max(tmp))[1]]]   
     
-
     
- 
+    
+    reference <- reference[[which(tmp == max(tmp))[1]]]   
+    
+    
+    
+    
   }
   
   return( reference )
@@ -172,7 +180,7 @@ VarSelParamEstim <- function(obj){
       obj@criteria@likelihood <- -Inf
       obj@partitions@tik <- matrix(1, nrow(obj@data), obj@model@g)
     }
-   
+    
   }
   
   if (any(obj@model@omega == 0) ){
