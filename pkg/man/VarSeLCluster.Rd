@@ -6,7 +6,7 @@ VarSelCluster
 
 \description{
    This function performs the variable selection for a model-based clustering. 
-   The data distribution follow a mixture of Gaussian distribution assuming conditional independence between variables. The model selection is carried out by maximizing the MICL criterion.
+   The data distribution follow a mixture of Gaussian distributions assuming conditional independence between variables. The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
 VarSelCluster(x, g, nbinit=50, parallel = TRUE)

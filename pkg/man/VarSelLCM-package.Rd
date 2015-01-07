@@ -9,7 +9,7 @@ Variable selection for model-based clustering using the integrated completed-dat
 }
 
 \description{
-Variable Selection for model-based clustering by using a mixture model of Gaussian distribution assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
+Variable Selection for model-based clustering by using a mixture model of Gaussian distributions assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
 }
 
 \details{
