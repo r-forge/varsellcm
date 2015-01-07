@@ -11,7 +11,7 @@ Sensory characterization and consumers preference for 12 variables of apples
 data(apples)
 }
 \format{
-  A data frame with 12 observations described by hedonic scores given by a panel of 60 consumers and  by 43 sensory attributes.
+  A data frame with 12 observations described by hedonistic scores given by a panel of 60 consumers and  by 43 sensory attributes.
 
 }
 

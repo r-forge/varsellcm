@@ -4,7 +4,7 @@
 
 \title{Class \code{"VSLCMmodel"}}
 \description{
-This class contains the model informations
+This class contains the model information
 }
 
 
