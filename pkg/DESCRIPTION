@@ -10,3 +10,6 @@ Depends: R (>= 3.0),  mclust
 Imports: methods, Rcpp (>= 0.11.1),  parallel
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
+ByteCompile: true
+LazyLoad: yes
+Collate: 'ICLexact.R' 'RcppExports.R' 'VSLCM_Classes.R' 'VSLCM_initialization.R' 'VarSelLCM.R' 'Print.R' 'Summary.R' 'onAttach.R'
