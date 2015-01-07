@@ -52,6 +52,10 @@ summary(results)
 print(results)
 
 \dontrun{
+## To install multitest package : uncomment the following lines
+## source("http://bioconductor.org/biocLite.R")
+## biocLite("multtest")
+
 require(multtest)
 data(golub)
 
