@@ -6,7 +6,7 @@ Author: Matthieu Marbac and Mohammed Sedki
 Title: Variable selection for model-based clustering using the integrated completed-data likelihood of a Latent Class Model
 Description: Variable Selection for model-based clustering by using a mixture model of Gaussian distributions assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
 Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <mohammed.sedki@inserm.fr>
-Depends: R (>= 3.0),  mclust
+Depends: R (>= 3.0.0),  mclust
 Imports: methods, Rcpp (>= 0.11.1),  parallel
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
