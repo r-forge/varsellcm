@@ -3,8 +3,8 @@ Type: Package
 Version: 1.0
 Date: 2014-11-25
 Author: Matthieu Marbac and Mohammed Sedki
-Title: Variable Selection for a cluster analysis using the Latent Class
-        Model
+Title: Variable selection for model-based clustering using the
+        integrated completed-data likelihood of a Latent Class Model
 Description: Variable Selection for model-based clustering by using a mixture model of Gaussian distribution assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
 Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed
         Sedki <mohammed.sedki@inserm.fr>
@@ -12,5 +12,5 @@ Depends: R (>= 3.0), mclust
 Imports: Rcpp (>= 0.11.1), parallel, methods
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
-Packaged: 2015-01-07 09:20:24 UTC; biostat
-Built: R 3.0.2; x86_64-pc-linux-gnu; 2015-01-07 09:20:25 UTC; unix
+Packaged: 2015-01-07 09:38:50 UTC; biostat
+Built: R 3.0.2; x86_64-pc-linux-gnu; 2015-01-07 09:38:50 UTC; unix

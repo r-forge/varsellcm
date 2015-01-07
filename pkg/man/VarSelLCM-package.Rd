@@ -2,32 +2,50 @@
 \alias{VarSelLCM-package}
 \alias{VarSelLCM}
 \docType{package}
+
+
 \title{
-What the package does (short line)
-~~ package title ~~
+Variable selection for model-based clustering using the integrated completed-data likelihood of a Latent Class Model
 }
+
 \description{
-More about what it does (maybe more than one line)
-~~ A concise (1-5 lines) description of the package ~~
+Variable Selection for model-based clustering by using a mixture model of Gaussian distribution assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
 }
+
 \details{
 \tabular{ll}{
 Package: \tab VarSelLCM\cr
 Type: \tab Package\cr
 Version: \tab 1.0\cr
 Date: \tab 2014-11-25\cr
-License: \tab What license is it under?\cr
+License: \tab GPL (>= 2)\cr
 }
-~~ An overview of how to use the package, including the most important functions ~~
+Main functions to use:
+\tabular{ll}{
+  Model Selection by the MICL criterion: \tab \code{\link{VarSelCluster}} \cr
+  MICL computation for known model: \tab \code{\link{VarSelModelKnown}} 
+  }
 }
-\author{
-Who wrote it
 
-Maintainer: Who to complain to <yourfault@somewhere.net>
-~~ The author and/or maintainer of the package ~~
+\author{
+Matthieu Marbac and Mohammed Sedki
+
+Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <mohammed.sedki@inserm.fr>
 }
+
 \references{
-~~ Literature or other references for background information ~~
+  M. Marbac and M. Sedki (2015).
+  Variable selection for model-based clustering using the integrated completed-data likelihood.
+  \emph{Preprint}. 
 }
-~~ Optionally other standard keywords, one per line, from file KEYWORDS in the R documentation directory ~~
+
+
+\examples{
+# Variable selection
+require(VarSelLCM)
+data(coffee)
+results <- VarSelCluster(coffee[,-c(1,2)], 2)
+
+}
+
 \keyword{ package }

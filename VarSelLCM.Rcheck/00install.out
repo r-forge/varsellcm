@@ -7,9 +7,10 @@ g++ -shared -o VarSelLCM.so Algo.o RcppExports.o VarSelLCM.o -L/usr/lib/R/lib -l
 installing to /home/biostat/Documents/Recherche/variable_selection/varsellcm/VarSelLCM.Rcheck/VarSelLCM/libs
 ** R
 ** data
+** inst
 ** preparing package for lazy loading
 ** help
-Avis : /home/biostat/Documents/Recherche/variable_selection/varsellcm/VarSelLCM.Rcheck/00_pkg_src/VarSelLCM/man/VarSelLCM-package.Rd:32: All text must be in a section
+Avis : /home/biostat/Documents/Recherche/variable_selection/varsellcm/VarSelLCM.Rcheck/00_pkg_src/VarSelLCM/man/VarSelLCM-package.Rd:34: All text must be in a section
 *** installing help indices
 ** building package indices
 ** testing if installed package can be loaded

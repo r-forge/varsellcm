@@ -2,10 +2,12 @@
 \alias{VarSelLCM-package}
 \alias{VarSelLCM}
 \docType{package}
+
+
 \title{
-What the package does (short line)
-~~ package title ~~
+Variable selection for model-based clustering using the integrated completed-data likelihood of a Latent Class Model
 }
+
 \description{
 More about what it does (maybe more than one line)
 ~~ A concise (1-5 lines) description of the package ~~
