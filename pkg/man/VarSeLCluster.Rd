@@ -46,4 +46,8 @@ VarSelCluster(x, g, nbinit=50, parallel = TRUE)
 require(VarSelLCM)
 data(apples)
 results <- VarSelCluster(apples, 2)
+
+summary(results)
+
+print(results)
 }
