@@ -20,11 +20,7 @@ Version: \tab 1.0\cr
 Date: \tab 2014-11-25\cr
 License: \tab GPL (>= 2)\cr
 }
-Main functions to use:
-\tabular{ll}{
-  Model Selection by the MICL criterion: \tab \code{\link{VarSelCluster}} \cr
-  MICL computation for known model: \tab \code{\link{VarSelModelKnown}} 
-  }
+The main functions to use is \code{\link{VarSelCluster}}. It carries out the model selection by maximizing the MICL criterion.
 }
 
 \author{

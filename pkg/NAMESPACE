@@ -1,5 +1,13 @@
 useDynLib(VarSelLCM)
-exportPattern("^[[:alpha:]]+")
+#exportPattern("^[[:alpha:]]+")
+export(VarSelCluster)
+exportClasses(
+     "VSLCMcriteria",
+     "VSLCMpartitions",
+     "VSLCMmodel",
+     "VSLCMparameters",
+     "VSLCMresults"
+)
 importFrom("Rcpp", evalCpp)
 importFrom("mclust", Mclust)
 importFrom("parallel", mclapply, detectCores)
