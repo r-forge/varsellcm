@@ -3,15 +3,13 @@ setClass(
   representation = representation(
     likelihood="numeric",
     BIC="numeric",
-    ICLbic="numeric",
-    ICLexact="numeric",
+    ICL="numeric",
     MICL="numeric"
   ), 
   prototype = prototype(
     likelihood=numeric(),
     BIC=numeric(),
-    ICLbic=numeric(),
-    ICLexact=numeric(),
+    ICL=numeric(),
     MICL=numeric()
   )
 )

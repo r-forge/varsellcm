@@ -5,24 +5,7 @@ VSLCM_initialization_omega <- function(n, d, g){
   return(omega)
 }
 
-# VSLCM_initialization_z <- function(omega, g, x){
-#   z <- rep(1, nrow(x))
-#   
-#   if ((g>1)&&(sum(omega)>0)){
-#     filtre <- 0
-#     tmp <- mixmodCluster(data = as.data.frame(x[,which(omega==1)]),
-#                          nbCluster = g,
-#                          models = mixmodGaussianModel(listModels = "Gaussian_pk_Lk_Bk")
-#     )
-#     if (tmp@error == FALSE)
-#       z <- tmp@bestResult@partition
-#     else
-#       z <- sample(1:g, nrow(x), replace=TRUE)
-#     
-#   }
-#   
-#   return(list(z=z,error=1*tmp@error))
-# }
+
 
 VSLCM_initialization_z <- function(omega, g, x){
   z <- rep(1, nrow(x))
@@ -86,7 +69,7 @@ VarSelStartingPoint <- function(x, g, omega, z, priors){
   starting <- new("VSLCMresults",
                   data = as.matrix(x),
                   priors = priors,
-                  criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICLbic=-Inf, ICLexact=-Inf, MICL=-Inf),
+                  criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf),
                   partitions = new("VSLCMpartitions", zMAP=z, zOPT=z),
                   model = new("VSLCMmodel", g=g, omega=omega),
                   parameters = new("VSLCMparameters")
