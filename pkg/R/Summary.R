@@ -1,7 +1,7 @@
 setMethod(
   f="summary",
   signature = c("VSLCMresults"),
-  definition = function(object,...){
+  definition = function(object){
     
     cat("Data set:\n   Number of individuals:", nrow(object@data), "\n   Number of variables:", ncol(object@data), "\n\n")
     

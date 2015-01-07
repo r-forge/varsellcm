@@ -40,7 +40,11 @@ Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <moha
 # Variable selection
 require(VarSelLCM)
 data(apples)
-results <- VarSelCluster(apples, 2)
+
+results <- VarSelCluster(apples, 2, parallel=FALSE)
+
+summary(results)
+print(results)
 
 }
 

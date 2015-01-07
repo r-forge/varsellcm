@@ -111,6 +111,8 @@ VarSelParamEstim <- function(obj){
     }
   }
   
+  colnames(obj@parameters@means) <- colnames(obj@data)
+  colnames(obj@parameters@variances) <- colnames(obj@data)
   obj@criteria@ICL <-  Integre_Complete_Like(obj)
   
   return(obj)

@@ -66,6 +66,11 @@ VarSelStartingPoint <- function(x, g, omega, z, priors){
   if (min(z)>0)
     z <- z-1
   
+  if (is.null(colnames(x)))
+    colnames(x) <- paste("X",1:ncol(x), sep="")
+  
+  
+    
   starting <- new("VSLCMresults",
                   data = as.matrix(x),
                   priors = priors,
