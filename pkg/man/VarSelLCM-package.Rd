@@ -43,8 +43,8 @@ Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <moha
 \examples{
 # Variable selection
 require(VarSelLCM)
-data(coffee)
-results <- VarSelCluster(coffee[,-c(1,2)], 2)
+data(apples)
+results <- VarSelCluster(apples, 2)
 
 }
 

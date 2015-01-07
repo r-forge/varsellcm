@@ -44,6 +44,6 @@ VarSelCluster(x, g, nbinit=50, parallel = TRUE)
 
 \examples{
 require(VarSelLCM)
-data(coffee)
-results <- VarSelCluster(coffee[,-c(1,2)], 2)
+data(apples)
+results <- VarSelCluster(apples, 2)
 }
