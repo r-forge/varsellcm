@@ -14,8 +14,8 @@
 }
 \examples{
 require(VarSelLCM)
-data(apples)
-results <- VarSelCluster(apples, 2, parallel=FALSE)
+data(banknote)
+results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
 summary(results)
 }
 \seealso{

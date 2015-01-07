@@ -39,12 +39,22 @@ Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <moha
 \examples{
 # Variable selection
 require(VarSelLCM)
-data(apples)
+data(banknote)
 
-results <- VarSelCluster(apples, 2, parallel=FALSE)
+results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
 
 summary(results)
 print(results)
+
+\dontrun{
+require(multtest)
+data(golub)
+
+results <- VarSelCluster(t(golub), 2)
+
+summary(results)
+
+}
 
 }
 

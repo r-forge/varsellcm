@@ -44,10 +44,21 @@ VarSelCluster(x, g, nbinit=50, parallel = TRUE)
 
 \examples{
 require(VarSelLCM)
-data(apples)
-results <- VarSelCluster(apples, 2, parallel=FALSE)
+data(banknote)
+results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
 
 summary(results)
 
 print(results)
+
+\dontrun{
+require(multtest)
+data(golub)
+
+results <- VarSelCluster(t(golub), 2)
+
+summary(results)
+
+}
+
 }
