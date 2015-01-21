@@ -15,9 +15,9 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
   }else{
     
     ### Je l'ai laissé pour windows
-    reference <- list()
-    for (it in 1:nbinit)
-      reference[[it]] <- VarSelStartingPoint(x, g)
+    #reference <- list()
+    #for (it in 1:nbinit)
+    #  reference[[it]] <- VarSelStartingPoint(x, g)
     
     nbcl <- list()
     for (it in 1:nbinit)
