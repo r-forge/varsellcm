@@ -7,27 +7,6 @@ VSLCM_initialization_omega <- function(n, d, g){
 
 
 
-VSLCM_initialization_z <- function(omega, g, x){
-  z <- rep(1, nrow(x))
-  error <- 0
-  if ((g>1)&&(sum(omega)>0)){
-    if (sum(omega)==1){
-      test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "V"), silent = TRUE)    
-    }else{
-      test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "VVI"), silent = TRUE)    
-    }
-    if (class(test) == "Mclust"){
-      z <- test$classification
-    }else{
-      z <- sample(1:g, nrow(x), replace=TRUE)    
-      error <- 1
-    }
-    
-  }
-  
-  return(list(z=z, error=error))
-}
-
 
 VSLCM_initialization_priors <- function(x){
   priors <- matrix(1, ncol(x), 4)
@@ -46,31 +25,18 @@ VarSelStartingPoint <- function(x, g, omega, z, priors){
   if (missing(priors))
     priors <- VSLCM_initialization_priors(as.matrix(x))
   
-  # Initialization
-  if (missing(omega)){
+  if (missing(omega))
     omega <- VSLCM_initialization_omega(nrow(x), ncol(x), g)
-    
-    if (missing(z))
-      tmp <- VSLCM_initialization_z(omega, g, x)
-    
-    while (tmp$error == 1){
-      omega <- VSLCM_initialization_omega(nrow(x), ncol(x), g)
-      tmp <- VSLCM_initialization_z(omega, g, x)
-    }
-    z <- tmp$z
-  }
   
   if (missing(z))
-    z <- VSLCM_initialization_z(omega, g, x)$z
+      z <- kmeans(scale(as.matrix(x[,which(omega==1)]), TRUE, TRUE), g)$cluster
   
   if (min(z)>0)
     z <- z-1
   
   if (is.null(colnames(x)))
     colnames(x) <- paste("X",1:ncol(x), sep="")
-  
-  
-    
+      
   starting <- new("VSLCMresults",
                   data = as.matrix(x),
                   priors = priors,

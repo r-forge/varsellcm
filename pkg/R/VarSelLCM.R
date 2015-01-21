@@ -1,19 +1,27 @@
+OneVarSelModelSelection <- function(x, g){
+  return(OptimizeMICL( VarSelStartingPoint(x, g), 1))
+}
+
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
   if (parallel == FALSE){
     
     reference <- new("VSLCMresults", criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf))
     for (it in 1:nbinit){
-      where <- VarSelStartingPoint(x, g)
-      cand <- OptimizeMICL(where, 1)
+      cand <- OneVarSelModelSelection(x, g)
       if (cand@criteria@MICL > reference@criteria@MICL)
         reference <- cand
     }
     
   }else{
     
+    ### Je l'ai laissé pour windows
     reference <- list()
     for (it in 1:nbinit)
       reference[[it]] <- VarSelStartingPoint(x, g)
+    
+    nbcl <- list()
+    for (it in 1:nbinit)
+      nbcl[[it]] <- g
     
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , nbinit)
     if(Sys.info()["sysname"] == "Windows")
@@ -29,9 +37,9 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
       
     }
     else
-      reference <- mclapply(X = reference,
-                            FUN = OptimizeMICL,
-                            optimize=1,
+      reference <- mclapply(X = nbcl,
+                            FUN = OneVarSelModelSelection,
+                            x=x,
                             mc.cores = nb.cpus,
                             mc.preschedule = TRUE,
                             mc.cleanup = TRUE
