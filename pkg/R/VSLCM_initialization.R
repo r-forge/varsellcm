@@ -43,13 +43,15 @@ VSLCM_initialization_priors <- function(x){
 VarSelStartingPoint <- function(x, g, omega, z, priors){
   if (missing(priors))
     priors <- VSLCM_initialization_priors(as.matrix(x))
-  
+  print("fin priors")
   # Initialization
   if (missing(omega))
     omega <- VSLCM_initialization_omega(nrow(x), ncol(x), g)
-    
+  print("fin omega")
+  
   if (missing(z))
     z <- VSLCM_initialization_z(omega, g, x)
+  print("fin z")
   
   if (min(z)>0)
     z <- z-1
@@ -57,6 +59,7 @@ VarSelStartingPoint <- function(x, g, omega, z, priors){
   if (is.null(colnames(x)))
     colnames(x) <- paste("X",1:ncol(x), sep="")
   
+  print("fin names")
   
   
   starting <- new("VSLCMresults",

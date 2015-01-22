@@ -1,5 +1,7 @@
 OneVarSelModelSelection <- function(x, g){
-  return(OptimizeMICL( VarSelStartingPoint(x, g), 1))
+  print("deb")
+  init <- VarSelStartingPoint(x, g)
+  return(OptimizeMICL( init, 1))
 }
 
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
