@@ -10,16 +10,16 @@ VSLCM_initialization_omega <- function(n, d, g){
 VSLCM_initialization_z <- function(omega, g, x){
   z <- rep(1, nrow(x))
   if ((g>1)&&(sum(omega)>0)){
-    if (sum(omega)==1){
-      test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "V"), silent = TRUE)    
-    }else{
-      test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "VVI"), silent = TRUE)    
-    }
-    if (class(test) == "Mclust"){
-      z <- test$classification
-    }else{
+#     if (sum(omega)==1){
+#       test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "V"), silent = TRUE)    
+#     }else{
+#       test <- try(Mclust(data = as.data.frame(x[,which(omega==1)]), G = g, modelNames = "VVI"), silent = TRUE)    
+#     }
+#     if (class(test) == "Mclust"){
+#       z <- test$classification
+#     }else{
       z <- kmeans(as.matrix(scale(x[,which(omega==1)],TRUE,TRUE)), g)$cluster
-    }
+#     }
     
   }
   
