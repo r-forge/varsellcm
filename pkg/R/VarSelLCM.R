@@ -46,9 +46,9 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
       )
     
     tmp <- rep(0, nbinit)
-    for (it in 1:nbinit){
+    for (it in 1:nbinit)
       tmp[it] <- reference[[it]]@criteria@MICL
-    }
+    
     
     
     
