@@ -62,7 +62,7 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     
   }
   
-  return( reference )
+  return(reference)
 }
 
 
