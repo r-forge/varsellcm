@@ -20,20 +20,20 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     #for (it in 1:nbinit)
     #  reference[[it]] <- VarSelStartingPoint(x, g)
     
-    nbcl <- list()
-    for (it in 1:nbinit)
-      nbcl[[it]] <- g
+    nbcl <- as.list(rep(g,nbinit))
+    #nbcl <- list()
+    #for (it in 1:nbinit)
+    #  nbcl[[it]] <- g
     
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , nbinit)
     if(Sys.info()["sysname"] == "Windows")
     {
       cl <- makeCluster(nb.cpus)
-      common.objects <- c("reference")
+      common.objects <- c("x","nbcl")
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       reference <- parLapply(cl = cl, 
-                             X  = reference, 
-                             fun = OptimizeMICL,
-                             optimize=1)
+                             X  = nbcl, 
+                             fun = OneVarSelModelSelection)
       stopCluster(cl)
       
     }
