@@ -29,11 +29,12 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     if(Sys.info()["sysname"] == "Windows")
     {
       cl <- makeCluster(nb.cpus)
-      common.objects <- c("VarSelStartingPoint","x","nbcl")
+      common.objects <- c("VarSelStartingPoint","x")
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       reference <- parLapply(cl = cl, 
                              X  = nbcl, 
-                             fun = OneVarSelModelSelection)
+                             fun = OneVarSelModelSelection,
+                             x = x)
       stopCluster(cl)
       
     }
