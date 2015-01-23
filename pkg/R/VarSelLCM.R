@@ -1,5 +1,4 @@
 OneVarSelModelSelection <- function(x, g){
-  print("deb")
   init <- VarSelStartingPoint(x, g)
   return(OptimizeMICL( init, 1))
 }
