@@ -47,5 +47,5 @@ VarSelStartingPoint <- function(x, g, omega, z, priors){
                   parameters = new("VSLCMparameters")
   )
 
-  return( starting )
+  return(starting)
 }

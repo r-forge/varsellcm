@@ -1,6 +1,9 @@
 OneVarSelModelSelection <- function(x, g){
   init <- VarSelStartingPoint(x, g)
-  return(OptimizeMICL( init, 1))
+  return(OptimizeMICL(init, 1))
+}
+OneVarSelModSel.wrapper <- function(g){
+  return(OneVarSelModelSelection(x, g))
 }
 
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
@@ -30,10 +33,11 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     {
       cl <- makeCluster(nb.cpus)
       common.objects <- c("x","VarSelStartingPoint","OptimizeMICL")
+      clusterEvalQ(cl, {require(VarSelLCM)})
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       reference <- parLapply(cl = cl, 
                              X  = nbcl, 
-                             fun = OneVarSelModelSelection)
+                             fun = OneVarSelModSel.wrapper)
       stopCluster(cl)
       
     }
