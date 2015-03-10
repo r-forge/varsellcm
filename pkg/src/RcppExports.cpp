@@ -10,15 +10,11 @@ using namespace Rcpp;
 S4 OptimizeMICL(S4 obj, int optimize);
 RcppExport SEXP VarSelLCM_OptimizeMICL(SEXP objSEXP, SEXP optimizeSEXP) {
 BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< S4 >::type obj(objSEXP );
-        Rcpp::traits::input_parameter< int >::type optimize(optimizeSEXP );
-        S4 __result = OptimizeMICL(obj, optimize);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< S4 >::type obj(objSEXP);
+    Rcpp::traits::input_parameter< int >::type optimize(optimizeSEXP);
+    __result = Rcpp::wrap(OptimizeMICL(obj, optimize));
+    return __result;
 END_RCPP
 }
