@@ -1,17 +1,17 @@
-OneVarSelModelSelection <- function(x, g){
+OneVarSelModelSelection <- function(g, x){
   init <- VarSelStartingPoint(x, g)
   return(OptimizeMICL(init, 1))
 }
-OneVarSelModSel.wrapper <- function(g){
-  return(OneVarSelModelSelection(x, g))
-}
+# OneVarSelModSel.wrapper <- function(g){
+#   return(OneVarSelModelSelection(x, g))
+# }
 
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
   if (parallel == FALSE){
     
     reference <- new("VSLCMresults", criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf))
     for (it in 1:nbinit){
-      cand <- OneVarSelModelSelection(x, g)
+      cand <- OneVarSelModelSelection(g, x)
       if (cand@criteria@MICL > reference@criteria@MICL)
         reference <- cand
     }
@@ -32,12 +32,13 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     if(Sys.info()["sysname"] == "Windows")
     {
       cl <- makeCluster(nb.cpus)
-      common.objects <- c("x","VarSelStartingPoint","OptimizeMICL")
+      common.objects <- c("VarSelStartingPoint","OptimizeMICL")
       clusterEvalQ(cl, {require(VarSelLCM)})
       clusterExport(cl=cl, varlist = common.objects, envir = environment())
       reference <- parLapply(cl = cl, 
                              X  = nbcl, 
-                             fun = OneVarSelModSel.wrapper)
+                             fun = OneVarSelModelSelection,
+                             x = x)
       stopCluster(cl)
       
     }
