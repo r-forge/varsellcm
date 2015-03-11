@@ -5,7 +5,7 @@
 
 
 \title{
-Variable selection for model-based clustering using the integrated completed-data likelihood of a Latent Class Model
+Variable Selection for Model-Based Clustering using the Integrated Complete-Data Likelihood of a Latent Class Model
 }
 
 \description{

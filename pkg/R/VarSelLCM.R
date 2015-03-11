@@ -2,9 +2,6 @@ OneVarSelModelSelection <- function(g, x){
   init <- VarSelStartingPoint(x, g)
   return(OptimizeMICL(init, 1))
 }
-# OneVarSelModSel.wrapper <- function(g){
-#   return(OneVarSelModelSelection(x, g))
-# }
 
 VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
   if (parallel == FALSE){
@@ -18,16 +15,8 @@ VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
     
   }else{
     
-    ### Je l'ai laissé pour windows
-    #reference <- list()
-    #for (it in 1:nbinit)
-    #  reference[[it]] <- VarSelStartingPoint(x, g)
     
     nbcl <- as.list(rep(g,nbinit))
-    #nbcl <- list()
-    #for (it in 1:nbinit)
-    #  nbcl[[it]] <- g
-    
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , nbinit)
     if(Sys.info()["sysname"] == "Windows")
     {
