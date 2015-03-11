@@ -1,5 +1,4 @@
 useDynLib(VarSelLCM)
-#exportPattern("^[[:alpha:]]+")
 export(VarSelCluster)
 exportClasses(
      "VSLCMcriteria",
