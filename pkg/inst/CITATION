@@ -1,18 +1,14 @@
 citHeader("To cite package 'VarSelLCM' in publications use:")
-     
-desc <- packageDescription("VarSelLCM")
-
-
+   
 citEntry(entry="article",
          title = "VarSelLCM: Variable Selection for a cluster analysis using the Latent Class Model",
-         author = personList(person(given="Matthieu", family="Marbac"),
-                             person(given="Mohammed", family="Sedki")),
-         journal = "Preprint", 
-          year="2015",
-         volume = " ",
-         pages = " ",
+         author = personList(as.person("Matthieu Marbac"),
+                             as.person("Mohammed Sedki")),
+         journal = "arXiv", 
+         year="2015",
+         volume = "1501.06314",
+         textVersion=
          paste("Matthieu Marbac and Mohammed Sedki (2015)",
 "Variable selection for model-based clustering using the integrated complete-data likelihood",
-"Preprint"))
-
-
+"arXiv1501.06314")
+)
