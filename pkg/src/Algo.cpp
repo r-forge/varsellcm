@@ -32,9 +32,7 @@ double logdinvgamma(const double & x, const double & alpha, const double  & beta
 double IntegreOneVariable(const vec & v, const double & nu, const double & s0, const double & mu,  const double & n0){
   double output = 0;
   double n = v.n_rows;
- // cout << n << (n>0) << endl ;
   if (n> 0){ 
-   // cout << "ok" << endl << endl;
     double n1 = n + n0;
     double theta1 = (n0*mu + n*mean(v))/n1;
     double s1 = sqrt( s0*s0 + var(v) *(n-1)  + pow((mu - mean(v)),2) /(1/n0 + 1/n)  );
