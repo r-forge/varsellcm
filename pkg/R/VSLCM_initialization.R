@@ -16,7 +16,7 @@ VSLCM_initialization_priors <- function(x){
     priors[j,3] <- mean(x[,j])
     priors[j,4] <- 2.6 /(max(x[,j]) - min(x[,j]))
   }
-  priors <- matrix(1, ncol(x), 4)
+  #priors <- matrix(1, ncol(x), 4)
   return(priors)
 }
 
