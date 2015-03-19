@@ -13,6 +13,7 @@
   Produce result summary of a VSLCMresults class
 }
 \examples{
+require(mclust)
 require(VarSelLCM)
 data(banknote)
 results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)

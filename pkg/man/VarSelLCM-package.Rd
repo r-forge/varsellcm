@@ -9,7 +9,10 @@ Variable Selection for Model-Based Clustering using the Integrated Complete-Data
 }
 
 \description{
-Variable Selection for model-based clustering by using a mixture model of Gaussian distributions assuming conditional independence between variables. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
+Variable Selection for model-based clustering by using a mixture model of Gaussian 
+distributions assuming conditional independence between variables. The algorithm 
+carries out the model selection by optimizing the MICL criterion which has a closed 
+form for such a distribution.
 }
 
 \details{
@@ -25,8 +28,7 @@ The main functions to use is \code{\link{VarSelCluster}}. It carries out the mod
 
 \author{
 Matthieu Marbac and Mohammed Sedki
-
-Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <mohammed.sedki@inserm.fr>
+Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 }
 
 \references{
@@ -38,6 +40,7 @@ Maintainer: Matthieu Marbac <matthieu.marbac@inserm.fr> and Mohammed Sedki <moha
 
 \examples{
 # Variable selection
+require(mclust)
 require(VarSelLCM)
 data(banknote)
 
@@ -50,7 +53,8 @@ print(results)
 ## To install multitest package : uncomment the following lines
 ## source("http://bioconductor.org/biocLite.R")
 ## biocLite("multtest")
-
+require(mclust)
+require(VarSelLCM)
 require(multtest)
 data(golub)
 

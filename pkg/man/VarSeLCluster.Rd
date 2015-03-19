@@ -6,7 +6,8 @@ VarSelCluster
 
 \description{
    This function performs the variable selection for a model-based clustering. 
-   The data distribution follow a mixture of Gaussian distributions assuming conditional independence between variables. The model selection is carried out by maximizing the MICL criterion.
+   The data distribution follow a mixture of Gaussian distributions assuming conditional independence between variables. 
+   The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
 VarSelCluster(x, g, nbinit=50, parallel = TRUE)
@@ -43,6 +44,7 @@ VarSelCluster(x, g, nbinit=50, parallel = TRUE)
 
 
 \examples{
+require(mclust)
 require(VarSelLCM)
 data(banknote)
 results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
@@ -55,7 +57,8 @@ print(results)
 ## To install multitest package : uncomment the following lines
 ## source("http://bioconductor.org/biocLite.R")
 ## biocLite("multtest")
-
+require(mclust)
+require(VarSelLCM)
 require(multtest)
 data(golub)
 
