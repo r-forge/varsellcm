@@ -7,7 +7,7 @@ Title: Variable Selection for Model-Based Clustering using the Integrated Comple
 Description: Variable Selection for model-based clustering by using a mixture model of Gaussian distributions 
              assuming conditional independence between variables. The algorithm carries out the model 
              selection by optimizing the MICL criterion which has a closed form for such a distribution.
-Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr> 
+Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>  
 Imports: methods, Rcpp (>= 0.11.1), parallel, mclust
 LinkingTo: Rcpp, RcppArmadillo
 License: GPL (>= 2)
