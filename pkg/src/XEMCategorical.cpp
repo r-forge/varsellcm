@@ -9,6 +9,7 @@ XEMCategorical::XEMCategorical(const DataCategorical * datapasse, const S4 * ref
 }
 
 XEMCategorical::XEMCategorical(const DataCategorical * datapasse, const colvec & omega, const int & g){
+  paramEstim = TRUE;
   InitCommumParamXEM(omega, g);  
   InitSpecificParamXEMCategorical(datapasse);
 }
@@ -45,29 +46,17 @@ double XEMCategorical::ComputeLogLike(){
   return sum(maxtmplogproba % data_p->m_w )+ sum((log(rowsums)) %data_p->m_w );
 }
 
-void XEMCategorical::OneEM(){
-  double loglike = ComputeLogLike(), prec = log(0);
-  int it=0;
-  while ( (it<iterSmall) && ((loglike-prec)>tolKeep) ){
-    it ++;
-    // E step
-    Estep();
-    // M step
-    for (int k=0; k<g; k++) paramCurrent_p->m_pi(k) = sum((tmplogproba.col(k)) % data_p->m_w);
-    paramCurrent_p->m_pi = paramCurrent_p->m_pi / sum(paramCurrent_p->m_pi);
-    for (int j=0; j< sum(omega); j++){
-      for (int h=0; h< data_p->m_nmodalities(location(j)); h++){
-        paramCurrent_p->m_alpha[j].col(h) = trans(trans(data_p->m_w(data_p->m_whotakewhat[location(j)][h])) *tmplogproba.rows(data_p->m_whotakewhat[location(j)][h]));
-      }
-      for (int k=0; k<g; k++){
-        paramCurrent_p->m_alpha[j].row(k) = paramCurrent_p->m_alpha[j].row(k)/sum(paramCurrent_p->m_alpha[j].row(k));        
-      }
+void XEMCategorical::Mstep(){
+  for (int k=0; k<g; k++) paramCurrent_p->m_pi(k) = sum((tmplogproba.col(k)) % data_p->m_w);
+  paramCurrent_p->m_pi = paramCurrent_p->m_pi / sum(paramCurrent_p->m_pi);
+  for (int j=0; j< sum(omega); j++){
+    for (int h=0; h< data_p->m_nmodalities(location(j)); h++){
+      paramCurrent_p->m_alpha[j].col(h) = trans(trans(data_p->m_w(data_p->m_whotakewhat[location(j)][h])) *tmplogproba.rows(data_p->m_whotakewhat[location(j)][h]));
     }
-    prec = loglike;
-    loglike = ComputeLogLike();
+    for (int k=0; k<g; k++){
+      paramCurrent_p->m_alpha[j].row(k) = paramCurrent_p->m_alpha[j].row(k)/sum(paramCurrent_p->m_alpha[j].row(k));        
+    }
   }
-  // Une verif
-  if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }
 
 void XEMCategorical::Output(S4 * reference_p){
@@ -79,10 +68,10 @@ void XEMCategorical::Output(S4 * reference_p){
     if (omega(j) == 0){
       vec tmp = zeros<vec>(data_p->m_nmodalities(j));
       for (int h=0; h<data_p->m_nmodalities(j); h++)
-        tmp(h) = sum(data_p->m_w(data_p->m_whotakewhat[j][h]));
+      tmp(h) = sum(data_p->m_w(data_p->m_whotakewhat[j][h]));
       tmp = tmp/sum(tmp);
       for (int k=0; k<g; k++)
-        alpha[j].row(k)=trans(tmp);      
+      alpha[j].row(k)=trans(tmp);      
     }else{
       alpha[j]=paramCurrent_p->m_alpha[loc];
       loc ++;

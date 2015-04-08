@@ -17,6 +17,7 @@ XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const S4 * refere
 }
 
 XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const colvec & omega, const int & g){
+  paramEstim = TRUE;
   InitCommumParamXEM(omega, g);  
   InitSpecificParamXEMContinuous(datapasse);
 }
@@ -27,6 +28,7 @@ void XEMContinuous::InitSpecificParamXEMContinuous(const DataContinuous * datapa
   tmplogproba = zeros<mat>(data_p->m_nrows, g);
   maxtmplogproba = ones<vec>(data_p->m_nrows);
   rowsums = ones<mat>(data_p->m_nrows);
+  m_weightTMP = zeros<vec>(data_p->m_nrows);
 }
 
 void XEMContinuous::SwitchParamCurrent(int ini){paramCurrent_p = &paramCand[ini];}
@@ -47,52 +49,40 @@ double XEMContinuous::ComputeLogLike(){
   return sum(maxtmplogproba) + sum(log(rowsums));
 }
 
-void XEMContinuous::OneEM(){
-  Col<double> weight = ones<vec>(data_p->m_nrows);
-  double loglike = ComputeLogLike(), prec = log(0);
-  int it=0;
-  while ( (it<iterSmall) && ((loglike-prec)>tolKeep) ){
-    it ++;
-    // E step
-    Estep();
-    // M step
-    paramCurrent_p->m_pi = trans(sum(tmplogproba,0));
-    paramCurrent_p->m_pi = paramCurrent_p->m_pi / sum(paramCurrent_p->m_pi);
-    for (int k=0; k<g; k++){
-      for (int j=0; j< sum(omega); j++){
-        weight = tmplogproba.col(k) % data_p->m_notNA.col(location(j));
-        paramCurrent_p->m_mu(k,j) = sum(data_p->m_x.col(location(j)) % weight ) / sum(weight);
-        paramCurrent_p->m_sd(k,j) = sqrt(sum( pow(data_p->m_x.col(location(j)) - paramCurrent_p->m_mu(k,j),2) % weight) / sum(weight));
-      }
+
+void XEMContinuous::Mstep(){
+  paramCurrent_p->m_pi = trans(sum(tmplogproba,0));
+  paramCurrent_p->m_pi = paramCurrent_p->m_pi / sum(paramCurrent_p->m_pi);
+  for (int k=0; k<g; k++){
+    for (int j=0; j< sum(omega); j++){
+      m_weightTMP = tmplogproba.col(k) % data_p->m_notNA.col(location(j));
+      paramCurrent_p->m_mu(k,j) = sum(data_p->m_x.col(location(j)) % m_weightTMP ) / sum(m_weightTMP);
+      paramCurrent_p->m_sd(k,j) = sqrt(sum( pow(data_p->m_x.col(location(j)) - paramCurrent_p->m_mu(k,j),2) % m_weightTMP) / sum(m_weightTMP));
     }
-    prec = loglike;
-    loglike = ComputeLogLike();
   }
-  // Pour la dégénérescence
-  if (loglike == -log(0)) loglike=log(0);
-  // Une verif
-  if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }
 
 void XEMContinuous::Output(S4 * reference_p){
   if (paramEstim){
-      Mat<double> mu=ones<mat>(g, data_p->m_ncols);
-  Mat<double> sd=ones<mat>(g, data_p->m_ncols);
-  int loc=0;
-  for (int j=0; j<data_p->m_ncols; j++){
-    if (omega(j) == 0){
-      vec tmp = data_p->m_x.col(j);
-      vec keep = tmp(find(data_p->m_notNA.col(j) == 1));
-      mu.col(j) = mu.col(j)*mean(keep);
-      sd.col(j) = sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
-    }else{
-      mu.col(j) = paramCurrent_p->m_mu.col(loc);
-      sd.col(j) = paramCurrent_p->m_sd.col(loc);
-      loc ++;
+    Mat<double> mu=ones<mat>(g, data_p->m_ncols);
+    Mat<double> sd=ones<mat>(g, data_p->m_ncols);
+    int loc=0;
+    for (int j=0; j<data_p->m_ncols; j++){
+      if (omega(j) == 0){
+        vec tmp = data_p->m_x.col(j);
+        vec keep = tmp(find(data_p->m_notNA.col(j) == 1));
+        mu.col(j) = mu.col(j)*mean(keep);
+        sd.col(j) = sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
+      }else{
+        mu.col(j) = paramCurrent_p->m_mu.col(loc);
+        sd.col(j) = paramCurrent_p->m_sd.col(loc);
+        loc ++;
+      }
     }
-  }
-  as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-  as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
-  as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
+    as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+    as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
+    as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
   }
 }
+
+

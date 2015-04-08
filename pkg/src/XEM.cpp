@@ -6,7 +6,6 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   nbKeep = 1;
   iterKeep = 1;
   tolKeep = 0.001;
-  loglikeBest = log(0);
   loglikeSmall = ones<vec>(nbSmall) * log(0);
   omega = om;
   g=gv;
@@ -21,7 +20,6 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
   nbKeep = strategy.slot("nbKeep");
   iterKeep = strategy.slot("iterKeep");
   tolKeep = strategy.slot("tolKeep");
-  loglikeBest = log(0);
   loglikeSmall = ones<vec>(nbSmall) * log(0);
   omega = om;
   g=gv;
@@ -55,6 +53,7 @@ void XEM::Run(){
 
 colvec XEM::FindZMAP(){
   Col<double> zMAP=ones<vec>(tmplogproba.n_rows);
+  
   uword  index;
   double max_val=0;
   for (int i=0; i<tmplogproba.n_rows; i++){
@@ -64,6 +63,22 @@ colvec XEM::FindZMAP(){
   return zMAP;
 }
 
-void XEM::Estep(){
-  for (int k=0; k<g; k++) tmplogproba.col(k) = tmplogproba.col(k)/rowsums;    
+void XEM::Estep(){for (int k=0; k<g; k++) tmplogproba.col(k) = tmplogproba.col(k)/rowsums;}
+
+void XEM::OneEM(){
+  double loglike = ComputeLogLike(), prec = log(0);
+  int it=0;
+  while ( (it<iterSmall) && ((loglike-prec)>tolKeep) ){
+    it ++;
+    // E step
+    Estep();
+    // M step
+    Mstep();
+    prec = loglike;
+    loglike = ComputeLogLike();
+  }
+  // Pour la dégénérescence
+  if (loglike == -log(0)) loglike=log(0);
+  // Une verif
+  if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }

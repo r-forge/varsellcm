@@ -6,7 +6,7 @@
 class XEM{
   public:
   int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g;
-  double tolKeep, loglikeBest;
+  double tolKeep;
   Col<double> loglikeSmall, omega, rowsums, maxtmplogproba;
   Mat<double> tmplogproba;
   uvec location;
@@ -17,14 +17,15 @@ class XEM{
   void InitCommumParamXEM(const colvec &, const int &, const S4 &);
   ~XEM(){};
   
-  virtual void OneEM() = 0;
+  virtual void Mstep() = 0;
   virtual void ComputeTmpLogProba() = 0;
   virtual double ComputeLogLike() = 0;
   virtual void SwitchParamCurrent(int) = 0;
   virtual void Output(S4 *)=0;
   
   void Run();
-  colvec FindZMAP();
   void Estep();
+  void OneEM();
+  colvec FindZMAP();
 };
 #endif

@@ -6,10 +6,13 @@
 
 
 class XEMContinuous : public XEM{
+
+    
   public:
   vector<ParamContinuous> paramCand;
   ParamContinuous * paramCurrent_p;
   const DataContinuous * data_p;
+  Col<double> m_weightTMP;
   
   // Constructeurs et destructeurs par défaut (non utilisé)
   XEMContinuous(){};
@@ -20,7 +23,7 @@ class XEMContinuous : public XEM{
   XEMContinuous(const DataContinuous *,  const S4 *);
   void InitSpecificParamXEMContinuous(const DataContinuous * datapasse);
     
-  virtual void OneEM();
+  virtual void Mstep();
   virtual void ComputeTmpLogProba();
   virtual double ComputeLogLike();
   virtual void SwitchParamCurrent(int);

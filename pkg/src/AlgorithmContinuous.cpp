@@ -1,8 +1,6 @@
 #include "AlgorithmContinuous.h"
 #include "XEMContinuous.h"
 
-
-
 AlgorithmContinuous::AlgorithmContinuous(const DataContinuous * data, const S4 * reference_p){
   vbleSelec = as<S4>(reference_p->slot("strategy")).slot("vbleSelec");
   if (vbleSelec){
@@ -14,7 +12,7 @@ AlgorithmContinuous::AlgorithmContinuous(const DataContinuous * data, const S4 *
       tmp = data_p->m_x.col(j);
       m_integralenondiscrim(j)=IntegreOneVariable(tmp(find(data_p->m_notNA.col(j) == 1)), j);
     }
-  }  
+  }
 }
 
 double AlgorithmContinuous::IntegreOneVariable(const vec & v, const int & j){
@@ -27,8 +25,6 @@ double AlgorithmContinuous::IntegreOneVariable(const vec & v, const int & j){
   }
   return output;
 }
-
-
 
 double AlgorithmContinuous::Integre_Complete_Like_Cand(){
   double outmicl = lgamma(m_g*0.5) - m_g*lgamma(0.5) - lgamma(data_p->m_nrows + m_g*0.5) + sum(m_integralenondiscrim);
@@ -43,7 +39,6 @@ double AlgorithmContinuous::Integre_Complete_Like_Cand(){
   }
   return outmicl;
 }
-
 
 void AlgorithmContinuous::Optimize_model(){
   m_miclCurrent = lgamma(m_g*0.5) - m_g*lgamma(0.5) - lgamma(data_p->m_nrows + m_g*0.5) + sum(m_integralenondiscrim);
@@ -62,8 +57,6 @@ void AlgorithmContinuous::Optimize_model(){
     }
   }
 }
-
-
 
 void AlgorithmContinuous::zCandInit(){
   XEMContinuous xem(data_p, m_omegaCurrent, m_g);

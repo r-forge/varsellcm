@@ -22,7 +22,7 @@ class XEMCategorical : public XEM{
   XEMCategorical(const DataCategorical *,  const S4 *);
   void InitSpecificParamXEMCategorical(const DataCategorical * datapasse);
   
-  virtual void OneEM();
+  virtual void Mstep();
   virtual void ComputeTmpLogProba();
   virtual double ComputeLogLike();
   virtual void SwitchParamCurrent(int);
