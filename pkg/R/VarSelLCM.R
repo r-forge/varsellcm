@@ -1,129 +1,117 @@
-OneVarSelModelSelection <- function(g, x){
-  init <- VarSelStartingPoint(x, g)
-  return(OptimizeMICL(init, 1))
-}
+########################################################################################################################
+## Fonctions principales du package, la seule accessible par l'utilisateur est VarSelCluster
+########################################################################################################################
 
-VarSelModelSelection <- function(x, g, nbinit=30,  parallel=TRUE){
-  if (parallel == FALSE){
-    
-    reference <- new("VSLCMresults", criteria = new("VSLCMcriteria", likelihood=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf))
-    for (it in 1:nbinit){
-      cand <- OneVarSelModelSelection(g, x)
-      if (cand@criteria@MICL > reference@criteria@MICL)
-        reference <- cand
+
+########################################################################################################################
+## La fonction VarSelModelSelection permet d'effectuer le choix de model et l'estimation des paramètres en appeleant le
+## code C++. Il retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la nature des données.
+########################################################################################################################
+setGeneric ( name= "VarSelModelSelection",  def = function(data, g, strategy){ standardGeneric("VarSelModelSelection")})
+## Pour les variables continues
+setMethod( f = "VarSelModelSelection", 
+           signature(data="VSLCMdataContinuous", g="numeric", strategy="VSLCMstrategy"), 
+           definition = function(data, g, strategy){
+             reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+             reference <- OptimizeMICL(reference, "Continuous")
+             return(DesignOutput(reference))             
+           }
+)
+## Pour les variables catégorielles
+setMethod( f = "VarSelModelSelection", 
+           signature(data="VSLCMdataCategorical", g="numeric", strategy="VSLCMstrategy"), 
+           definition = function(data, g, strategy){
+             reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+             reference <- OptimizeMICL(reference, "Categorical")
+             return(DesignOutput(reference))             
+           }
+)
+
+
+########################################################################################################################
+## La fonction VarSelModelMLE permet d'effectuer l'estimation des paramètres en considèrant que les variables données
+## dans le slot model de l'objet VSLCMresultsContinuous ou VSLCMresultsCategorical.
+## Il appelle le code c++ et retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la
+## nature des données.
+########################################################################################################################
+setGeneric ( name= "VarSelModelMLE",  def = function(obj,it){ standardGeneric("VarSelModelMLE")})
+## Pour les variables continues
+setMethod( f = "VarSelModelMLE", 
+           signature(obj="VSLCMresultsContinuous",it="numeric"), 
+           definition = function(obj,it){
+             reference <- OptimizeMICL(obj, "Continuous")
+             return(DesignOutput(reference))             
+           }
+)
+## Pour les variables catégorielles
+setMethod( f = "VarSelModelMLE", 
+           signature(obj="VSLCMresultsCategorical",it="numeric"), 
+           definition = function(obj,it){
+             reference <- OptimizeMICL(obj, "Categorical")
+             print(str(reference,2))
+             return(DesignOutput(reference))             
+           }
+)
+
+
+########################################################################################################################
+## La fonction VarSelCluster est disponible pour l'utilisateur et permet d'appeller les fonctions VarSelModelSelection et
+## VarSelModelMLE et retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical
+## La fonction possède deux paramètres obligatoires:
+## x: tableau de données sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
+## g: nombre de classes (numeric de taille 1)
+## La fonction possède également 9 paramètres optionnels
+## initModel: nomber d'initialisations de l'algorithme d'optimisation de MICL
+## vbleSelec: logical indiquant si la sélection de variables est effectuée
+## paramEstim: logical indiquant si l'estimation des paramètres est effectuée
+## parallel: logical indiquant si le code est parallèlisé
+## nbSmall: nombre d'initialisations du small EM
+## iterSmall: nombre d'itérations des small EM
+## nbKeep: nombre de chaines conservées après le small EM
+## iterKeep: nombre d'itérations maximum des EM
+## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
+########################################################################################################################
+VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, parallel=FALSE, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
+  # Verifie les paramètres d'entrées
+  CheckInputs(x, g, initModel, vbleSelec, paramEstim, parallel, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
+  # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
+  strategy <- VSLCMstrategy(initModel, parallel, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)  
+  # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
+  data <- VSLCMdata(x)
+  # Estimation du modèle et/ou des paramètres
+  if (strategy@parallel == FALSE)
+    reference <- VarSelModelSelection(data, g, strategy)
+  else{
+    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1))
+    if (strategy@vbleSelec == TRUE){
+      reference <- mclapply(X = as.list(rep(g, max(1,strategy@initModel))), FUN = VarSelModelSelection, data=data, strategy=JustModelStrategy(strategy), mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      # On conserve le meilleur modèle au sens de MICL
+      tmpMICL <- rep(NA, length(reference))
+      for (it in 1:length(reference))
+        tmpMICL[it] <- reference[[it]]@criteria@MICL
+      reference <- reference[[which.max(tmpMICL)]]
+      # On parallelise aussi pour les EM donc on réparti les initialisations sur les différents coeurs
+    }else{
+      if (class(data) == "VSLCMdataContinuous")
+        reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+      else if (class(data) == "VSLCMdataCategorical")
+        reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+      else
+        stop()      
     }
-    
-  }else{
-    
-    
-    nbcl <- as.list(rep(g,nbinit))
-    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , nbinit)
-    if(Sys.info()["sysname"] == "Windows")
-    {
-      cl <- makeCluster(nb.cpus)
-      common.objects <- c("x","OneVarSelModelSelection","VarSelStartingPoint","OptimizeMICL")
-      clusterEvalQ(cl, {require(VarSelLCM)})
-      clusterExport(cl=cl, varlist = common.objects, envir = environment())
-      reference <- parLapply(cl = cl, 
-                             X  = nbcl, 
-                             fun = function(g){OneVarSelModelSelection(g,x)})
-      stopCluster(cl)
-      
+    reference@strategy <- strategy 
+    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1))
+    if (strategy@paramEstim){
+      reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)
+      reference@strategy@nbKeep <- ceiling(reference@strategy@nbKeep / nb.cpus)
+      reference <- mclapply(X = as.list(rep(g, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      # On conserve les paramètres maximisant la vraisemblance
+      tmploglike <- rep(NA, length(reference))
+      for (it in 1:length(tmploglike))
+        tmploglike[it] <- reference[[it]]@criteria@likelihood
+      reference <- reference[[which.max(tmploglike)]]
+      reference@strategy <- strategy
     }
-    else
-      reference <- mclapply(X = nbcl,
-                            FUN = OneVarSelModelSelection,
-                            x=x,
-                            mc.cores = nb.cpus,
-                            mc.preschedule = TRUE,
-                            mc.cleanup = TRUE
-      )
-    
-    tmp <- rep(0, nbinit)
-    for (it in 1:nbinit)
-      tmp[it] <- reference[[it]]@criteria@MICL
-    
-    
-    
-    
-    
-    reference <- reference[[which(tmp == max(tmp))[1]]]   
-    
-    
-    
-    
   }
-  
   return(reference)
 }
-
-
-VarSelParamEstim <- function(obj){
-  
-  obj@criteria@likelihood <- 0
-  obj@criteria@BIC <- 0
-  
-  obj@parameters@means <- matrix(0, obj@model@g, ncol(obj@data))
-  rownames(obj@parameters@means ) <- paste("Class", 1:obj@model@g)
-  obj@parameters@variances <- matrix(0, obj@model@g, ncol(obj@data))
-  rownames(obj@parameters@variances ) <- paste("Class", 1:obj@model@g)
-  
-  obj@partitions@zOPT <- as.numeric(obj@partitions@zOPT) + 1
-  
-  
-  if (sum(obj@model@omega) > 0){
-    if (sum(obj@model@omega)==1){
-      discrim <- try(Mclust(data = as.data.frame(obj@data[, which(obj@model@omega == 1)]), G = obj@model@g, modelNames = "V"), silent=TRUE)
-    }else{
-      discrim <- try(Mclust(data = as.data.frame(obj@data[, which(obj@model@omega == 1)]), G = obj@model@g, modelNames = "VVI"), silent=TRUE)
-      if (class(discrim) == "try-error")
-        discrim <- try(Mclust(data = as.data.frame(obj@data[, which(obj@model@omega == 1)]), G = obj@model@g, modelNames = c("EII", "VII","EEI", "EVI", "VVI")), silent=TRUE)
-    }
-    if (class(discrim)=="Mclust"){
-      obj@criteria@likelihood <- discrim$loglik
-      obj@criteria@BIC <- discrim$loglik - (obj@model@g * 2 * sum(obj@model@omega) + (obj@model@g-1)) * 0.5 * log(nrow(obj@data))
-      obj@partitions@zMAP <- discrim$classification
-      obj@partitions@tik <- discrim$z
-      obj@parameters@proportions <- discrim$parameters$pro
-      obj@parameters@means[,which(obj@model@omega == 1)]<- t(discrim$parameters$mean)
-      if (sum(obj@model@omega)==1){
-        obj@parameters@variances[,which(obj@model@omega == 1) ] <- discrim$parameters$variance$sigmasq
-      }else{
-        for (k in 1:nrow(obj@parameters@variances))
-          obj@parameters@variances[k,which(obj@model@omega == 1) ]<- diag(discrim$parameters$variance$sigma[,,k])  
-      }
-    }else{
-      print("error in the parameter estimation")
-      obj@criteria@BIC <- -Inf
-      obj@criteria@likelihood <- -Inf
-      obj@partitions@tik <- matrix(1, nrow(obj@data), obj@model@g)
-    }
-    
-  }
-  
-  if (any(obj@model@omega == 0) ){
-    for (j in  which(obj@model@omega == 0)){
-      me <- mean(obj@data[,j])
-      va <- var(obj@data[,j])
-      obj@parameters@means[,j] <- me
-      obj@parameters@variances[,j] <- va
-      loglike <- sum( dnorm(obj@data[,j], me, sqrt(va), log = TRUE))
-      obj@criteria@likelihood <- obj@criteria@likelihood + loglike
-      obj@criteria@BIC <- obj@criteria@BIC + loglike - log(nrow(obj@data))
-    }
-  }
-  
-  colnames(obj@parameters@means) <- colnames(obj@data)
-  colnames(obj@parameters@variances) <- colnames(obj@data)
-  obj@criteria@ICL <-  Integre_Complete_Like(obj)
-  
-  return(obj)
-}
-
-VarSelCluster <- function(x, g, nbinit=50, parallel = TRUE){
-  models <- VarSelModelSelection(x, g, nbinit, parallel)
-  return(  VarSelParamEstim(models) )
-}
-
-VarSelModelKnown <- function(x, g, omega)
-  return( VarSelParamEstim(OptimizeMICL(VarSelStartingPoint(x, g, omega), 0)))

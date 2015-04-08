@@ -3,12 +3,19 @@ export(VarSelCluster)
 exportClasses(
      "VSLCMcriteria",
      "VSLCMpartitions",
+     "VSLCMstrategy",
      "VSLCMmodel",
-     "VSLCMparameters")
-exportClasses("VSLCMresults")
+     "VSLCMdataContinuous",
+     "VSLCMdataCategorical",
+     "VSLCMparamContinuous",
+     "VSLCMparamCategorical",
+     "VSLCMresultsContinuous",
+     "VSLCMresultsCategorical"
+     )
 exportMethods(summary)
 exportMethods(print)
 import(methods)
 importFrom("Rcpp", evalCpp)
-importFrom("mclust", Mclust)
+importFrom("mgcv", uniquecombs)
+importFrom("ade4", acm.disjonctif)
 importFrom("parallel", mclapply, detectCores, makeCluster, clusterExport, parLapply, clusterEvalQ, stopCluster)

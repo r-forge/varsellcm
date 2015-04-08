@@ -5,33 +5,64 @@ VarSelCluster
 }
 
 \description{
-   This function performs the variable selection for a model-based clustering. 
-   The data distribution follow a mixture of Gaussian distributions assuming conditional independence between variables. 
+   This function performs the variable selection for a model-based clustering of data set having missing values. 
+   The data distribution follow a locally independent mixture model whose the one-dimensional marginal distributions
+   belong to the exponential family (i.e. Gaussian or multinomial).
+   Missing values are dealing by assuming that data are missing at random.
    The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
-VarSelCluster(x, g, nbinit=50, parallel = TRUE)
+VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, parallel=FALSE, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
   \item{x}{
-    A matrix, or data frame where rows correspond to observations and columns correspond to variables. 
+    A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric"  and categorical variables must be "factor".
 
   }
   \item{g}{
     An integer specifying the number of mixture components
   }
-  \item{nbinit}{
+  \item{initModel}{
     The number of random initializations of the algorithm. 
     The default is 50. 
   }
-  \item{parallel}{
-    A Boolean indicating if the code is parallelized or not.
-    The default is TRUE.
+  \item{vbleSelec}{
+    Logical indicating if a variable selection is performed. 
+    The default is TRUE. 
   }
+  \item{paramEstim}{
+    Logical indicating if the maximum likelihood (ML) inference is performed for the best model (according to the MICL criterion). 
+    The default is TRUE. 
+  }
+  \item{parallel}{
+    Logical indicating if the code is parallelized or not.
+    The default is FALSE.
+  }
+  \item{nbSmall}{
+    Numeric indicating the number of SmallEM algorithms performed for the ML inference. 
+    The default is 250. 
+  }
+  \item{iterSmall}{
+    Numeric indicating the number of iterations for each SmallEM algorithm.
+    The default is 20. 
+  }
+  \item{nbKeep}{
+    Numeric indicating the number of chains used for the final EM algorithm.
+    The default is 50. 
+  }
+  \item{iterKeep}{
+    Numeric indicating the maximal number of iterations for each EM algorithm.
+    The default is 1000. 
+  }
+  \item{tolKeep}{
+    Numeric indicating the maximal gap between two successive iterations of EM algorithm which stops the algorithm.
+    The default is 0.001. 
+  }
+
 }
 \value{
-  An object of class \code{\linkS4class{VSLCMresults}} providing the model maximizing the MICL criterion.
+  An object of class \code{\linkS4class{VSLCMresultsContinuous}} or \code{\linkS4class{VSLCMresultsCategorical}} providing the model maximizing the MICL criterion.
   Thus, it indicates which variables are relevant to the clustering. It also provides the maximum
   likelihood estimates associated to this model.
 }
@@ -44,28 +75,22 @@ VarSelCluster(x, g, nbinit=50, parallel = TRUE)
 
 
 \examples{
-require(mclust)
+# Variable selection and parameter estimation of a continuous data set with missing values
 require(VarSelLCM)
-data(banknote)
-results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
+data(stones)
+
+results <- VarSelCluster(stones, 2)
 
 summary(results)
 
 print(results)
 
-\dontrun{
-## To install multitest package : uncomment the following lines
-## source("http://bioconductor.org/biocLite.R")
-## biocLite("multtest")
-require(mclust)
-require(VarSelLCM)
-require(multtest)
-data(golub)
+# Variable selection and parameter estimation of a categorical data set without missing values
+data(birds)
 
-results <- VarSelCluster(t(golub), 2)
+results <- VarSelCluster(birds, 2)
 
 summary(results)
 
-}
-
+print(results)
 }

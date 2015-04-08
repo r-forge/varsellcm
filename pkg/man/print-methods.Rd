@@ -1,25 +1,27 @@
 \docType{methods}
 \name{print}
 \alias{print}
-\alias{print,VSLCMresults-method}
-\title{Print an object of class VSLCMresults}
+\alias{print,VSLCMresultsContinuous-method}
+\alias{print,VSLCMresultsCategorical-method}
+\title{Produce a presentation of a VSLCMresultsCategorical or VSLCMresultsContinuous class}
 \arguments{
-  \item{x}{An object of class \code{\linkS4class{VSLCMresults}}}
+  \item{object}{An object of class \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsContinuous}}}
 }
 \value{
-  NULL. 
+  NULL. Summaries to standard out.
 }
 \description{
- Print an object of class VSLCMresults
+  Produce a presentation of a VSLCMresultsCategorical or VSLCMresultsContinuous class
 }
 \examples{
-require(mclust)
 require(VarSelLCM)
-data(banknote)
-results <- VarSelCluster(banknote[,-1], 2, parallel=FALSE)
+data(stones)
+
+results <- VarSelCluster(stones, 2)
+
 print(results)
+
 }
 \seealso{
   \code{\link{print}}
 }
-
