@@ -19,16 +19,13 @@ class XEMCategorical : public XEM{
 
   // Constructeurs avec et sans les paramètres de réglages
   XEMCategorical(const DataCategorical *, const colvec &, const int &);
-  XEMCategorical(const DataCategorical *, const colvec &, const int &,  const S4 &);
+  XEMCategorical(const DataCategorical *,  const S4 *);
   void InitSpecificParamXEMCategorical(const DataCategorical * datapasse);
-  
-  // Celui-ci est à supprimer une fois la partie algo faite
-  XEMCategorical(const DataCategorical &, const colvec &, const int &);
   
   virtual void OneEM();
   virtual void ComputeTmpLogProba();
   virtual double ComputeLogLike();
   virtual void SwitchParamCurrent(int);
-  virtual S4 Output(S4 &);
+  virtual void Output(S4 *);
 };
 #endif

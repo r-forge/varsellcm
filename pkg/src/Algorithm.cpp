@@ -22,24 +22,29 @@ void Algorithm::InitCommumParamXEM(const int & g, const int & nbinit, const int 
   }
 }
 
-void Algorithm::Run(){
-  double prec = log(0);
-  m_omegaBest = omegainit.col(0);
-  for (int ini=0; ini<omegainit.n_cols; ini++){
-    m_omegaCurrent = omegainit.col(ini);
-    prec = log(0);
-    zCandInit();
-    m_miclCurrent = Integre_Complete_Like_Cand();
-    while (prec < m_miclCurrent){
-      prec = m_miclCurrent;
-      Optimize_partition();
-      Optimize_model();
+void Algorithm::Run(S4 * output_p){
+  if (vbleSelec){
+    double prec = log(0);
+    m_omegaBest = omegainit.col(0);
+    for (int ini=0; ini<omegainit.n_cols; ini++){
+      m_omegaCurrent = omegainit.col(ini);
+      prec = log(0);
+      zCandInit();
+      m_miclCurrent = Integre_Complete_Like_Cand();
+      while (prec < m_miclCurrent){
+        prec = m_miclCurrent;
+        Optimize_partition();
+        Optimize_model();
+      }
+      if (m_miclCurrent > m_miclBest){
+        m_miclBest = m_miclCurrent;
+        m_omegaBest = m_omegaCurrent;
+        m_zStarBest = m_zStarCurrent;
+      }
     }
-    if (m_miclCurrent > m_miclBest){
-      m_miclBest = m_miclCurrent;
-      m_omegaBest = m_omegaCurrent;
-      m_zStarBest = m_zStarCurrent;
-    }
+    as<S4>(output_p->slot("model")).slot("omega") = wrap(trans(m_omegaBest));
+    as<S4>(output_p->slot("partitions")).slot("zOPT") = wrap(trans(m_zStarBest));
+    as<S4>(output_p->slot("criteria")).slot("MICL") = m_miclBest;  
   }
 }
 

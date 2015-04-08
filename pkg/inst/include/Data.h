@@ -12,9 +12,8 @@ using namespace Rcpp;
 
 class Data{
   public:
-  int a;
   
-  Data(){a=1;};
+  Data(){};
   ~Data(){};
   
   virtual void affiche(){};

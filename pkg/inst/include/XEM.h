@@ -10,6 +10,7 @@ class XEM{
   Col<double> loglikeSmall, omega, rowsums, maxtmplogproba;
   Mat<double> tmplogproba;
   uvec location;
+  bool paramEstim;
   
   XEM(){};
   void InitCommumParamXEM(const colvec &, const int &);
@@ -20,7 +21,7 @@ class XEM{
   virtual void ComputeTmpLogProba() = 0;
   virtual double ComputeLogLike() = 0;
   virtual void SwitchParamCurrent(int) = 0;
-  virtual S4 Output(S4 &)=0;
+  virtual void Output(S4 *)=0;
   
   void Run();
   colvec FindZMAP();

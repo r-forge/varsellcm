@@ -31,23 +31,26 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
 
 
 void XEM::Run(){
-  // Partie Small EM
-  for (int ini=0; ini<nbSmall; ini++){
-    SwitchParamCurrent(ini);
-    OneEM();
-    loglikeSmall(ini) = ComputeLogLike();
+  if (paramEstim){
+    // Partie Small EM
+    for (int ini=0; ini<nbSmall; ini++){
+      SwitchParamCurrent(ini);
+      OneEM();
+      loglikeSmall(ini) = ComputeLogLike();
+    }
+    // On conserve les meilleurs initialisations
+    uvec indices = sort_index(loglikeSmall);
+    iterCurrent = iterKeep;
+    for (int tmp1=0; tmp1<nbKeep; tmp1++){
+      SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
+      OneEM();
+      loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
+    }
+    indices = sort_index(loglikeSmall);
+    int indicebest = indices(nbKeep-1);
+    SwitchParamCurrent(indicebest);
+    
   }
-  // On conserve les meilleurs initialisations
-  uvec indices = sort_index(loglikeSmall);
-  iterCurrent = iterKeep;
-  for (int tmp1=0; tmp1<nbKeep; tmp1++){
-    SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
-    OneEM();
-    loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
-  }
-  indices = sort_index(loglikeSmall);
-  int indicebest = indices(nbKeep-1);
-  SwitchParamCurrent(indicebest);
 }
 
 colvec XEM::FindZMAP(){

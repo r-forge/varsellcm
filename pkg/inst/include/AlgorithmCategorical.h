@@ -13,7 +13,7 @@ class AlgorithmCategorical : public Algorithm{
   AlgorithmCategorical(){};
   ~AlgorithmCategorical(){};
   
-  AlgorithmCategorical(const DataCategorical *, const int &, const int &);
+  AlgorithmCategorical(const DataCategorical *, const S4 *);
   void InitSpecificParamAlgo(const DataCategorical * datapasse);
   
   virtual double Integre_Complete_Like_Cand();

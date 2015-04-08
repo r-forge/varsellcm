@@ -17,13 +17,13 @@ class XEMContinuous : public XEM{
 
   // Constructeurs avec et sans les paramètres de réglages
   XEMContinuous(const DataContinuous *, const colvec &, const int &);
-  XEMContinuous(const DataContinuous *, const colvec &, const int &,  const S4 &);
+  XEMContinuous(const DataContinuous *,  const S4 *);
   void InitSpecificParamXEMContinuous(const DataContinuous * datapasse);
     
   virtual void OneEM();
   virtual void ComputeTmpLogProba();
   virtual double ComputeLogLike();
   virtual void SwitchParamCurrent(int);
-  virtual S4 Output(S4 &);
+  virtual void Output(S4 *);
 };
 #endif

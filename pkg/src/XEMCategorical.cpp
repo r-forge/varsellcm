@@ -1,19 +1,16 @@
 #include "XEMCategorical.h"
 
-XEMCategorical::XEMCategorical(const DataCategorical * datapasse, const colvec & omega, const int & g,  const S4 & strategy){
-  InitCommumParamXEM(omega, g, strategy);
-  InitSpecificParamXEMCategorical(datapasse);
+XEMCategorical::XEMCategorical(const DataCategorical * datapasse, const S4 * reference_p){
+  paramEstim = as<S4>(reference_p->slot("strategy")).slot("paramEstim");
+  if (paramEstim){
+    InitCommumParamXEM(as<S4>(reference_p->slot("model")).slot("omega"), as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")));
+    InitSpecificParamXEMCategorical(datapasse);
+  }
 }
 
 XEMCategorical::XEMCategorical(const DataCategorical * datapasse, const colvec & omega, const int & g){
   InitCommumParamXEM(omega, g);  
   InitSpecificParamXEMCategorical(datapasse);
-}
-// A supprimer quand la partie Algorithm sera faite
-XEMCategorical::XEMCategorical(const DataCategorical & datapasse, const colvec & omega, const int & g){
-  InitCommumParamXEM(omega, g);  
-  data_p = &datapasse;
-  InitSpecificParamXEMCategorical(data_p);
 }
 
 void XEMCategorical::InitSpecificParamXEMCategorical(const DataCategorical * datapasse){
@@ -73,7 +70,7 @@ void XEMCategorical::OneEM(){
   if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }
 
-S4 XEMCategorical::Output(S4 & param){
+void XEMCategorical::Output(S4 * reference_p){
   vector< Mat<double> >  alpha;
   alpha.resize(data_p->m_ncols);
   int loc=0;
@@ -91,7 +88,6 @@ S4 XEMCategorical::Output(S4 & param){
       loc ++;
     }
   }
-  param.slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-  param.slot("alpha") = wrap(alpha);    
-  return param;
+  as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+  as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
 }

@@ -13,7 +13,7 @@ class AlgorithmContinuous : public Algorithm{
   AlgorithmContinuous(){};
   ~AlgorithmContinuous(){};
   
-  AlgorithmContinuous(const DataContinuous *, const int &, const int &);
+  AlgorithmContinuous(const DataContinuous *, const S4 *);
   void InitSpecificParamAlgo(const DataContinuous * datapasse);
   
   

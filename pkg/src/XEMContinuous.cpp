@@ -8,9 +8,12 @@ Col<double> dlogGaussian(const Col<double> & x, const Col<double> & o, const dou
   return  tmpval;
 }
 
-XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const colvec & omega, const int & g,  const S4 & strategy){
-  InitCommumParamXEM(omega, g, strategy);
-  InitSpecificParamXEMContinuous(datapasse);
+XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const S4 * reference_p){
+  paramEstim = as<S4>(reference_p->slot("strategy")).slot("paramEstim");
+  if (paramEstim){
+    InitCommumParamXEM(as<S4>(reference_p->slot("model")).slot("omega"), as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")));
+    InitSpecificParamXEMContinuous(datapasse);
+  }
 }
 
 XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const colvec & omega, const int & g){
@@ -71,8 +74,9 @@ void XEMContinuous::OneEM(){
   if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }
 
-S4 XEMContinuous::Output(S4 & param){
-  Mat<double> mu=ones<mat>(g, data_p->m_ncols);
+void XEMContinuous::Output(S4 * reference_p){
+  if (paramEstim){
+      Mat<double> mu=ones<mat>(g, data_p->m_ncols);
   Mat<double> sd=ones<mat>(g, data_p->m_ncols);
   int loc=0;
   for (int j=0; j<data_p->m_ncols; j++){
@@ -87,8 +91,8 @@ S4 XEMContinuous::Output(S4 & param){
       loc ++;
     }
   }
-  param.slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-  param.slot("mu") = wrap(trans(mu));
-  param.slot("sd") = wrap(trans(sd));
-  return param;
+  as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+  as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
+  as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
+  }
 }
