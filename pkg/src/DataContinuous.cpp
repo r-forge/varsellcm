@@ -1,6 +1,5 @@
 #include "DataContinuous.h"
 
-
 DataContinuous::DataContinuous(const S4 & obj){
  this->m_x = as<mat>(obj.slot("data"));
  this->m_priors  = as<mat>(obj.slot("priors")); 

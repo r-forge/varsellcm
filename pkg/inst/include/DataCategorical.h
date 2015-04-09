@@ -1,9 +1,30 @@
+/*
+Cette classe contient les éléments relatifs aux données qualitatives
+
+Ces élements sont:
+m_profiles : matrice constituée des profils uniques
+m_nmodalities: vecteurs indiquant le nombre de modalités pour chaque variable
+m_w : poids des profils
+m_nprofiles : nombre de profiles
+m_ncols : nombre de variables
+m_whotakewhat : vector de vector où m_whotakewhate[j][h] liste les indices des profiles prenant
+la modalité h pour la variable j. Ne sont pas présents dans m_whotakewhate[j], les individus 
+ayant une valeur manquante pour la variable j
+
+*/
 #ifndef DataCategorical_H
 #define DataCategorical_H
 
-#include "Data.h"
+#include <iostream>
+#include <iomanip>
+#include <RcppArmadillo.h>
+#include <Rcpp.h>
 
-class DataCategorical : public Data{
+using namespace std;
+using namespace arma;
+using namespace Rcpp;
+
+class DataCategorical {
   public:
     Mat<double> m_profiles;
     rowvec m_nmodalities;

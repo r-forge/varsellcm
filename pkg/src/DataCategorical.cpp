@@ -1,6 +1,5 @@
 #include "DataCategorical.h"
 
-
 DataCategorical::DataCategorical(const S4 & obj){
  this->m_profiles = as<mat>(obj.slot("shortdata"));
  this->m_w  = (as<vec>(obj.slot("weightdata")));
@@ -12,8 +11,6 @@ DataCategorical::DataCategorical(const S4 & obj){
  this->m_whotakewhat.resize(m_ncols);
  for (int j=0; j<m_ncols; j++){
    m_whotakewhat[j].resize(m_nmodalities(j));
-   for (int h=0; h<m_nmodalities(j); h++){
-     m_whotakewhat[j][h] = find(m_profiles.col(j) == h);
-   }
+   for (int h=0; h<m_nmodalities(j); h++)  m_whotakewhat[j][h] = find(m_profiles.col(j) == h);
  }
 }
