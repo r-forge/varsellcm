@@ -13,7 +13,6 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   iterCurrent = iterSmall;
 }
 
-
 void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strategy){
   nbSmall = strategy.slot("nbSmall");
   iterSmall = strategy.slot("iterSmall");
@@ -26,7 +25,6 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
   location = find(omega == 1);
   iterCurrent = iterSmall;
 }
-
 
 void XEM::Run(){
   if (paramEstim){
@@ -70,9 +68,7 @@ void XEM::OneEM(){
   int it=0;
   while ( (it<iterSmall) && ((loglike-prec)>tolKeep) ){
     it ++;
-    // E step
     Estep();
-    // M step
     Mstep();
     prec = loglike;
     loglike = ComputeLogLike();
