@@ -1,33 +1,23 @@
-#include <iostream>
-#include <iomanip>
-#include <RcppArmadillo.h>
-#include <Rcpp.h>
-#include <math.h> 
-
-using namespace std;
-using namespace arma;
-using namespace Rcpp;
 #include "ParamContinuous.h"
-
 
 ParamContinuous::ParamContinuous(){
   this->m_mu = ones<mat>(0,0);
   this->m_sd = m_mu;
   this->m_pi = ones<vec>(0);  
 }
+
 ParamContinuous::ParamContinuous(const ParamContinuous & param){
   this->m_mu = param.m_mu;
   this->m_sd = param.m_sd;
   this->m_pi = param.m_pi;  
 }
 
-
 ParamContinuous::ParamContinuous(const DataContinuous * data,  const colvec & omega, const int & g){
   this->m_mu = ones<mat>(g, sum(omega));
   this->m_sd = m_mu;
   this->m_pi = ones<vec>(g)/g;  
   int k=0, li=0;
-    uvec location = find(omega == 1);
+  uvec location = find(omega == 1);
   for (int j=0; j<m_mu.n_cols; j++){
     ivec who = randi<ivec>(data->m_nrows, distr_param(0, data->m_nrows -1));
     k=0;
