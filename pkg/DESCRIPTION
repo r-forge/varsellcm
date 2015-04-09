@@ -2,13 +2,13 @@ Package: VarSelLCM
 Type: Package
 Title: Variable Selection for Model-Based Clustering of continuous,
         categorical or mixed data set with missing values.
-Version: 1.9
+Version: 1.9.1
 Date: 2015-04-08
 Author: Matthieu Marbac and Mohammed Sedki
 Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 Description: Variable Selection for model-based clustering by using a mixture model assuming conditional independence between variables and whose the one dimensional distributions of the components belong to the exponential family. Missing data are dealing by assuming that they are missing at random. The algorithm carries out the model selection by optimizing the MICL criterion which has a closed form for such a distribution.
 License: GPL (>= 2)
-Imports: methods, Rcpp (>= 0.11.1), parallel, ade4, mgcv
+Imports: methods, Rcpp (>= 0.11.1), parallel, mgcv
 LinkingTo: Rcpp, RcppArmadillo
 ByteCompile: true
 LazyLoad: yes
