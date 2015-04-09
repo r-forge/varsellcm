@@ -2,31 +2,6 @@
 ## Fonctions principales du package, la seule accessible par l'utilisateur est VarSelCluster
 ########################################################################################################################
 
-# 
-# ########################################################################################################################
-# ## La fonction VarSelModelSelection permet d'effectuer le choix de model et l'estimation des paramètres en appeleant le
-# ## code C++. Il retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la nature des données.
-# ########################################################################################################################
-# setGeneric ( name= "VarSelModelSelection",  def = function(data, g, strategy){ standardGeneric("VarSelModelSelection")})
-# ## Pour les variables continues
-# setMethod( f = "VarSelModelSelection", 
-#            signature(data="VSLCMdataContinuous", g="numeric", strategy="VSLCMstrategy"), 
-#            definition = function(data, g, strategy){
-#              reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-#              reference <- OptimizeMICL(reference, "Continuous")
-#              return(DesignOutput(reference))             
-#            }
-# )
-# ## Pour les variables catégorielles
-# setMethod( f = "VarSelModelSelection", 
-#            signature(data="VSLCMdataCategorical", g="numeric", strategy="VSLCMstrategy"), 
-#            definition = function(data, g, strategy){
-#              reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-#              reference <- OptimizeMICL(reference, "Categorical")
-#              return(DesignOutput(reference))             
-#            }
-# )
-
 
 ########################################################################################################################
 ## La fonction VarSelModelMLE permet d'effectuer l'estimation des paramètres en considèrant que les variables données
@@ -92,12 +67,25 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, p
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1))
     if (strategy@vbleSelec == TRUE){
       reference@strategy <- JustModelStrategy(strategy, nb.cpus)
-      reference <- mclapply(X = as.list(rep(0, nb.cpus)),
-                            FUN = VarSelModelMLE,
-                            obj=reference,
-                            mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      
+      if(Sys.info()["sysname"] == "Windows")
+      {
+        cl <- makeCluster(nb.cpus)
+        common.objects <- c("reference","VarSelModelMLE", "OptimizeMICL")
+        clusterEvalQ(cl, {require(VarSelLCM)})
+        clusterExport(cl=cl, varlist = common.objects, envir = environment())
+        reference <- parLapply(cl = cl, 
+                               X  = as.list(rep(0, nb.cpus)), 
+                               fun = function(g){VarSelModelMLE(reference,g)})
+        stopCluster(cl)
+        
+      }
+      else
+        reference <- mclapply(X = as.list(rep(0, nb.cpus)),
+                              FUN = VarSelModelMLE,
+                              obj=reference,
+                              mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
       # On conserve le meilleur modèle au sens de MICL
-
       tmpMICL <- rep(NA, length(reference))
       for (it in 1:length(reference)) tmpMICL[it] <- reference[[it]]@criteria@MICL
       reference <- reference[[which.max(tmpMICL)]]
@@ -109,7 +97,21 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, p
       reference@strategy@vbleSelec <- FALSE
       reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)
       reference@strategy@nbKeep <- ceiling(reference@strategy@nbKeep / nb.cpus)
-      reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      
+      if(Sys.info()["sysname"] == "Windows")
+      {
+        cl <- makeCluster(nb.cpus)
+        common.objects <- c("reference","VarSelModelMLE", "OptimizeMICL")
+        clusterEvalQ(cl, {require(VarSelLCM)})
+        clusterExport(cl=cl, varlist = common.objects, envir = environment())
+        reference <- parLapply(cl = cl, 
+                               X  = as.list(rep(0, nb.cpus)), 
+                               fun = function(g){VarSelModelMLE(reference,g)})
+        stopCluster(cl)
+        
+      }
+      else
+        reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
       # On conserve les paramètres maximisant la vraisemblance
       tmploglike <- rep(NA, length(reference))
       for (it in 1:length(tmploglike)) tmploglike[it] <- reference[[it]]@criteria@loglikelihood
