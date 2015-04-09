@@ -44,9 +44,9 @@ void XEM::Run(){
       OneEM();
       loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
     }
-    indices = sort_index(loglikeSmall);
-    int indicebest = indices(nbKeep-1);
-    SwitchParamCurrent(indicebest);
+    uword  index;
+    double indicebest = (loglikeSmall).max(index);
+    SwitchParamCurrent(index);
     loglikeoutput = ComputeLogLike();
   }
 }
