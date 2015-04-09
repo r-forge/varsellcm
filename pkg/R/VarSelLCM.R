@@ -2,30 +2,30 @@
 ## Fonctions principales du package, la seule accessible par l'utilisateur est VarSelCluster
 ########################################################################################################################
 
-
-########################################################################################################################
-## La fonction VarSelModelSelection permet d'effectuer le choix de model et l'estimation des paramètres en appeleant le
-## code C++. Il retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la nature des données.
-########################################################################################################################
-setGeneric ( name= "VarSelModelSelection",  def = function(data, g, strategy){ standardGeneric("VarSelModelSelection")})
-## Pour les variables continues
-setMethod( f = "VarSelModelSelection", 
-           signature(data="VSLCMdataContinuous", g="numeric", strategy="VSLCMstrategy"), 
-           definition = function(data, g, strategy){
-             reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-             reference <- OptimizeMICL(reference, "Continuous")
-             return(DesignOutput(reference))             
-           }
-)
-## Pour les variables catégorielles
-setMethod( f = "VarSelModelSelection", 
-           signature(data="VSLCMdataCategorical", g="numeric", strategy="VSLCMstrategy"), 
-           definition = function(data, g, strategy){
-             reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-             reference <- OptimizeMICL(reference, "Categorical")
-             return(DesignOutput(reference))             
-           }
-)
+# 
+# ########################################################################################################################
+# ## La fonction VarSelModelSelection permet d'effectuer le choix de model et l'estimation des paramètres en appeleant le
+# ## code C++. Il retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la nature des données.
+# ########################################################################################################################
+# setGeneric ( name= "VarSelModelSelection",  def = function(data, g, strategy){ standardGeneric("VarSelModelSelection")})
+# ## Pour les variables continues
+# setMethod( f = "VarSelModelSelection", 
+#            signature(data="VSLCMdataContinuous", g="numeric", strategy="VSLCMstrategy"), 
+#            definition = function(data, g, strategy){
+#              reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+#              reference <- OptimizeMICL(reference, "Continuous")
+#              return(DesignOutput(reference))             
+#            }
+# )
+# ## Pour les variables catégorielles
+# setMethod( f = "VarSelModelSelection", 
+#            signature(data="VSLCMdataCategorical", g="numeric", strategy="VSLCMstrategy"), 
+#            definition = function(data, g, strategy){
+#              reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+#              reference <- OptimizeMICL(reference, "Categorical")
+#              return(DesignOutput(reference))             
+#            }
+# )
 
 
 ########################################################################################################################
@@ -40,16 +40,15 @@ setMethod( f = "VarSelModelMLE",
            signature(obj="VSLCMresultsContinuous",it="numeric"), 
            definition = function(obj,it){
              reference <- OptimizeMICL(obj, "Continuous")
-             return(DesignOutput(reference))             
+             return(reference)         
            }
 )
 ## Pour les variables catégorielles
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsCategorical",it="numeric"), 
-           definition = function(obj,it){
+           definition = function(obj, it){
              reference <- OptimizeMICL(obj, "Categorical")
-             print(str(reference,2))
-             return(DesignOutput(reference))             
+             return(reference)           
            }
 )
 
@@ -78,40 +77,45 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, p
   strategy <- VSLCMstrategy(initModel, parallel, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)  
   # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
   data <- VSLCMdata(x)
+  
+  if (class(data) == "VSLCMdataContinuous")
+    reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+  else if (class(data) == "VSLCMdataCategorical")
+    reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+  else
+    stop()      
+  
   # Estimation du modèle et/ou des paramètres
   if (strategy@parallel == FALSE)
-    reference <- VarSelModelSelection(data, g, strategy)
+    reference <- VarSelModelMLE(reference, 0)
   else{
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1))
     if (strategy@vbleSelec == TRUE){
-      reference <- mclapply(X = as.list(rep(g, max(1,strategy@initModel))), FUN = VarSelModelSelection, data=data, strategy=JustModelStrategy(strategy), mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      reference@strategy <- JustModelStrategy(strategy, nb.cpus)
+      reference <- mclapply(X = as.list(rep(0, nb.cpus)),
+                            FUN = VarSelModelMLE,
+                            obj=reference,
+                            mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
       # On conserve le meilleur modèle au sens de MICL
+
       tmpMICL <- rep(NA, length(reference))
-      for (it in 1:length(reference))
-        tmpMICL[it] <- reference[[it]]@criteria@MICL
+      for (it in 1:length(reference)) tmpMICL[it] <- reference[[it]]@criteria@MICL
       reference <- reference[[which.max(tmpMICL)]]
       # On parallelise aussi pour les EM donc on réparti les initialisations sur les différents coeurs
-    }else{
-      if (class(data) == "VSLCMdataContinuous")
-        reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-      else if (class(data) == "VSLCMdataCategorical")
-        reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
-      else
-        stop()      
     }
     reference@strategy <- strategy 
     nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1))
     if (strategy@paramEstim){
+      reference@strategy@vbleSelec <- FALSE
       reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)
       reference@strategy@nbKeep <- ceiling(reference@strategy@nbKeep / nb.cpus)
-      reference <- mclapply(X = as.list(rep(g, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+      reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
       # On conserve les paramètres maximisant la vraisemblance
       tmploglike <- rep(NA, length(reference))
-      for (it in 1:length(tmploglike))
-        tmploglike[it] <- reference[[it]]@criteria@likelihood
+      for (it in 1:length(tmploglike)) tmploglike[it] <- reference[[it]]@criteria@loglikelihood
       reference <- reference[[which.max(tmploglike)]]
       reference@strategy <- strategy
     }
   }
-  return(reference)
+  return(DesignOutput(reference))
 }

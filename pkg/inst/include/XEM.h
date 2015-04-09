@@ -9,6 +9,7 @@ iterKeep: nombre maximum d'itération pour les chaines conservées
 iterCurrent : nombre maximum d'itération pour l'algorithme en cours (Small EM ou EM)
 g : nombre de composantes
 tolKeep: arret si la différence entre deux log-vraisemblances successives est inférieure que tolKeep
+loglikeoutput: valeur de la lo-vraisemblance associée au MLE
 loglikeSmall: og-vraisemblance pour chaque chaine
 omega: role des variables (1: discriminant, 0: non discriminant)
 rowsums: pour calculer les vraisemblances
@@ -26,7 +27,7 @@ paramEstim: booléen indiquant si on fait l'estimation
 class XEM{
   public:
   int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g;
-  double tolKeep;
+  double tolKeep, loglikeoutput;
   Col<double> loglikeSmall, omega, rowsums, maxtmplogproba;
   Mat<double> tmplogproba;
   uvec location;

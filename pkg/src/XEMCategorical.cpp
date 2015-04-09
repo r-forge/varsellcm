@@ -60,23 +60,32 @@ void XEMCategorical::Mstep(){
 }
 
 void XEMCategorical::Output(S4 * reference_p){
-  vector< Mat<double> >  alpha;
-  alpha.resize(data_p->m_ncols);
-  int loc=0;
-  for (int j=0; j<data_p->m_ncols; j++){
-    alpha[j] = zeros<mat>(g, data_p->m_nmodalities(j));
-    if (omega(j) == 0){
-      vec tmp = zeros<vec>(data_p->m_nmodalities(j));
-      for (int h=0; h<data_p->m_nmodalities(j); h++)
-      tmp(h) = sum(data_p->m_w(data_p->m_whotakewhat[j][h]));
-      tmp = tmp/sum(tmp);
-      for (int k=0; k<g; k++)
-      alpha[j].row(k)=trans(tmp);      
-    }else{
-      alpha[j]=paramCurrent_p->m_alpha[loc];
-      loc ++;
+  if (paramEstim){
+    vector< Mat<double> >  alpha;
+    alpha.resize(data_p->m_ncols);
+    int loc=0;
+    for (int j=0; j<data_p->m_ncols; j++){
+      alpha[j] = zeros<mat>(g, data_p->m_nmodalities(j));
+      if (omega(j) == 0){
+        vec tmp = zeros<vec>(data_p->m_nmodalities(j));
+        for (int h=0; h<data_p->m_nmodalities(j); h++)
+        tmp(h) = sum(data_p->m_w(data_p->m_whotakewhat[j][h]));
+        tmp = tmp/sum(tmp);
+        for (int k=0; k<g; k++) alpha[j].row(k)=trans(tmp);
+        for (int h=0; h<data_p->m_nmodalities(j); h++){
+          loglikeoutput += sum(data_p->m_w(data_p->m_whotakewhat[j][h])) * log(alpha[j](0,h));
+        }
+        
+      }else{
+        alpha[j]=paramCurrent_p->m_alpha[loc];
+        loc ++;
+      }
     }
+    as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+    as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
+    as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
+    Estep();
+    as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
+    as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
   }
-  as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-  as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
 }

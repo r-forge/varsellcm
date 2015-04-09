@@ -16,7 +16,7 @@ setMethod(
       print(colnames(object@data@data)[which(object@model@omega==1)])
     }   
     cat("\n\nInformation Criteria:\n")
-    cat("   loglike:", object@criteria@likelihood,"\n")    
+    cat("   loglike:", object@criteria@loglikelihood,"\n")    
     cat("   BIC:    ", object@criteria@BIC,"\n")    
     cat("   ICL:    ", object@criteria@ICL,"\n")    
     cat("   MICL:   ", object@criteria@MICL,"\n")       
@@ -39,7 +39,7 @@ setMethod(
       print(colnames(object@data@shortdata)[which(object@model@omega==1)])
     }
     cat("\n\nInformation Criteria:\n")
-    cat("   loglike:", object@criteria@likelihood,"\n")    
+    cat("   loglike:", object@criteria@loglikelihood,"\n")    
     cat("   BIC:    ", object@criteria@BIC,"\n")    
     cat("   ICL:    ", object@criteria@ICL,"\n")    
     cat("   MICL:   ", object@criteria@MICL,"\n")       

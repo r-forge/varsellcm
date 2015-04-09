@@ -11,6 +11,7 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   g=gv;
   location = find(omega == 1);
   iterCurrent = iterSmall;
+  loglikeoutput=log(0);
 }
 
 void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strategy){
@@ -24,6 +25,7 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
   g=gv;
   location = find(omega == 1);
   iterCurrent = iterSmall;
+  loglikeoutput=log(0);
 }
 
 void XEM::Run(){
@@ -45,13 +47,12 @@ void XEM::Run(){
     indices = sort_index(loglikeSmall);
     int indicebest = indices(nbKeep-1);
     SwitchParamCurrent(indicebest);
-    
+    loglikeoutput = ComputeLogLike();
   }
 }
 
 colvec XEM::FindZMAP(){
   Col<double> zMAP=ones<vec>(tmplogproba.n_rows);
-  
   uword  index;
   double max_val=0;
   for (int i=0; i<tmplogproba.n_rows; i++){

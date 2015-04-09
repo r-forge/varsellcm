@@ -4,11 +4,11 @@
 ########################################################################################################################
 
 ########################################################################################################################
-## Classe S4 VSLCMcriteria contenant la logvraisemblance (likelihood), la valeur des critères BIC, ICL et MICL
+## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des critères BIC, ICL et MICL
 ########################################################################################################################
 setClass(Class = "VSLCMcriteria", 
-         representation = representation(likelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric"), 
-         prototype = prototype(likelihood=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric() )
+         representation = representation(loglikelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric"), 
+         prototype = prototype(loglikelihood=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric() )
 )
 
 ########################################################################################################################
@@ -43,7 +43,7 @@ VSLCMstrategy <- function(initModel=50, parallel=FALSE, vbleSelec=TRUE, paramEst
 JustModelStrategy <- function(strategy, nb.cpus){
   output <- strategy
   output@paramEstim <- FALSE
-  output@initModel <- 1
+  output@initModel <- ceiling(strategy@initModel / nb.cpus)
   return(output)
 }
 
