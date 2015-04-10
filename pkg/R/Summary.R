@@ -9,7 +9,7 @@ setMethod(
   definition = function(object){
     cat("Data set:\n   Number of individuals:", object@data@n,"\n")
     cat("   Number of continuous variables:", object@data@d, "\n")
-    cat("   Percentage of missing values:", round(100*(1-mean(object@data@notNA)),2),"\n\n")
+    cat("   Percentile of missing values:", round(100*(1-mean(object@data@notNA)),2),"\n\n")
     cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering:\n  ")
@@ -32,7 +32,7 @@ setMethod(
     cat("   Number of profiles:", nrow(object@data@shortdata),"\n")
     cat("   Number of categorical variables:", object@data@d, "\n")
     miss <- sum(sweep(is.na(object@data@shortdata),1,object@data@weightdata,"*")) / (object@data@n * object@data@d)
-    cat("   Percentage of missing values:", miss,"\n\n")
+    cat("   Percentile of missing values:", miss,"\n\n")
     cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering:\n  ")
