@@ -17,20 +17,22 @@ ParamContinuous::ParamContinuous(const DataContinuous * data,  const colvec & om
   this->m_sd = m_mu;
   this->m_pi = ones<vec>(g)/g;  
   int k=0, li=0;
-  uvec location = find(omega == 1);
-  for (int j=0; j<m_mu.n_cols; j++){
-    ivec who = randi<ivec>(data->m_nrows, distr_param(0, data->m_nrows -1));
-    k=0;
-    li=0;
-    while (k<g){
-      if (data->m_notNA(who(li),location(j)) == 1){
-        m_mu(k,j) = data->m_x(who(li),location(j));
-        k++;
+  if (sum(omega)>0){
+    uvec location = find(omega == 1);
+    for (int j=0; j<m_mu.n_cols; j++){
+      ivec who = randi<ivec>(data->m_nrows, distr_param(0, data->m_nrows -1));
+      k=0;
+      li=0;
+      while (k<g){
+        if (data->m_notNA(who(li),location(j)) == 1){
+          m_mu(k,j) = data->m_x(who(li),location(j));
+          k++;
+        }
+        li++;
       }
-      li++;
+      vec tmp = data->m_x.col(location(j));
+      vec keep=tmp(find(data->m_notNA.col(j) == 1));
+      m_sd.col(j)=m_sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
     }
-    vec tmp = data->m_x.col(location(j));
-    vec keep=tmp(find(data->m_notNA.col(j) == 1));
-    m_sd.col(j)=m_sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
   }
 }

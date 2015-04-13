@@ -1,10 +1,11 @@
 #include "XEMContinuous.h"
 
+
 Col<double> dlogGaussian(const Col<double> & x, const Col<double> & o, const double  mu, const double  sd){
   Col<double>tmpval= - 0.5*pow((x - mu),2)/pow(sd,2) - log(sd * sqrt( 2*M_PI));
   if (sum(o)<x.n_rows)  tmpval(find( o == 0)) = zeros<vec>(x.n_rows-sum(o));
   return  tmpval;
-}
+};
 
 XEMContinuous::XEMContinuous(const DataContinuous * datapasse, const S4 * reference_p){
   paramEstim = as<S4>(reference_p->slot("strategy")).slot("paramEstim");
@@ -38,14 +39,6 @@ void XEMContinuous::ComputeTmpLogProba(){
   }
 }
 
-double XEMContinuous::ComputeLogLike(){
-  ComputeTmpLogProba();
-  maxtmplogproba = max(tmplogproba, 1);
-  for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
-  tmplogproba = exp(tmplogproba);
-  rowsums = sum(tmplogproba,1);
-  return sum(maxtmplogproba) + sum(log(rowsums));
-}
 
 
 void XEMContinuous::Mstep(){

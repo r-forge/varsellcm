@@ -13,9 +13,11 @@ ParamCategorical::ParamCategorical(const ParamCategorical & param){
 ParamCategorical::ParamCategorical(const DataCategorical * data,  const colvec & omega, const int & g){
   this->m_alpha.resize(sum(omega));
   this->m_pi = ones<vec>(g)/g;  
-  uvec location = find(omega == 1);
-  for (int j=0; j<sum(omega); j++){
-    m_alpha[j] = randu(g, data->m_nmodalities(location(j)));
-    for (int k=0; k<g; k++) m_alpha[j].row(k) = m_alpha[j].row(k) / sum(m_alpha[j].row(k));
+  if (sum(omega)>0){
+    uvec location = find(omega == 1);
+    for (int j=0; j<sum(omega); j++){
+      m_alpha[j] = randu(g, data->m_nmodalities(location(j)));
+      for (int k=0; k<g; k++) m_alpha[j].row(k) = m_alpha[j].row(k) / sum(m_alpha[j].row(k));
+    }
   }
 }

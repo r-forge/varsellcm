@@ -86,7 +86,7 @@ setClass(
 ## La fonction VSLCMdata permet de construire un objet de class S4 VSLCMdataContinuous ou VSLCMdataCategorical en fonction
 ## de la nature des variables
 ########################################################################################################################
-VSLCMdata <- function(x){
+VSLCMdata <- function(x, redquali=TRUE){
   # Ajout d'un nom de variable si celui-ci est manquant
   if (is.null(colnames(x)))
     colnames(x) <- paste("X",1:ncol(x), sep="")
@@ -111,8 +111,12 @@ VSLCMdata <- function(x){
     shortdata <- mat
     ## Pour travailler avec Armadillo on rempli artificellement les NA par 0
     shortdata[is.na(shortdata)] <- 0
-    shortdata <- uniquecombs(shortdata)
-    weightdata <- as.numeric(table(attr(shortdata,"index")))
+    if (redquali==TRUE){
+      shortdata <- uniquecombs(shortdata)
+      weightdata <- as.numeric(table(attr(shortdata,"index")))
+    }else{
+      weightdata <- rep(1, n)
+    }
     colnames(shortdata) <- colnames(x)
     modalitynames <- list()
     for (j in 1:d){
@@ -148,7 +152,7 @@ VSLCMdata <- function(x){
     if (length(idxcont) != 0)
       output$continuous <- VSLCMdata(x[, idxcont])
     if (length(idxcat) != 0)
-      output$categorical <- VSLCMdata(x[, idxcat])
+      output$categorical <- VSLCMdata(x[, idxcat], redquali=FALSE)
     output <- new("VSLCMdataMixed", n=n, d=d, withContinuous=(length(idxcont) != 0), withCategorical=(length(idxcat) != 0),
                   dataContinuous=output$continuous, dataCategorical=output$categorical)
   }

@@ -11,11 +11,11 @@ m_pi : proportions
 #define ParamContinuous_H
 
 #include "DataContinuous.h"
+#include "Param.h"
 
-class ParamContinuous{
+class ParamContinuous : public Param{
   public:
   Mat<double> m_mu, m_sd;
-  Col<double> m_pi;
     
   ParamContinuous();
   ParamContinuous(const ParamContinuous & param);

@@ -49,14 +49,14 @@ class XEM{
   void OneEM();
   // Renvoie la partition MAP
   colvec FindZMAP();
+  // calcul et renvoie de la logvraisemblance (a modifier pour les données avec des poids comme les qualitatives)
+  virtual double ComputeLogLike();
   
   // Les trois fonction suivantes sont à redéfinir pour chaque classe héritiaire d'XEM
   // Etape M
   virtual void Mstep() = 0;
   // calcul des log-proba conditionnelles
   virtual void ComputeTmpLogProba() = 0;
-  // calcul et renvoie de la logvraisemblance
-  virtual double ComputeLogLike() = 0;
   // change le pointeur des paramètres acutels (voir définietion spécifique des classes)
   virtual void SwitchParamCurrent(int) = 0;
   // Acutalise l'object S4 retourné sous R

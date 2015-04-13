@@ -9,30 +9,33 @@ data_p : pointeur vers les données
 m_weightTMP : ulilisé pour le calcul des probabilités conditionelles
 
 */
-#ifndef XEMContinuous_H
-#define XEMContinuous_H
-#include "DataContinuous.h"
-#include "ParamContinuous.h"
+#ifndef XEMMixed_H
+#define XEMMixed_H
+#include "DataMixed.h"
+#include "ParamMixed.h"
 #include "XEM.h"
+#include "XEMContinuous.h"
 
 
-class XEMContinuous : public XEM{
+class XEMMixed : public XEM{
   public:
-  vector<ParamContinuous> paramCand;
-  ParamContinuous * paramCurrent_p;
-  const DataContinuous * data_p;
+    vector<ParamMixed> paramCand;
+  ParamMixed * paramCurrent_p;
+  const DataMixed * data_p;
   Col<double> m_weightTMP;
+  uvec locationContinuous, locationCategorical;
+  Col<double> omegaContinuous, omegaCategorical;
   
   // Constructeurs et destructeurs par défaut (non utilisé)
-  XEMContinuous(){};
-  ~XEMContinuous(){};
-
+  XEMMixed(){};
+  ~XEMMixed(){};
+  
   // Constructeurs avec et sans les paramètres de réglages
-  XEMContinuous(const DataContinuous *, const colvec &, const int &);
-  XEMContinuous(const DataContinuous *,  const S4 *);
+  XEMMixed(const DataMixed *, const colvec &, const int &);
+  XEMMixed(const DataMixed *,  const S4 *);
   // Initialisation des paramètres spécifiques
-  void InitSpecificParamXEMContinuous(const DataContinuous * datapasse);
-    
+  void InitSpecificParamXEMMixed(const DataMixed * datapasse);
+  
   // Les trois fonction suivantes sont à redéfinir pour chaque classe héritiaire d'XEM
   // Etape M
   virtual void Mstep();
@@ -41,6 +44,6 @@ class XEMContinuous : public XEM{
   // change le pointeur des paramètres acutels (voir définietion spécifique des classes)
   virtual void SwitchParamCurrent(int);
   // Acutalise l'object S4 retourné sous R
-  virtual void Output(S4 *);
+  virtual void Output(S4 *){};
 };
 #endif

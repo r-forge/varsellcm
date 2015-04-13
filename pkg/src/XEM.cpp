@@ -62,6 +62,16 @@ colvec XEM::FindZMAP(){
   return zMAP;
 }
 
+double XEM::ComputeLogLike(){
+  ComputeTmpLogProba();
+  maxtmplogproba = max(tmplogproba, 1);
+  for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
+  tmplogproba = exp(tmplogproba);
+  rowsums = sum(tmplogproba,1);
+  return sum(maxtmplogproba) + sum(log(rowsums));
+}
+
+
 void XEM::Estep(){for (int k=0; k<g; k++) tmplogproba.col(k) = tmplogproba.col(k)/rowsums;}
 
 void XEM::OneEM(){

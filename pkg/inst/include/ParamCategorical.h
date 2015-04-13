@@ -9,12 +9,12 @@ m_pi : proportions
 #ifndef ParamCategorical_H
 #define ParamCategorical_H
 
+#include "Param.h"
 #include "DataCategorical.h"
 
-class ParamCategorical{
+class ParamCategorical : public Param{
   public:
   vector< Mat<double> > m_alpha;
-  Col<double> m_pi;
   
   ParamCategorical();
   ParamCategorical(const ParamCategorical & param);
