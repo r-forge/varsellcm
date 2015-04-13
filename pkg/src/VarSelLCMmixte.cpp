@@ -24,13 +24,10 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     xem_p->Run(); 
     xem_p->Output(reference_p);
   }else if (namestr == "Mixed"){
-    cout << "cas mixed deb" << endl;
     DataMixed * data_p = new DataMixed(as<S4>(reference.slot("data")));
     XEMMixed *xem_p  = new XEMMixed(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);
-    cout << xem_p->paramCurrent_p->m_pi << endl;
-    cout << "cas mixed fin" << endl;
   }
   
   return reference;
