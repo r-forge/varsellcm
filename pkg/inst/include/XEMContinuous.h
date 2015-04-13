@@ -17,8 +17,6 @@ m_weightTMP : ulilisé pour le calcul des probabilités conditionelles
 
 
 class XEMContinuous : public XEM{
-
-    
   public:
   vector<ParamContinuous> paramCand;
   ParamContinuous * paramCurrent_p;

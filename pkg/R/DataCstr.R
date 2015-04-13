@@ -58,6 +58,25 @@ setClass(
   )
 )
 
+
+########################################################################################################################
+## La classe S4 VSLCMdataMixed est relatives à des données mixtes. Elle possède une liste d'élèments
+## de classe S4 VSLCMdataContinuous ou VSLCMdataCategorical
+########################################################################################################################
+setClass(
+  Class = "VSLCMdataMixed", 
+  representation = representation(
+    n="numeric",
+    d="numeric",
+    data="list"
+  ), 
+  prototype = prototype(
+    n=numeric(),
+    d=numeric(),
+    data=list()
+  )
+)
+
 ########################################################################################################################
 ## La fonction VSLCMdata permet de construire un objet de class S4 VSLCMdataContinuous ou VSLCMdataCategorical en fonction
 ## de la nature des variables
@@ -119,8 +138,15 @@ VSLCMdata <- function(x){
     colnames(mat) <-  colnames(x)
     colnames(notNA) <- colnames(x)
     output <-  new("VSLCMdataContinuous", n=n, d=d, data=mat, notNA=notNA, priors=priors)    
-  }else
-    stop("Data set is not correct!")
+  }else{
+    output <- list()
+    if (length(idxcont) != 0)
+      output$continuous <- VSLCMdata(x[, idxcont])
+    if (length(idxcat) != 0)
+      output$categorical <- VSLCMdata(x[, idxcat])
+    output <- new("VSLCMdataMixed", n=n, d=d, data=output)
+  }
+ #   stop("Data set is not correct!")
   
   return(output)
 }

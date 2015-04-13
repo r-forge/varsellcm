@@ -74,6 +74,16 @@ setClass(
   prototype = prototype(pi=numeric(), alpha=list())
 )
 
+
+########################################################################################################################
+## Classe S4 VSLCMparamMixed contenant les paramètres continus et categoriels
+########################################################################################################################
+setClass(
+  Class = "VSLCMparamMixed", 
+  representation = representation(param="list"), 
+  prototype = prototype(param=list())
+)
+
 ########################################################################################################################
 ## Classe S4 VSLCMresultsContinuous
 ########################################################################################################################
@@ -94,4 +104,16 @@ setClass(
     model="VSLCMmodel", strategy="VSLCMstrategy", param="VSLCMparamCategorical"), 
   prototype = prototype(data=new("VSLCMdataCategorical"), criteria=new("VSLCMcriteria"), partitions=new("VSLCMpartitions"),
     model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamCategorical"))
+)
+
+
+########################################################################################################################
+## Classe S4 VSLCMresultsMixed
+########################################################################################################################
+setClass(
+  Class = "VSLCMresultsMixed", 
+  representation = representation(data="VSLCMdataMixed", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
+                                  model="VSLCMmodel", strategy="VSLCMstrategy", param="VSLCMparamMixed"), 
+  prototype = prototype(data=new("VSLCMdataMixed"), criteria=new("VSLCMcriteria"), partitions=new("VSLCMpartitions"),
+                        model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamMixed"))
 )

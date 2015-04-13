@@ -38,7 +38,7 @@ setMethod( f = "VarSelModelMLE",
 ## initModel: nomber d'initialisations de l'algorithme d'optimisation de MICL
 ## vbleSelec: logical indiquant si la sélection de variables est effectuée
 ## paramEstim: logical indiquant si l'estimation des paramètres est effectuée
-## parallel: logical indiquant si le code est parallèlisé
+## nbcores: nombre de coeurs de calcul utilisés
 ## nbSmall: nombre d'initialisations du small EM
 ## iterSmall: nombre d'itérations des small EM
 ## nbKeep: nombre de chaines conservées après le small EM
@@ -57,6 +57,8 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
     reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
   else if (class(data) == "VSLCMdataCategorical")
     reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
+  else if (class(data) == "VSLCMdataMixed")
+    reference <- new("VSLCMresultsMixed", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=rep(1, data@d)), strategy=strategy)
   else
     stop()      
   
