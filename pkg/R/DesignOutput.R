@@ -83,7 +83,7 @@ setMethod( f = "DesignOutput",
            definition = function(reference){
              if (reference@strategy@paramEstim == TRUE){
                reference@model@omega <-  as.numeric(reference@model@omega)
-               namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@data))
+               namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@shortdata))
                names(reference@model@omega) <- namestmp
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
