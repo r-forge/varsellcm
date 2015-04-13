@@ -22,6 +22,8 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     XEMCategorical *xem_p  = new XEMCategorical(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);
+  }else if (namestr == "Mixed"){
+    cout << "cas mixed" << endl;
   }
   
   return reference;

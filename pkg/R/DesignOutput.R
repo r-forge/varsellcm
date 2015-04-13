@@ -76,3 +76,11 @@ setMethod( f = "DesignOutput",
              return(reference)
            }
 )
+
+## Cas des variables mixed
+setMethod( f = "DesignOutput", 
+           signature(reference="VSLCMresultsMixed"), 
+           definition = function(reference){
+                          return(reference)
+           }
+)

@@ -26,6 +26,14 @@ setMethod( f = "VarSelModelMLE",
              return(reference)           
            }
 )
+## Pour les variables mixed
+setMethod( f = "VarSelModelMLE", 
+           signature(obj="VSLCMresultsMixed",it="numeric"), 
+           definition = function(obj, it){
+             reference <- OptimizeMICL(obj, "Mixed")
+             return(reference)           
+           }
+)
 
 
 ########################################################################################################################
