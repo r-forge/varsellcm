@@ -32,10 +32,10 @@ setClass(
 ) 
 
 ## Constructeur de la classe S4 VSLCMstrategy
-VSLCMstrategy <- function(initModel=50, parallel=FALSE, vbleSelec=TRUE, paramEstim=TRUE, nbSmall=100, iterSmall=20, nbKeep=10, iterKeep=100, tolKeep=0.001){
+VSLCMstrategy <- function(initModel=50, nbcores=1, vbleSelec=TRUE, paramEstim=TRUE, nbSmall=100, iterSmall=20, nbKeep=10, iterKeep=100, tolKeep=0.001){
   if( nbKeep > nbSmall)
     nbKeep <- nbSmall
-  new("VSLCMstrategy",initModel=initModel, parallel=parallel, vbleSelec=vbleSelec, paramEstim=paramEstim, nbSmall=nbSmall, iterSmall=iterSmall, nbKeep=nbKeep,
+  new("VSLCMstrategy",initModel=initModel, parallel=(nbcores>1), vbleSelec=vbleSelec, paramEstim=paramEstim, nbSmall=nbSmall, iterSmall=iterSmall, nbKeep=nbKeep,
       iterKeep=iterKeep, tolKeep=tolKeep)
 }
 

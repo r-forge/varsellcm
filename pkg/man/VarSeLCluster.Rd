@@ -12,7 +12,8 @@ VarSelCluster
    The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
-VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, parallel=FALSE, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
+VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1,
+nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
@@ -35,9 +36,9 @@ VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, parallel=FALS
     Logical indicating if the maximum likelihood (ML) inference is performed for the best model (according to the MICL criterion). 
     The default is TRUE. 
   }
-  \item{parallel}{
-    Logical indicating if the code is parallelized or not.
-    The default is FALSE.
+  \item{nbcores}{
+    Number of cores.
+    The default is 1.
   }
   \item{nbSmall}{
     Numeric indicating the number of SmallEM algorithms performed for the ML inference. 

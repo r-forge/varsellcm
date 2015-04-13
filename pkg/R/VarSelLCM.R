@@ -45,11 +45,11 @@ setMethod( f = "VarSelModelMLE",
 ## iterKeep: nombre d'itérations maximum des EM
 ## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
 ########################################################################################################################
-VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, parallel=FALSE, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
+VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
   # Verifie les paramètres d'entrées
-  CheckInputs(x, g, initModel, vbleSelec, paramEstim, parallel, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
+  CheckInputs(x, g, initModel, vbleSelec, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
-  strategy <- VSLCMstrategy(initModel, parallel, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)  
+  strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)  
   # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
   data <- VSLCMdata(x)
   
@@ -64,7 +64,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, p
   if (strategy@parallel == FALSE)
     reference <- VarSelModelMLE(reference, 0)
   else{
-    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1))
+    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1), nbcores)
     if (strategy@vbleSelec == TRUE){
       reference@strategy <- JustModelStrategy(strategy, nb.cpus)
       
@@ -92,7 +92,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, p
       # On parallelise aussi pour les EM donc on réparti les initialisations sur les différents coeurs
     }
     reference@strategy <- strategy 
-    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1))
+    nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores)
     if (strategy@paramEstim){
       reference@strategy@vbleSelec <- FALSE
       reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)

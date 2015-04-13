@@ -1,5 +1,5 @@
 # Verifie les paramètres d'entrées
-CheckInputs <- function(x, g, initModel, vbleSelec, paramEstim, parallel, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
+CheckInputs <- function(x, g, initModel, vbleSelec, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
   if ( (is.numeric(g)==FALSE) || (length(g)!=1))
     stop("The component number have to be an integer of length one!")
   
@@ -12,8 +12,8 @@ CheckInputs <- function(x, g, initModel, vbleSelec, paramEstim, parallel, nbSmal
   if (is.logical(paramEstim) == FALSE)
     stop("Input paramEstim must be logicial")
   
-  if (is.logical(parallel) == FALSE)
-    stop("Input parallel must be logicial")
+  if (is.numeric(nbcores) == FALSE)
+    stop("Input nbcores must be numeric")
   
   if ((is.numeric(nbSmall) == FALSE) || (length(nbSmall)!=1))
     stop("Input nbSmall must be numeric of size one")
