@@ -60,20 +60,25 @@ setClass(
 
 
 ########################################################################################################################
-## La classe S4 VSLCMdataMixed est relatives à des données mixtes. Elle possède une liste d'élèments
-## de classe S4 VSLCMdataContinuous ou VSLCMdataCategorical
+
 ########################################################################################################################
 setClass(
   Class = "VSLCMdataMixed", 
   representation = representation(
     n="numeric",
     d="numeric",
-    data="list"
+    withContinuous="logical",
+    withCategorical="logical",
+    dataContinuous="VSLCMdataContinuous",
+    dataCategorical="VSLCMdataCategorical"
   ), 
   prototype = prototype(
     n=numeric(),
     d=numeric(),
-    data=list()
+    withContinuous=logical(),
+    withCategorical=logical(),
+    dataContinuous=new("VSLCMdataContinuous"),
+    dataCategorical=new("VSLCMdataCategorical")
   )
 )
 
@@ -139,12 +144,13 @@ VSLCMdata <- function(x){
     colnames(notNA) <- colnames(x)
     output <-  new("VSLCMdataContinuous", n=n, d=d, data=mat, notNA=notNA, priors=priors)    
   }else{
-    output <- list()
+    output <- list(continuous=new("VSLCMdataContinuous"), categorical=new("VSLCMdataCategorical"))
     if (length(idxcont) != 0)
       output$continuous <- VSLCMdata(x[, idxcont])
     if (length(idxcat) != 0)
       output$categorical <- VSLCMdata(x[, idxcat])
-    output <- new("VSLCMdataMixed", n=n, d=d, data=output)
+    output <- new("VSLCMdataMixed", n=n, d=d, withContinuous=(length(idxcont) != 0), withCategorical=(length(idxcat) != 0),
+                  dataContinuous=output$continuous, dataCategorical=output$categorical)
   }
  #   stop("Data set is not correct!")
   

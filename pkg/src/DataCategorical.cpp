@@ -3,6 +3,7 @@
 DataCategorical::DataCategorical(const S4 & obj){
  this->m_profiles = as<mat>(obj.slot("shortdata"));
  this->m_w  = (as<vec>(obj.slot("weightdata")));
+ this->m_nrows = sum(m_w);
  this->m_nmodalities = max(m_profiles);
  // Les données manquantes sont codées par la valeur -1
  m_profiles = m_profiles - 1;

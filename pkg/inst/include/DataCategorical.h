@@ -23,7 +23,7 @@ class DataCategorical : public Data{
     int m_nprofiles;
     vector < vector < uvec > > m_whotakewhat;
   
-  DataCategorical();
+  DataCategorical(){};
   DataCategorical(const S4 &);
   ~DataCategorical(){};
 };

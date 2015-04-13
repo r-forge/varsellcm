@@ -3,6 +3,8 @@
 #include "XEMContinuous.h"
 #include "XEMCategorical.h"
 
+#include "DataMixed.h"
+
 //[[Rcpp::export]]
 S4  OptimizeMICL(S4 reference, StringVector name){
   S4 * reference_p=&reference;
@@ -23,7 +25,10 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     xem_p->Run(); 
     xem_p->Output(reference_p);
   }else if (namestr == "Mixed"){
-    cout << "cas mixed" << endl;
+    cout << "cas mixed deb" << endl;
+    DataMixed * data_p = new DataMixed(as<S4>(reference.slot("data")));
+    
+    cout << "cas mixed fin" << endl;
   }
   
   return reference;
