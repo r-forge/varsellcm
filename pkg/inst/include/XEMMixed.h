@@ -44,6 +44,6 @@ class XEMMixed : public XEM{
   // change le pointeur des paramètres acutels (voir définietion spécifique des classes)
   virtual void SwitchParamCurrent(int);
   // Acutalise l'object S4 retourné sous R
-  virtual void Output(S4 *){};
+  virtual void Output(S4 *);
 };
 #endif

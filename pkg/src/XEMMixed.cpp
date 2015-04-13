@@ -84,35 +84,58 @@ void XEMMixed::Mstep(){
   }
 }
 
-/*
-void XEMMixed::Output(S4 * reference_p){
-if (paramEstim){
-vector< Mat<double> >  alpha;
-alpha.resize(data_p->m_ncols);
-int loc=0;
-for (int j=0; j<data_p->m_ncols; j++){
-alpha[j] = zeros<mat>(g, data_p->m_nmodalities(j));
-if (omega(j) == 0){
-vec tmp = zeros<vec>(data_p->m_nmodalities(j));
-for (int h=0; h<data_p->m_nmodalities(j); h++)
-tmp(h) = sum(data_p->m_w(data_p->m_whotakewhat[j][h]));
-tmp = tmp/sum(tmp);
-for (int k=0; k<g; k++) alpha[j].row(k)=trans(tmp);
-for (int h=0; h<data_p->m_nmodalities(j); h++){
-loglikeoutput += sum(data_p->m_w(data_p->m_whotakewhat[j][h])) * log(alpha[j](0,h));
-}
 
-}else{
-alpha[j]=paramCurrent_p->m_alpha[loc];
-loc ++;
+void XEMMixed::Output(S4 * reference_p){
+  if (paramEstim){
+    // Partie Continue    
+    Mat<double> mu=ones<mat>(g, data_p->m_continuousData_p->m_ncols);
+    Mat<double> sd=ones<mat>(g, data_p->m_continuousData_p->m_ncols);
+    int loc=0;
+    
+    for (int j=0; j<data_p->m_continuousData_p->m_ncols; j++){
+      if (omegaContinuous(j) == 0){
+        vec tmp = data_p->m_continuousData_p->m_x.col(j);
+        vec keep = tmp(find(data_p->m_continuousData_p->m_notNA.col(j) == 1));
+        mu.col(j) = mu.col(j)*mean(keep);
+        sd.col(j) = sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
+        loglikeoutput += sum(dlogGaussianbis(data_p->m_continuousData_p->m_x.col(j), data_p->m_continuousData_p->m_notNA.col(j), mu(0,j), sd(0,j)));
+      }else{
+        mu.col(j) = paramCurrent_p->m_paramContinuous.m_mu.col(loc);
+        sd.col(j) = paramCurrent_p->m_paramContinuous.m_sd.col(loc);
+        loc ++;
+      }
+    }
+    
+    // Partie Categorielle
+    vector< Mat<double> >  alpha;
+    alpha.resize(data_p->m_categoricalData_p->m_ncols);
+    loc=0;
+    for (int j=0; j<data_p->m_categoricalData_p->m_ncols; j++){
+      alpha[j] = zeros<mat>(g, data_p->m_categoricalData_p->m_nmodalities(j));
+      if (omegaCategorical(j) == 0){
+        vec tmp = zeros<vec>(data_p->m_categoricalData_p->m_nmodalities(j));
+        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++)
+        tmp(h) = sum(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+        tmp = tmp/sum(tmp);
+        for (int k=0; k<g; k++) alpha[j].row(k)=trans(tmp);
+        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++){
+          loglikeoutput += sum(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) * log(alpha[j](0,h));
+        }
+        
+      }else{
+        alpha[j]=paramCurrent_p->m_paramCategorical.m_alpha[loc];
+        loc ++;
+      }
+    }
+    as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+    as<S4>(as<S4>(reference_p->slot("param")).slot("paramContinuous")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+    as<S4>(as<S4>(reference_p->slot("param")).slot("paramCategorical")).slot("pi")  = wrap(trans(paramCurrent_p->m_pi));
+    as<S4>(as<S4>(reference_p->slot("param")).slot("paramCategorical")).slot("alpha") = wrap(alpha);    
+    as<S4>(as<S4>(reference_p->slot("param")).slot("paramContinuous")).slot("mu") = wrap(trans(mu));
+    as<S4>(as<S4>(reference_p->slot("param")).slot("paramContinuous")).slot("sd") = wrap(trans(sd));
+    as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
+    Estep();
+    as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
+    as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
+  }
 }
-}
-as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
-as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
-Estep();
-as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
-as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
-}
-}
-*/

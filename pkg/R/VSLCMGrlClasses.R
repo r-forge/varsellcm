@@ -80,8 +80,8 @@ setClass(
 ########################################################################################################################
 setClass(
   Class = "VSLCMparamMixed", 
-  representation = representation(param="list"), 
-  prototype = prototype(param=list())
+  representation = representation(pi="numeric", paramContinuous="VSLCMparamContinuous", paramCategorical="VSLCMparamCategorical"), 
+  prototype = prototype(pi=numeric(), paramContinuous=new("VSLCMparamContinuous"), paramCategorical=new("VSLCMparamCategorical"))
 )
 
 ########################################################################################################################
