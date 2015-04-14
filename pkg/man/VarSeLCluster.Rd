@@ -86,6 +86,8 @@ summary(results)
 
 print(results)
 
+plot(results)
+
 # Variable selection and parameter estimation of a categorical data set without missing values
 data(birds)
 
@@ -94,4 +96,18 @@ results <- VarSelCluster(birds, 2)
 summary(results)
 
 print(results)
+
+plot(results)
+
+
+# Variable selection and parameter estimation of a mixed data set without missing values
+data(heterodata)
+
+results <- VarSelCluster(heterodata, 2)
+
+summary(results)
+
+print(results)
+
+plot(results)
 }

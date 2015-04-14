@@ -47,6 +47,8 @@ summary(results)
 
 print(results)
 
+plot(results)
+
 # Variable selection and parameter estimation of a categorical data set without missing values
 data(birds)
 
@@ -56,20 +58,21 @@ summary(results)
 
 print(results)
 
-\dontrun{
-## To install multitest package : uncomment the following lines
-## source("http://bioconductor.org/biocLite.R")
-## biocLite("multtest")
-require(VarSelLCM)
-require(multtest)
-data(golub)
+plot(results)
 
-results <- VarSelCluster(t(golub), 2)
+
+# Variable selection and parameter estimation of a mixed data set without missing values
+data(heterodata)
+
+results <- VarSelCluster(heterodata, 2)
 
 summary(results)
 
+print(results)
+
+plot(results)
 }
 
-}
+
 
 \keyword{ package }
