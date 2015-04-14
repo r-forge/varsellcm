@@ -61,13 +61,13 @@ void AlgorithmMixed::Optimize_model(){
   
   if (data_p->m_withCategorical){
     for (int j=0; j<data_p->m_categoricalData_p->m_ncols; j++){
-      discrim=  algoCate_p->IntegreOneVariableCategoricalDiscrim(j, m_zCandCurrent) - algoCate_p->m_integralenondiscrim(j);
+      discrim=  algoCate_p->IntegreOneVariableCategoricalDiscrim(j, m_zCandCurrent);
       if (discrim > algoCate_p->m_integralenondiscrim(j)){
         m_omegaCurrent(loc) = 1;
         m_miclCurrent +=  discrim;   
       }else{
         m_omegaCurrent(loc) = 0;
-        m_omegaCurrent(loc) +=  algoCate_p->m_integralenondiscrim(j);
+        m_miclCurrent +=  algoCate_p->m_integralenondiscrim(j);
       }
       loc++;
     }  
