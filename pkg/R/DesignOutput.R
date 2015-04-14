@@ -70,7 +70,7 @@ setMethod( f = "DesignOutput",
                  for (j in 1:ncol(reference@data@shortdata))
                    reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
                }
-               reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] + 1
+               reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
                colnames(reference@partitions@tik )=paste("class-",1:reference@model@g,sep="")
                reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                reference@criteria@ICL <- ICLcategorical(reference) 
@@ -124,7 +124,7 @@ setMethod( f = "DesignOutput",
                    for (j in 1:ncol(reference@data@dataCategorical@shortdata))
                      reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
                  }
-                 reference@partitions@tik <- reference@partitions@tik + 1
+                 reference@partitions@tik <- reference@partitions@tik 
                  colnames(reference@partitions@tik ) <- paste("class-",1:reference@model@g,sep="")
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
