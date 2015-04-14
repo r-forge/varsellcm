@@ -1,5 +1,6 @@
-#include "AlgorithmContinuous.h"
-#include "AlgorithmCategorical.h"
+//#include "AlgorithmContinuous.h"
+//#include "AlgorithmCategorical.h"
+#include "AlgorithmMixed.h"
 #include "XEMContinuous.h"
 #include "XEMCategorical.h"
 #include "XEMMixed.h"
@@ -24,7 +25,9 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     xem_p->Run(); 
     xem_p->Output(reference_p);
   }else if (namestr == "Mixed"){
-    DataMixed * data_p = new DataMixed(as<S4>(reference.slot("data")));
+    DataMixed *data_p = new DataMixed(as<S4>(reference.slot("data")));
+    AlgorithmMixed *algo_p = new AlgorithmMixed(data_p, reference_p);
+    algo_p->Run(reference_p);
     XEMMixed *xem_p  = new XEMMixed(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);

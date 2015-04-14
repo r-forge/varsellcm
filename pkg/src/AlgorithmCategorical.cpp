@@ -5,7 +5,7 @@ AlgorithmCategorical::AlgorithmCategorical(const DataCategorical * data,  const 
   vbleSelec = as<S4>(reference_p->slot("strategy")).slot("vbleSelec");
   if (vbleSelec){
     data_p = data;
-    InitCommumParamXEM(as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")).slot("initModel"), data_p->m_nprofiles, data_p->m_ncols);
+    InitCommumParamAlgo(as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")).slot("initModel"), data_p->m_nprofiles, data_p->m_ncols);
     m_integralenondiscrim=ones<vec>(data_p->m_ncols);
     for (int j=0; j<data_p->m_ncols; j++) m_integralenondiscrim(j)=IntegreOneVariableCategoricalNotDiscrim(j);
   }    
@@ -29,6 +29,26 @@ double AlgorithmCategorical::IntegreOneVariableCategoricalDiscrim(const int & j)
   }
   return output;
 }
+
+double AlgorithmCategorical::IntegreOneVariableCategoricalDiscrim(const int & j, const colvec & z){
+  int mj = data_p->m_whotakewhat[j].size();
+  Mat <double> nkjh = 0.5 * ones<mat>(m_g, mj);
+  for (int h=0; h<mj;h++){
+    for (int i=0; i<data_p->m_whotakewhat[j][h].n_rows; i++) nkjh(z(data_p->m_whotakewhat[j][h](i)), h)+=data_p->m_w(data_p->m_whotakewhat[j][h](i));
+  }
+  double output = m_g*lgamma(mj * 0.5) - (m_g*mj) * lgamma(0.5);
+  double tmpmargin = 0;
+  for (int k=0; k<m_g; k++){
+    tmpmargin = 0;
+    for (int h=0; h<mj; h++){
+      output += lgamma(nkjh(k,h));
+      tmpmargin += nkjh(k,h);
+    }
+    output -= lgamma(tmpmargin);
+  }
+  return output;
+}
+
 
 double AlgorithmCategorical::IntegreOneVariableCategoricalNotDiscrim(const int & j){
   int mj = data_p->m_whotakewhat[j].size();

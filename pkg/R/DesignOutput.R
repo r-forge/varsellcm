@@ -125,7 +125,7 @@ setMethod( f = "DesignOutput",
                      reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
                  }
                  reference@partitions@tik <- reference@partitions@tik + 1
-                 colnames(reference@partitions@tik )=paste("class-",1:reference@model@g,sep="")
+                 colnames(reference@partitions@tik ) <- paste("class-",1:reference@model@g,sep="")
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  

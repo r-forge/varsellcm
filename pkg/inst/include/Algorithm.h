@@ -43,7 +43,7 @@ class Algorithm{
   
   // Les trois fonctions suivantes sont communes pour les classes héritiaires d'Algorithm.  
   // Permet d'inialiser les éléments de la classes
-  void InitCommumParamXEM(const int &, const int &, const int &, const int &) ;
+  void InitCommumParamAlgo(const int &, const int &, const int &, const int &) ;
   // Effectue la selection de variables (si vbleSelec=TRUE) et actualise les sorties
   void Run(S4 *);
   // Optimisation de la partition m_zStarCurrent pour le modèle m_omegaCurrent

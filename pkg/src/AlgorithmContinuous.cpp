@@ -5,7 +5,7 @@ AlgorithmContinuous::AlgorithmContinuous(const DataContinuous * data, const S4 *
   vbleSelec = as<S4>(reference_p->slot("strategy")).slot("vbleSelec");
   if (vbleSelec){
     data_p = data;
-    InitCommumParamXEM(as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")).slot("initModel"), data_p->m_nrows, data_p->m_ncols);
+    InitCommumParamAlgo(as<S4>(reference_p->slot("model")).slot("g"), as<S4>(reference_p->slot("strategy")).slot("initModel"), data_p->m_nrows, data_p->m_ncols);
     m_integralenondiscrim=ones<vec>(data_p->m_ncols);
     vec tmp;
     for (int j=0; j<data_p->m_ncols; j++){

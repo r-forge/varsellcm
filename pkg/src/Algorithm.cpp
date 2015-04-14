@@ -1,6 +1,6 @@
 #include "Algorithm.h"
 
-void Algorithm::InitCommumParamXEM(const int & g, const int & nbinit, const int & nrows, const int & ncols){
+void Algorithm::InitCommumParamAlgo(const int & g, const int & nbinit, const int & nrows, const int & ncols){
   m_zStarBest = ones<vec>(nrows);
   m_zStarCurrent = ones<vec>(nrows);
   m_zCandCurrent = ones<vec>(nrows);
