@@ -22,8 +22,9 @@ setMethod( f = "DesignOutput",
                colnames(reference@param@mu) <-  paste("class-",1:length(reference@param@pi),sep="")
                colnames(reference@param@sd) <-  paste("class-",1:length(reference@param@pi),sep="")
                if (all(reference@param@sd != 0)){
+                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
-                 colnames(reference@partitions@tik) <-  paste("class-",1:reference@model@g,sep="") + 1
+                 colnames(reference@partitions@tik) <-  paste("class-",1:reference@model@g,sep="")
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  reference@criteria@ICL <- ICLcontinuous(reference) 
                }else{
@@ -45,14 +46,15 @@ setMethod( f = "DesignOutput",
 setMethod( f = "DesignOutput", 
            signature(reference="VSLCMresultsCategorical"), 
            definition = function(reference){
+             reference@model@omega <-  as.numeric(reference@model@omega)
+             names(reference@model@omega) <- colnames(reference@data@data)
              if (reference@strategy@paramEstim == TRUE){
-               reference@model@omega <-  as.numeric(reference@model@omega)
-               names(reference@model@omega) <- colnames(reference@data@data)
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
                }else{
                  reference@partitions@zOPT <- 1 + reference@partitions@zOPT[attr(reference@data@shortdata,"index")]
+                 reference@partitions@zMAP <- 1 + reference@partitions@zMAP[attr(reference@data@shortdata,"index")]
                }
                # Attention zOPT correspond aux profiles, on repasse donc au niveau des individus
                reference@param@pi <- as.numeric(reference@param@pi)
@@ -81,15 +83,17 @@ setMethod( f = "DesignOutput",
 setMethod( f = "DesignOutput", 
            signature(reference="VSLCMresultsMixed"), 
            definition = function(reference){
+             reference@model@omega <-  as.numeric(reference@model@omega)
+             namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@shortdata))
+             names(reference@model@omega) <- namestmp
+             
              if (reference@strategy@paramEstim == TRUE){
-               reference@model@omega <-  as.numeric(reference@model@omega)
-               namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@shortdata))
-               names(reference@model@omega) <- namestmp
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
                }else{
-                 reference@partitions@zOPT <- 1 + reference@partitions@zOPT
+                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
+                 reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
                }
                
                rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
