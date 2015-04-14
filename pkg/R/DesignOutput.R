@@ -126,10 +126,19 @@ setMethod( f = "DesignOutput",
                  }
                  reference@partitions@tik <- reference@partitions@tik 
                  colnames(reference@partitions@tik ) <- paste("class-",1:reference@model@g,sep="")
-                 reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
-                 reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
-                 
-                 #reference@criteria@ICL <- ICLcategorical(reference) 
+                 nbparam <- reference@model@g-1 
+                 if (reference@data@withContinuous){
+                   shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataContinuous@data))]
+                   nbparam <- nbparam + sum(shortomega) * reference@model@g * 2 + sum(1-shortomega) * 2
+                 }
+                 if (reference@data@withCategorical){
+                   shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataCategorical@shortdata))]
+                   for (j in 1:length(shortomega)){
+                     nbparam <- nbparam + (length(reference@data@dataCategorical@modalitynames[[j]])-1) * (1 + (reference@model@g-1)*shortomega[j])
+                   }
+                 }
+                 reference@criteria@BIC <- reference@criteria@loglikelihood - nbparam*0.5*log(reference@data@n)
+                 reference@criteria@ICL <- ICLmixed(reference) 
                }else{
                  warning("All the models get error (degeneracy)", call. = FALSE)
                  reference@criteria@loglikelihood <- -Inf

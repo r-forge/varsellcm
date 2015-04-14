@@ -60,3 +60,39 @@ ICLcategorical <- function(obj){
   }
   return(ICLexact)
 }
+
+
+## ICL exact dans le cas de variables mixed
+ICLmixed <- function(obj){
+  ICLexact <- lgamma(obj@model@g/2) - obj@model@g*lgamma(1/2) +  sum(lgamma(table(c(1:obj@model@g, obj@partitions@zMAP)) - 1/2)) - lgamma(length(obj@partitions@zMAP) + obj@model@g/2)
+  if (obj@data@withContinuous){
+    who <- which(names(obj@model@omega) %in% colnames(obj@data@dataContinuous@data))
+    loc <- 0
+    for (j in who){
+      loc <- loc + 1
+      if (obj@model@omega[j]==0){
+        ICLexact <- ICLexact  + IntegreOneVariableContinuous(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,loc]==1),loc], obj@data@dataContinuous@priors[loc,])
+      }else{
+        for (k in unique(obj@partitions@zMAP))
+          ICLexact <- ICLexact  + IntegreOneVariableContinuous(obj@data@dataContinuous@data[which( (obj@partitions@zMAP==k)*obj@data@dataContinuous@notNA[,loc] ==1),loc], obj@data@dataContinuous@priors[loc,])
+      }
+    }
+  }
+  
+  if (obj@data@withCategorical){
+    who <- which(names(obj@model@omega) %in% colnames(obj@data@dataCategorical@shortdata))
+    loc <- 0
+    for (j in who){
+      loc <- loc + 1
+      if (obj@model@omega[j]==0)
+        ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@dataCategorical@data[,loc],  length(obj@data@dataCategorical@modalitynames[[loc]]))
+      else{
+        for (k in unique(obj@partitions@zMAP))
+          ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@dataCategorical@data[which(obj@partitions@zMAP == k),loc],  length(obj@data@dataCategorical@modalitynames[[loc]]))
+      }
+      
+    }
+  }
+
+  return(ICLexact)
+}
