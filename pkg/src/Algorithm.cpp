@@ -48,10 +48,12 @@ void Algorithm::Run(S4 * output_p){
 
 void Algorithm::ComputeMICL(S4 * output_p){
   double prec = log(0);
-  colvec tmp = as<S4>(output_p->slot("model")).slot("omega");
+  Col<double> tmp = as<S4>(output_p->slot("model")).slot("omega");
   m_omegaCurrent = tmp;
-  for (int ini=0; ini<omegainit.n_cols; ini++){
+  m_omegaBest= tmp;
+  for (int ini=0; ini<5; ini++){
     prec = log(0);
+    m_omegaCurrent = tmp;
     zCandInit();
     m_miclCurrent = Integre_Complete_Like_Cand();
     while (prec < m_miclCurrent){

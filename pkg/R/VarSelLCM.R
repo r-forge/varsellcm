@@ -7,24 +7,27 @@ setGeneric ( name= "MICL",  def = function(obj){ standardGeneric("MICL")})
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsContinuous"), 
            definition = function(obj){
+             obj@strategy@vbleSelec=T
              reference <- ComputeMICL(obj, "Continuous")
-             return(reference@criteria@MICL)         
+             return(reference)         
            }
 )
 ## Pour les variables catégorielles
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsCategorical"), 
            definition = function(obj){
+             obj@strategy@vbleSelec=T
              reference <- ComputeMICL(obj, "Categorical")
-             return(reference@criteria@MICL)           
+             return(reference)           
            }
 )
 ## Pour les variables mixed
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsMixed"), 
            definition = function(obj){
+             obj@strategy@vbleSelec=T
              reference <- ComputeMICL(obj, "Mixed")
-             return(reference@criteria@MICL)           
+             return(reference)           
            }
 )
 
