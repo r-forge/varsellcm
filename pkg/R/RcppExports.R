@@ -5,3 +5,7 @@ OptimizeMICL <- function(reference, name) {
     .Call('VarSelLCM_OptimizeMICL', PACKAGE = 'VarSelLCM', reference, name)
 }
 
+ComputeMICL <- function(reference, name) {
+    .Call('VarSelLCM_ComputeMICL', PACKAGE = 'VarSelLCM', reference, name)
+}
+

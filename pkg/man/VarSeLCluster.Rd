@@ -12,8 +12,8 @@ VarSelCluster
    The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
-VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1,
-nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
+VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramEstim=TRUE,
+nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
@@ -31,6 +31,11 @@ nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
   \item{vbleSelec}{
     Logical indicating if a variable selection is performed. 
     The default is TRUE. 
+  }
+  \item{discrim}{
+    Logical vector indicating if the role of the variable (1: discriminative, 0: not discriminative).
+    It is used only when vbleSelec=FALSE.
+    The default considers all the variables as discriminative (rep(1,ncol(x))). 
   }
   \item{paramEstim}{
     Logical indicating if the maximum likelihood (ML) inference is performed for the best model (according to the MICL criterion). 

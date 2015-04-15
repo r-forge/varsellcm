@@ -71,8 +71,8 @@ setMethod( f = "DesignOutput",
                  colnames(reference@param@alpha[[j]]) <- reference@data@modalitynames[[j]]
                }
                names(reference@param@alpha) <- colnames(reference@data@shortdata)
-
-               reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
+               if (reference@model@g>1)
+                 reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
                colnames(reference@partitions@tik )=paste("class-",1:reference@model@g,sep="")
                reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                reference@criteria@ICL <- ICLcategorical(reference) 

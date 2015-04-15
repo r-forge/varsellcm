@@ -46,6 +46,27 @@ void Algorithm::Run(S4 * output_p){
   }
 }
 
+void Algorithm::ComputeMICL(S4 * output_p){
+  double prec = log(0);
+  colvec tmp = as<S4>(output_p->slot("model")).slot("omega");
+  m_omegaCurrent = tmp;
+  for (int ini=0; ini<omegainit.n_cols; ini++){
+    prec = log(0);
+    zCandInit();
+    m_miclCurrent = Integre_Complete_Like_Cand();
+    while (prec < m_miclCurrent){
+      prec = m_miclCurrent;
+      Optimize_partition();
+    }
+    if (m_miclCurrent > m_miclBest){
+      m_miclBest = m_miclCurrent;
+      m_zStarBest = m_zStarCurrent;
+    }
+  }
+  as<S4>(output_p->slot("partitions")).slot("zOPT") = wrap(trans(m_zStarBest));
+  as<S4>(output_p->slot("criteria")).slot("MICL") = m_miclBest;
+}
+
 void Algorithm::Optimize_partition(){
   int chgt = m_zCandCurrent.n_rows ;
   double critere_cand=0;

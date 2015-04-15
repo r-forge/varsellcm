@@ -1,5 +1,5 @@
 # Verifie les paramètres d'entrées
-CheckInputs <- function(x, g, initModel, vbleSelec, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
+CheckInputs <- function(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
   if ( (is.numeric(g)==FALSE) || (length(g)!=1))
     stop("The component number have to be an integer of length one!")
   
@@ -7,7 +7,10 @@ CheckInputs <- function(x, g, initModel, vbleSelec, paramEstim, nbcores, nbSmall
     stop("Data set must be a data frame!")
   
   if (is.logical(vbleSelec) == FALSE)
-    stop("Input vbleSelec must be logicial")
+    stop("Input vbleSelec must be logical")
+  
+  if ((length(discrim) != ncol(x)) || (all(discrim %in% c(0,1))==FALSE))
+    stop("Input discrim must be logical of length number of variables")
   
   if (is.logical(paramEstim) == FALSE)
     stop("Input paramEstim must be logicial")
