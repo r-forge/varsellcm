@@ -7,8 +7,10 @@ setGeneric ( name= "MICL",  def = function(obj){ standardGeneric("MICL")})
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsContinuous"), 
            definition = function(obj){
-             obj@strategy@vbleSelec=T
+             obj@strategy@vbleSelec <- TRUE
+             obj@data <- VSLCMdata(obj@data@data)
              reference <- ComputeMICL(obj, "Continuous")
+             reference <- DesignOutput(reference)
              return(reference)         
            }
 )
@@ -16,8 +18,17 @@ setMethod( f = "MICL",
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsCategorical"), 
            definition = function(obj){
-             obj@strategy@vbleSelec=T
+             obj@strategy@vbleSelec <- TRUE
+             tmp <- data.frame(obj@data@data)
+             for (j in 1:ncol(tmp)){
+               tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
+               tmp[,j] <- factor(tmp[,j])
+             }
+             
+             colnames(tmp) <- colnames(obj@data@shortdata)
+             obj@data <- VSLCMdata(tmp)
              reference <- ComputeMICL(obj, "Categorical")
+             reference <- DesignOutput(reference)
              return(reference)           
            }
 )
@@ -25,8 +36,19 @@ setMethod( f = "MICL",
 setMethod( f = "MICL", 
            signature(obj="VSLCMresultsMixed"), 
            definition = function(obj){
-             obj@strategy@vbleSelec=T
+             obj@strategy@vbleSelec <- TRUE
+             
+             tmp <- data.frame(obj@data@dataCategorical@data)
+             for (j in 1:ncol(tmp)){
+               tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@dataCategorical@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
+               tmp[,j] <- factor(tmp[,j])
+             }
+             tmp <- cbind(obj@data@dataContinuous@data, tmp)
+             colnames(tmp) <- names(obj@model@omega)
+             
+             obj@data <- VSLCMdata(tmp)
              reference <- ComputeMICL(obj, "Mixed")
+             reference <- DesignOutput(reference)
              return(reference)           
            }
 )

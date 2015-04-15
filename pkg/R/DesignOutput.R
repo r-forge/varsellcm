@@ -60,8 +60,8 @@ setMethod( f = "DesignOutput",
                  reference@criteria@MICL <- numeric()
                }else{
                  reference@partitions@zOPT <- 1 + reference@partitions@zOPT[attr(reference@data@shortdata,"index")]
-                 reference@partitions@zMAP <- 1 + reference@partitions@zMAP[attr(reference@data@shortdata,"index")]
                }
+               reference@partitions@zMAP <- 1 + reference@partitions@zMAP[attr(reference@data@shortdata,"index")]
                # Attention zOPT correspond aux profiles, on repasse donc au niveau des individus
                reference@param@pi <- as.numeric(reference@param@pi)
                names(reference@param@pi) <- paste("class-",1:length(reference@param@pi),sep="")

@@ -6,6 +6,14 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   nbKeep = 1;
   iterKeep = 1;
   tolKeep = 0.001;
+
+/*  nbSmall = 250;
+  iterSmall = 20;
+  nbKeep = 50;
+  iterKeep = 1000;
+  tolKeep = 0.001;*/
+  
+  
   m_nbdegenere=0;
   loglikeSmall = ones<vec>(nbSmall) * log(0);
   omega = om;

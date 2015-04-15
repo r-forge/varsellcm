@@ -12,7 +12,8 @@ void Algorithm::InitCommumParamAlgo(const int & g, const int & nbinit, const int
   omegainit = ones<mat>(ncols, nbinit);
   uvec loc;
   Col<double> tmpvec ;
-  for (int ini=0; ini<nbinit; ini++){
+  //omegainit.col(0) = ones<vec>(ncols);
+  for (int ini=1; ini<nbinit; ini++){
     loc = find(tmp.col(ini)>0.5);
     tmpvec = zeros<vec>(ncols);
     tmpvec(loc)+=1;
@@ -30,6 +31,7 @@ void Algorithm::Run(S4 * output_p){
       zCandInit();
       m_miclCurrent = Integre_Complete_Like_Cand();
       while (prec < m_miclCurrent){
+        // cout << trans(m_omegaCurrent ) << " " << m_miclCurrent << endl;
         prec = m_miclCurrent;
         Optimize_partition();
         Optimize_model();
@@ -49,11 +51,14 @@ void Algorithm::Run(S4 * output_p){
 void Algorithm::ComputeMICL(S4 * output_p){
   double prec = log(0);
   Col<double> tmp = as<S4>(output_p->slot("model")).slot("omega");
+  //Col<double> tmp2= as<S4>(output_p->slot("partitions")).slot("zMAP");
   m_omegaCurrent = tmp;
   m_omegaBest= tmp;
-  for (int ini=0; ini<5; ini++){
+  for (int ini=0; ini<15; ini++){
     prec = log(0);
     m_omegaCurrent = tmp;
+    //m_zCandCurrent = tmp2-1;
+    //m_zStarCurrent = m_zCandCurrent;
     zCandInit();
     m_miclCurrent = Integre_Complete_Like_Cand();
     while (prec < m_miclCurrent){

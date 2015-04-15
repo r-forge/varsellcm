@@ -84,6 +84,7 @@ void XEMCategorical::Output(S4 * reference_p){
     as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
     as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
     as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
+      as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = m_nbdegenere/nbKeep;
     Estep();
     as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
     as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
