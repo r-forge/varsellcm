@@ -6,6 +6,7 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   nbKeep = 1;
   iterKeep = 1;
   tolKeep = 0.001;
+  m_nbdegenere=0;
   loglikeSmall = ones<vec>(nbSmall) * log(0);
   omega = om;
   g=gv;
@@ -21,6 +22,7 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
   iterKeep = strategy.slot("iterKeep");
   tolKeep = strategy.slot("tolKeep");
   loglikeSmall = ones<vec>(nbSmall) * log(0);
+  m_nbdegenere=0;
   omega = om;
   g=gv;
   location = find(omega == 1);
@@ -39,10 +41,12 @@ void XEM::Run(){
     // On conserve les meilleurs initialisations
     uvec indices = sort_index(loglikeSmall);
     iterCurrent = iterKeep;
+    m_nbdegenere = 0;
     for (int tmp1=0; tmp1<nbKeep; tmp1++){
       SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
       OneEM();
       loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
+      m_nbdegenere += isnan(loglikeSmall(indices(nbSmall - tmp1 - 1)));
     }
     uword  index;
     double indicebest = (loglikeSmall).max(index);
@@ -84,8 +88,8 @@ void XEM::OneEM(){
     prec = loglike;
     loglike = ComputeLogLike();
   }
-  // Pour la dégénérescence
-  if (loglike == -log(0)) loglike=log(0);
+  // Pour la dégénérescence (pas la peine car on obtien nan)
+  //if (loglike == - log(0)) loglike=log(0);
   // Une verif
   if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }

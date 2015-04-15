@@ -26,7 +26,7 @@ paramEstim: booléen indiquant si on fait l'estimation
 
 class XEM{
   public:
-  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g;
+  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g, m_nbdegenere;
   double tolKeep, loglikeoutput;
   Col<double> loglikeSmall, omega, rowsums, maxtmplogproba;
   Mat<double> tmplogproba;

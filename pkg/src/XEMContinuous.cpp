@@ -3,6 +3,11 @@
 
 Col<double> dlogGaussian(const Col<double> & x, const Col<double> & o, const double  mu, const double  sd){
   Col<double>tmpval= - 0.5*pow((x - mu),2)/pow(sd,2) - log(sd * sqrt( 2*M_PI));
+  // C'est pour la dégénéresence mais a supprimer plus tard
+  /*if (sd<=0){
+  tmpval(find( x != mu)) = zeros<vec>(sum(x!=mu)) + log(0);
+  tmpval(find( x == mu)) = zeros<vec>(sum(x==mu)) - log(0);
+  } */ 
   if (sum(o)<x.n_rows)  tmpval(find( o == 0)) = zeros<vec>(x.n_rows-sum(o));
   return  tmpval;
 };
@@ -55,30 +60,37 @@ void XEMContinuous::Mstep(){
 
 void XEMContinuous::Output(S4 * reference_p){
   if (paramEstim){
-    Mat<double> mu=ones<mat>(g, data_p->m_ncols);
-    Mat<double> sd=ones<mat>(g, data_p->m_ncols);
-    int loc=0;
-    
-    for (int j=0; j<data_p->m_ncols; j++){
-      if (omega(j) == 0){
-        vec tmp = data_p->m_x.col(j);
-        vec keep = tmp(find(data_p->m_notNA.col(j) == 1));
-        mu.col(j) = mu.col(j)*mean(keep);
-        sd.col(j) = sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
-        loglikeoutput += sum(dlogGaussian(data_p->m_x.col(j), data_p->m_notNA.col(j), mu(0,j), sd(0,j)));
-      }else{
-        mu.col(j) = paramCurrent_p->m_mu.col(loc);
-        sd.col(j) = paramCurrent_p->m_sd.col(loc);
-        loc ++;
+    if (m_nbdegenere<nbKeep){
+      Mat<double> mu=ones<mat>(g, data_p->m_ncols);
+      Mat<double> sd=ones<mat>(g, data_p->m_ncols);
+      int loc=0;
+      
+      for (int j=0; j<data_p->m_ncols; j++){
+        if (omega(j) == 0){
+          vec tmp = data_p->m_x.col(j);
+          vec keep = tmp(find(data_p->m_notNA.col(j) == 1));
+          mu.col(j) = mu.col(j)*mean(keep);
+          sd.col(j) = sd.col(j)*sqrt(sum(pow(( keep - mean(keep)),2) ) / keep.n_rows);
+          loglikeoutput += sum(dlogGaussian(data_p->m_x.col(j), data_p->m_notNA.col(j), mu(0,j), sd(0,j)));
+        }else{
+          mu.col(j) = paramCurrent_p->m_mu.col(loc);
+          sd.col(j) = paramCurrent_p->m_sd.col(loc);
+          
+          loc ++;
+        }
       }
+      as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+      as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
+      as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
+      as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
+      as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = m_nbdegenere/nbKeep;
+      Estep();
+      as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
+      as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
+    }else{
+      as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = 1;
     }
-    as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
-    as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
-    as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
-    as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
-    Estep();
-    as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
-    as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
+    
   }
 }
 

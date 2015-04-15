@@ -87,6 +87,7 @@ void XEMMixed::Mstep(){
 
 void XEMMixed::Output(S4 * reference_p){
   if (paramEstim){
+    if (m_nbdegenere<nbKeep){
     // Partie Continue    
     Mat<double> mu=ones<mat>(g, data_p->m_continuousData_p->m_ncols);
     Mat<double> sd=ones<mat>(g, data_p->m_continuousData_p->m_ncols);
@@ -133,9 +134,13 @@ void XEMMixed::Output(S4 * reference_p){
     as<S4>(as<S4>(reference_p->slot("param")).slot("paramCategorical")).slot("alpha") = wrap(alpha);    
     as<S4>(as<S4>(reference_p->slot("param")).slot("paramContinuous")).slot("mu") = wrap(trans(mu));
     as<S4>(as<S4>(reference_p->slot("param")).slot("paramContinuous")).slot("sd") = wrap(trans(sd));
+    as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = m_nbdegenere/nbKeep;
     as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
     Estep();
     as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
     as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
+    }else{
+      as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = 1;
+    }
   }
 }

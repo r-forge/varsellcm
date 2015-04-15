@@ -15,12 +15,18 @@ setMethod(
       cat("\nNames of the relevant variables for the clustering:\n  ")
       print(colnames(object@data@data)[which(object@model@omega==1)])
     }   
-    cat("\n\nInformation Criteria:\n")
-    cat("   loglike:", object@criteria@loglikelihood,"\n")    
-    cat("   BIC:    ", object@criteria@BIC,"\n")    
-    cat("   ICL:    ", object@criteria@ICL,"\n") 
-    if (object@strategy@vbleSelec)
-      cat("   MICL:   ", object@criteria@MICL,"\n")       
+    if (object@criteria@degeneracyrate != 1){
+      cat("\n\nInformation Criteria:\n")
+      cat("   loglike:", object@criteria@loglikelihood,"\n")    
+      cat("   BIC:    ", object@criteria@BIC,"\n")    
+      cat("   ICL:    ", object@criteria@ICL,"\n") 
+      if (object@strategy@vbleSelec)
+        cat("   MICL:   ", object@criteria@MICL,"\n")      
+    }
+    cat("\n")
+    if (object@criteria@degeneracyrate>0.1)
+      cat("Warnings:\n  The rate of degeneracy for the EM algorithm is", object@criteria@degeneracyrate,"\n" )
+    
   }
 )
 
@@ -66,11 +72,16 @@ setMethod(
       cat("\nNames of the relevant variables for the clustering:\n  ")
       print(names(object@model@omega)[which(object@model@omega==1)])
     }
-    cat("\n\nInformation Criteria:\n")
-    cat("   loglike:", object@criteria@loglikelihood,"\n")    
-    cat("   BIC:    ", object@criteria@BIC,"\n")    
-    cat("   ICL:    ", object@criteria@ICL,"\n")
-    if (object@strategy@vbleSelec)
-      cat("   MICL:   ", object@criteria@MICL,"\n")       
+    if (object@criteria@degeneracyrate != 1){
+      cat("\n\nInformation Criteria:\n")
+      cat("   loglike:", object@criteria@loglikelihood,"\n")    
+      cat("   BIC:    ", object@criteria@BIC,"\n")    
+      cat("   ICL:    ", object@criteria@ICL,"\n")
+      if (object@strategy@vbleSelec)
+        cat("   MICL:   ", object@criteria@MICL,"\n")  
+    }
+    cat("\n")
+    if (object@criteria@degeneracyrate>0.1)
+      cat("Warnings:\n  The rate of degeneracy for the EM algorithm is", object@criteria@degeneracyrate,"\n" )
   }
 )

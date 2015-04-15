@@ -14,30 +14,31 @@ setMethod( f = "DesignOutput",
                reference@partitions@zOPT <- numeric()
                reference@criteria@MICL <- numeric()
              }
+             # On remet les valeurs manquantes
+             for (j in 1:reference@data@d){
+               if (any(reference@data@notNA[,j]==0))
+                 reference@data@data[which(reference@data@notNA[,j]==0),j] <- NA
+             }
              if (reference@strategy@paramEstim){
                rownames(reference@param@mu)  <-   colnames(reference@data@data)
                rownames(reference@param@sd)  <-   colnames(reference@data@data)
-               reference@param@pi <- as.numeric(reference@param@pi)
-               names(reference@param@pi) <-  paste("class-",1:length(reference@param@pi),sep="")
-               colnames(reference@param@mu) <-  paste("class-",1:length(reference@param@pi),sep="")
-               colnames(reference@param@sd) <-  paste("class-",1:length(reference@param@pi),sep="")
-               if (all(reference@param@sd != 0)){
+               if (reference@criteria@degeneracyrate != 1){
+                 if (reference@criteria@degeneracyrate>0.1)
+                   warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
+                 reference@param@pi <- as.numeric(reference@param@pi)
+                 names(reference@param@pi) <-  paste("class-",1:length(reference@param@pi),sep="")
+                 colnames(reference@param@mu) <-  paste("class-",1:length(reference@param@pi),sep="")
+                 colnames(reference@param@sd) <-  paste("class-",1:length(reference@param@pi),sep="")
+                 
                  reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
                  colnames(reference@partitions@tik) <-  paste("class-",1:reference@model@g,sep="")
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  reference@criteria@ICL <- ICLcontinuous(reference) 
                }else{
-                 warning("All the models get error (degeneracy)", call. = FALSE)
-                 reference@criteria@loglikelihood <- -Inf
-                 reference@criteria@BIC <- -Inf
-                 reference@criteria@ICL <- -Inf                 
+                 warning("All the models get error (degeneracy)", call. = FALSE)           
                }
-               # On remet les valeurs manquantes
-               for (j in 1:reference@data@d){
-                 if (any(reference@data@notNA[,j]==0))
-                   reference@data@data[which(reference@data@notNA[,j]==0),j] <- NA
-               }
+
              }
              return(reference)
            }
@@ -48,6 +49,11 @@ setMethod( f = "DesignOutput",
            definition = function(reference){
              reference@model@omega <-  as.numeric(reference@model@omega)
              names(reference@model@omega) <- colnames(reference@data@data)
+             # On remet les valeurs manquantes
+             if (any(reference@data@shortdata == 0)){
+               for (j in 1:ncol(reference@data@shortdata))
+                 reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
+             }
              if (reference@strategy@paramEstim == TRUE){
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
@@ -65,11 +71,7 @@ setMethod( f = "DesignOutput",
                  colnames(reference@param@alpha[[j]]) <- reference@data@modalitynames[[j]]
                }
                names(reference@param@alpha) <- colnames(reference@data@shortdata)
-               # On remet les valeurs manquantes
-               if (any(reference@data@shortdata == 0)){
-                 for (j in 1:ncol(reference@data@shortdata))
-                   reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
-               }
+
                reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
                colnames(reference@partitions@tik )=paste("class-",1:reference@model@g,sep="")
                reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
@@ -86,7 +88,15 @@ setMethod( f = "DesignOutput",
              reference@model@omega <-  as.numeric(reference@model@omega)
              namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@shortdata))
              names(reference@model@omega) <- namestmp
-             
+             for (j in 1:reference@data@dataContinuous@d){
+               if (any(reference@data@dataContinuous@notNA[,j]==0))
+                 reference@data@dataContinuous@data[which(reference@data@dataContinuous@notNA[,j]==0),j] <- NA
+             }
+             # On remet les valeurs manquantes
+             if (any(reference@data@dataCategorical@shortdata == 0)){
+               for (j in 1:ncol(reference@data@dataCategorical@shortdata))
+                 reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
+             }
              if (reference@strategy@paramEstim == TRUE){
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
@@ -95,19 +105,19 @@ setMethod( f = "DesignOutput",
                  reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
                }
-               
-               rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
-               rownames(reference@param@paramContinuous@sd)  <-   colnames(reference@data@dataContinuous@data)
-               reference@param@paramContinuous@pi <- as.numeric(reference@param@paramContinuous@pi)
-               names(reference@param@paramContinuous@pi) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-               colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-               colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-               # On remet les valeurs manquantes
-               for (j in 1:reference@data@dataContinuous@d){
-                 if (any(reference@data@dataContinuous@notNA[,j]==0))
-                   reference@data@dataContinuous@data[which(reference@data@dataContinuous@notNA[,j]==0),j] <- NA
-               }
-               if (all(reference@param@paramContinuous@sd != 0)){             
+
+               if (reference@criteria@degeneracyrate != 1){
+                 if (reference@criteria@degeneracyrate>0.1)
+                   warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
+                 
+                 rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
+                 rownames(reference@param@paramContinuous@sd)  <-   colnames(reference@data@dataContinuous@data)
+                 reference@param@paramContinuous@pi <- as.numeric(reference@param@paramContinuous@pi)
+                 names(reference@param@paramContinuous@pi) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                 colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                 colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                 # On remet les valeurs manquantes
+
                  reference@param@pi <- as.numeric(reference@param@pi)
                  names(reference@param@pi) <- paste("class-",1:length(reference@param@pi),sep="")
                  reference@param@paramCategorical@pi <- as.numeric(reference@param@paramCategorical@pi)
@@ -119,11 +129,7 @@ setMethod( f = "DesignOutput",
                    colnames(reference@param@paramCategorical@alpha[[j]]) <- reference@data@dataCategorical@modalitynames[[j]]
                  }
                  names(reference@param@paramCategorical@alpha) <- colnames(reference@data@dataCategorical@shortdata)
-                 # On remet les valeurs manquantes
-                 if (any(reference@data@dataCategorical@shortdata == 0)){
-                   for (j in 1:ncol(reference@data@dataCategorical@shortdata))
-                     reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
-                 }
+
                  reference@partitions@tik <- reference@partitions@tik 
                  colnames(reference@partitions@tik ) <- paste("class-",1:reference@model@g,sep="")
                  nbparam <- reference@model@g-1 
@@ -140,10 +146,7 @@ setMethod( f = "DesignOutput",
                  reference@criteria@BIC <- reference@criteria@loglikelihood - nbparam*0.5*log(reference@data@n)
                  reference@criteria@ICL <- ICLmixed(reference) 
                }else{
-                 warning("All the models get error (degeneracy)", call. = FALSE)
-                 reference@criteria@loglikelihood <- -Inf
-                 reference@criteria@BIC <- -Inf
-                 reference@criteria@ICL <- -Inf                 
+                 warning("All the models get error (degeneracy)", call. = FALSE)  
                }
              }
              

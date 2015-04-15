@@ -149,10 +149,18 @@ VSLCMdata <- function(x, redquali=TRUE){
     output <-  new("VSLCMdataContinuous", n=n, d=d, data=mat, notNA=notNA, priors=priors)    
   }else{
     output <- list(continuous=new("VSLCMdataContinuous"), categorical=new("VSLCMdataCategorical"))
-    if (length(idxcont) != 0)
-      output$continuous <- VSLCMdata(x[, idxcont])
-    if (length(idxcat) != 0)
-      output$categorical <- VSLCMdata(x[, idxcat], redquali=FALSE)
+    if (length(idxcont) != 0){
+      tmpdata <- data.frame(x[,idxcont])
+      colnames(tmpdata) <- colnames(x)[idxcont]
+      output$continuous <- VSLCMdata(tmpdata)
+    }
+      
+    if (length(idxcat) != 0){
+      tmpdata <- data.frame(x[,idxcat])
+      colnames(tmpdata) <- colnames(x)[idxcat]      
+      output$categorical <- VSLCMdata(tmpdata, redquali=FALSE)
+    }
+
     output <- new("VSLCMdataMixed", n=n, d=d, withContinuous=(length(idxcont) != 0), withCategorical=(length(idxcat) != 0),
                   dataContinuous=output$continuous, dataCategorical=output$categorical)
   }
