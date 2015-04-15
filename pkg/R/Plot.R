@@ -24,11 +24,14 @@ setMethod(
   f="plot",
   signature = c("VSLCMresultsCategorical"),
   definition = function(x){
+    op <- par(no.readonly = TRUE)
     if (any(x@model@omega==1) && (x@model@g>1))
       plotCateg(x@data, x@model, x@param)
     else
       cat("No plot is available since none variable is discriminative!")
+    par(op)
   }
+  
 )
 
 plotCont <- function(data, model, param){
@@ -54,17 +57,18 @@ plotCont <- function(data, model, param){
     mtext(1, at = colMeans(mp), text = colnames(data@data)[which(model@omega==1)], line = 2)
   }else
     plot(NA, xlim=c(0,1), ylim=c(0,1),xlab = "", ylab="", axes = F, main="Discriminative continuous variables", cex.main=0.8)
-  
 }
 
 setMethod(
   f="plot",
   signature = c("VSLCMresultsContinuous"),
   definition = function(x){
+    op <- par(no.readonly = TRUE)
     if (any(x@model@omega==1) && (x@model@g>1))
       plotCont(x@data, x@model, x@param)    
     else
       cat("No plot is available since none variable is discriminative!")
+    par(op)
   }
 )
 
@@ -73,6 +77,7 @@ setMethod(
   f="plot",
   signature = c("VSLCMresultsMixed"),
   definition = function(x){
+    op <- par(no.readonly = TRUE)
     if (any(x@model@omega==1) && (x@model@g>1)){
       par(mfrow=c(1,x@data@withContinuous+x@data@withCategorical))
       if (x@data@withContinuous)
@@ -82,6 +87,7 @@ setMethod(
         plotCateg(x@data@dataCategorical, new("VSLCMmodel", g=x@model@g, omega=x@model@omega[which(names(x@model@omega) %in% colnames(x@data@dataCategorical@shortdata))]), x@param@paramCategorical)    
       
     }
+    par(op)
   }
 )
 

@@ -88,6 +88,8 @@ print(results)
 
 plot(results)
 
+newind <- VarSelImputation(results, 1)
+
 # Variable selection and parameter estimation of a categorical data set without missing values
 data(birds)
 

@@ -1,5 +1,6 @@
 useDynLib(VarSelLCM)
 export(VarSelCluster)
+export(VarSelImputation)
 exportClasses(
      "VSLCMcriteria",
      "VSLCMpartitions",
