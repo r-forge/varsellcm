@@ -176,13 +176,16 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
         }
         else
           reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+
         # On conserve les paramètres maximisant la vraisemblance
         tmploglike <- rep(NA, length(reference))
-        for (it in 1:length(tmploglike)) tmploglike[it] <- reference[[it]]@criteria@loglikelihood
+        for (it in 1:length(tmploglike)) {if (reference[[it]]@criteria@degeneracyrate!=1) tmploglike[it] <- reference[[it]]@criteria@loglikelihood}
+        #print(tmploglike)
         reference <- reference[[which.max(tmploglike)]]
         reference@strategy <- strategy
       }
     }
   }
   return(DesignOutput(reference))
+  #return(reference)
   }

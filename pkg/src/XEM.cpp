@@ -60,6 +60,7 @@ void XEM::Run(){
     double indicebest = (loglikeSmall).max(index);
     SwitchParamCurrent(index);
     loglikeoutput = ComputeLogLike();
+    
   }
 }
 
