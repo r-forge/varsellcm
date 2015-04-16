@@ -93,6 +93,5 @@ ICLmixed <- function(obj){
       
     }
   }
-
   return(ICLexact)
 }
