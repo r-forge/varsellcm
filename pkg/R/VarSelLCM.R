@@ -180,7 +180,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
         # On conserve les paramètres maximisant la vraisemblance
         tmploglike <- rep(NA, length(reference))
         for (it in 1:length(tmploglike)) {if (reference[[it]]@criteria@degeneracyrate!=1) tmploglike[it] <- reference[[it]]@criteria@loglikelihood}
-        #print(tmploglike)
+        if (all(is.na(tmploglike))) tmploglike[1]=1
         reference <- reference[[which.max(tmploglike)]]
         reference@strategy <- strategy
       }
