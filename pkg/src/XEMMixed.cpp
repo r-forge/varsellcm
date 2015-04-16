@@ -84,6 +84,12 @@ void XEMMixed::Mstep(){
   }
 }
 
+int XEMMixed::FiltreDegenere(){
+  int output = 0;
+  if (min(min(paramCurrent_p->m_paramContinuous.m_sd))<0.000001)
+    output = 1;
+  return output;
+}
 
 void XEMMixed::Output(S4 * reference_p){
   if (paramEstim){

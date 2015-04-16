@@ -42,5 +42,7 @@ class XEMContinuous : public XEM{
   virtual void SwitchParamCurrent(int);
   // Acutalise l'object S4 retourné sous R
   virtual void Output(S4 *);
+  virtual int  FiltreDegenere();
+
 };
 #endif

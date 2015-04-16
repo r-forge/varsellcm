@@ -6,8 +6,8 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv){
   nbKeep = 1;
   iterKeep = 1;
   tolKeep = 0.001;
-
-/*  nbSmall = 250;
+  
+  /*  nbSmall = 250;
   iterSmall = 20;
   nbKeep = 50;
   iterKeep = 1000;
@@ -50,17 +50,30 @@ void XEM::Run(){
     uvec indices = sort_index(loglikeSmall);
     iterCurrent = iterKeep;
     m_nbdegenere = 0;
+    if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
+
+    int degenere = 0;
     for (int tmp1=0; tmp1<nbKeep; tmp1++){
       SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
       OneEM();
       loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
-      m_nbdegenere += isnan(loglikeSmall(indices(nbSmall - tmp1 - 1)));
+      degenere = FiltreDegenere();
+      if (degenere==1){
+        m_nbdegenere ++;
+        loglikeSmall(indices(nbSmall - tmp1 - 1)) = log(0);
+      }
     }
+    
     uword  index;
     double indicebest = (loglikeSmall).max(index);
     SwitchParamCurrent(index);
     loglikeoutput = ComputeLogLike();
-    
+    degenere = FiltreDegenere();
+    if (degenere==1){
+      m_nbdegenere ++;
+      loglikeoutput = log(0);
+    }
+    indices = sort_index(loglikeSmall);
   }
 }
 
@@ -78,10 +91,16 @@ colvec XEM::FindZMAP(){
 double XEM::ComputeLogLike(){
   ComputeTmpLogProba();
   maxtmplogproba = max(tmplogproba, 1);
-  for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
-  tmplogproba = exp(tmplogproba);
-  rowsums = sum(tmplogproba,1);
-  return sum(maxtmplogproba) + sum(log(rowsums));
+  double output=0;
+  if (min(maxtmplogproba) == 0){
+    output = log(0);
+  }else{
+    for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
+    tmplogproba = exp(tmplogproba);
+    rowsums = sum(tmplogproba,1);
+    output = sum(maxtmplogproba) + sum(log(rowsums));
+  }
+  return output;
 }
 
 
@@ -90,15 +109,13 @@ void XEM::Estep(){for (int k=0; k<g; k++) tmplogproba.col(k) = tmplogproba.col(k
 void XEM::OneEM(){
   double loglike = ComputeLogLike(), prec = log(0);
   int it=0;
-  while ( (it<iterSmall) && ((loglike-prec)>tolKeep) ){
+  while ( (it<iterCurrent) && ((loglike-prec)>tolKeep) ){
     it ++;
     Estep();
     Mstep();
     prec = loglike;
     loglike = ComputeLogLike();
   }
-  // Pour la dégénérescence (pas la peine car on obtien nan)
-  //if (loglike == - log(0)) loglike=log(0);
   // Une verif
   if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }
