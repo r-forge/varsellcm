@@ -132,14 +132,12 @@ VSLCMdata <- function(x, redquali=TRUE){
     if (length(idxcont) != 0){
       priors <- matrix(NA, d, 4)
       colnames(priors) <- c("alpha", "beta", "lambda", "delta")
-#       for (j in idxcont){
-#         priors[j,1] <- 1.28*2
-#         priors[j,2] <- sqrt(0.72 * var(x[,j], na.rm = T))
-#         priors[j,3] <- mean(x[,j], na.rm = T)
-#         priors[j,4] <- 2.6 /(max(x[,j], na.rm = T) - min(x[,j], na.rm = T))
-#       }
-      # Attention ici on met les priors a 1!!!!
-      priors <- matrix(1, d, 4)
+      for (j in idxcont){
+        priors[j,1] <- 1#1.28*2
+        priors[j,2] <- 1#sqrt(0.72 * var(x[,j], na.rm = T))
+        priors[j,3] <- mean(x[,j], na.rm = T)
+        priors[j,4] <- 1#2.6 /(max(x[,j], na.rm = T) - min(x[,j], na.rm = T))
+      }
     }
     ## Pour travailler avec Armadillo on rempli artificellement les NA par 0
     notNA <- (is.na(x)==FALSE)*1

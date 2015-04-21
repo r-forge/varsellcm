@@ -8,7 +8,7 @@ setMethod( f = "MICL",
            signature(obj="VSLCMresultsContinuous"), 
            definition = function(obj){
              obj@strategy@vbleSelec <- TRUE
-             obj@data <- VSLCMdata(obj@data@data)
+             obj@data <- VSLCMdata(obj@data@data, obj@data@priors)
              reference <- ComputeMICL(obj, "Continuous")
              reference <- DesignOutput(reference)
              return(reference)         
@@ -26,7 +26,7 @@ setMethod( f = "MICL",
              }
              
              colnames(tmp) <- colnames(obj@data@shortdata)
-             obj@data <- VSLCMdata(tmp)
+             obj@data <- VSLCMdata(tmp, obj@data@priors)
              reference <- ComputeMICL(obj, "Categorical")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -46,7 +46,7 @@ setMethod( f = "MICL",
              tmp <- cbind(obj@data@dataContinuous@data, tmp)
              colnames(tmp) <- names(obj@model@omega)
              
-             obj@data <- VSLCMdata(tmp)
+             obj@data <- VSLCMdata(tmp, obj@data@priors)
              reference <- ComputeMICL(obj, "Mixed")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -108,7 +108,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
   # Verifie les paramètres d'entrées
   CheckInputs(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
-  strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)  
+  strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
   # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
   data <- VSLCMdata(x)
   
@@ -156,7 +156,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
         # On parallelise aussi pour les EM donc on réparti les initialisations sur les différents coeurs
       }
       reference@strategy <- strategy 
-      nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores)
+      nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores, 4)
       if (strategy@paramEstim){
         reference@strategy@vbleSelec <- FALSE
         reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)

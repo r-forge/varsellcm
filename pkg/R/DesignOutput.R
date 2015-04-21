@@ -22,9 +22,9 @@ setMethod( f = "DesignOutput",
                    reference@data@data[which(reference@data@notNA[,j]==0),j] <- NA
                }
                if (reference@strategy@paramEstim){
-                 rownames(reference@param@mu)  <-   colnames(reference@data@data)
-                 rownames(reference@param@sd)  <-   colnames(reference@data@data)
                  if (reference@criteria@degeneracyrate != 1){
+                   rownames(reference@param@mu)  <-   colnames(reference@data@data)
+                   rownames(reference@param@sd)  <-   colnames(reference@data@data)
                    if (reference@criteria@degeneracyrate>0.1)
                      warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
                    reference@param@pi <- as.numeric(reference@param@pi)
@@ -157,8 +157,6 @@ setMethod( f = "DesignOutput",
                  }
                }
              }
-             
-             
              return(reference)
            }
 )

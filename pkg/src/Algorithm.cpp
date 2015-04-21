@@ -27,6 +27,8 @@ void Algorithm::Run(S4 * output_p){
     m_omegaBest = omegainit.col(0);
     for (int ini=0; ini<omegainit.n_cols; ini++){
       m_omegaCurrent = omegainit.col(ini);
+      if (sum(m_omegaCurrent)==0)
+        m_omegaCurrent = ones<vec>(omegainit.n_rows);
       prec = log(0);
       zCandInit();
       m_miclCurrent = Integre_Complete_Like_Cand();
