@@ -8,7 +8,7 @@ setMethod( f = "MICL",
            signature(obj="VSLCMresultsContinuous"), 
            definition = function(obj){
              obj@strategy@vbleSelec <- TRUE
-             obj@data <- VSLCMdata(obj@data@data, obj@data@priors)
+             obj@data <- VSLCMdata(obj@data@data, obj@model@g)
              reference <- ComputeMICL(obj, "Continuous")
              reference <- DesignOutput(reference)
              return(reference)         
@@ -26,7 +26,7 @@ setMethod( f = "MICL",
              }
              
              colnames(tmp) <- colnames(obj@data@shortdata)
-             obj@data <- VSLCMdata(tmp, obj@data@priors)
+             obj@data <- VSLCMdata(tmp, obj@model@g)
              reference <- ComputeMICL(obj, "Categorical")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -46,7 +46,7 @@ setMethod( f = "MICL",
              tmp <- cbind(obj@data@dataContinuous@data, tmp)
              colnames(tmp) <- names(obj@model@omega)
              
-             obj@data <- VSLCMdata(tmp, obj@data@priors)
+             obj@data <- VSLCMdata(tmp, obj@model@g)
              reference <- ComputeMICL(obj, "Mixed")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -110,7 +110,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
   # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
   strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
   # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
-  data <- VSLCMdata(x)
+  data <- VSLCMdata(x, g)
   
   if (class(data) == "VSLCMdataContinuous")
     reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)

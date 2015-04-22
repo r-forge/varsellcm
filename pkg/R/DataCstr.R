@@ -86,7 +86,7 @@ setClass(
 ## La fonction VSLCMdata permet de construire un objet de class S4 VSLCMdataContinuous ou VSLCMdataCategorical en fonction
 ## de la nature des variables
 ########################################################################################################################
-VSLCMdata <- function(x, redquali=TRUE){
+VSLCMdata <- function(x, g, redquali=TRUE){
   # Ajout d'un nom de variable si celui-ci est manquant
   if (is.null(colnames(x)))
     colnames(x) <- paste("X",1:ncol(x), sep="")
@@ -136,7 +136,7 @@ VSLCMdata <- function(x, redquali=TRUE){
         priors[j,1] <- 1#1.28*2
         priors[j,2] <- 1#sqrt(0.72 * var(x[,j], na.rm = T))
         priors[j,3] <- mean(x[,j], na.rm = T)
-        priors[j,4] <- 1#2.6 /(max(x[,j], na.rm = T) - min(x[,j], na.rm = T))
+        priors[j,4] <- 1/(100*g)
       }
     }
     ## Pour travailler avec Armadillo on rempli artificellement les NA par 0
@@ -150,13 +150,13 @@ VSLCMdata <- function(x, redquali=TRUE){
     if (length(idxcont) != 0){
       tmpdata <- data.frame(x[,idxcont])
       colnames(tmpdata) <- colnames(x)[idxcont]
-      output$continuous <- VSLCMdata(tmpdata)
+      output$continuous <- VSLCMdata(tmpdata, g)
     }
       
     if (length(idxcat) != 0){
       tmpdata <- data.frame(x[,idxcat])
       colnames(tmpdata) <- colnames(x)[idxcat]      
-      output$categorical <- VSLCMdata(tmpdata, redquali=FALSE)
+      output$categorical <- VSLCMdata(tmpdata, g, redquali=FALSE)
     }
 
     output <- new("VSLCMdataMixed", n=n, d=d, withContinuous=(length(idxcont) != 0), withCategorical=(length(idxcat) != 0),
