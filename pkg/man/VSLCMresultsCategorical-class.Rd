@@ -7,8 +7,6 @@
 This class contains the model information
 }
 
-
-
 \section{Slots}{
   \describe{
     \item{\code{data}:}{An object of class \code{\linkS4class{VSLCMdataCategorical}} }
@@ -20,9 +18,7 @@ This class contains the model information
   }
 }
 
-
 \examples{
 showClass("VSLCMresultsCategorical")
 }
-
 \keyword{classes}

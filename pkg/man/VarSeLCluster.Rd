@@ -1,46 +1,45 @@
 \name{VarSelCluster}
 \alias{VarSelCluster}
-\title{
-VarSelCluster
-}
+\title{VarSelCluster}
 
 \description{
    This function performs the variable selection for a model-based clustering of data set having missing values. 
-   The data distribution follow a locally independent mixture model whose the one-dimensional marginal distributions
+   The data distribution follows a locally independent mixture model whose the one-dimensional marginal distributions
    belong to the exponential family (i.e. Gaussian or multinomial).
    Missing values are dealing by assuming that data are missing at random.
    The model selection is carried out by maximizing the MICL criterion.
 }
 \usage{
-VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramEstim=TRUE,
-nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
+VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
-  \item{x}{
-    A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric"  and categorical variables must be "factor".
-
-  }
+  \item{x}{A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric"  and categorical variables must be "factor".}
+  
   \item{g}{
     An integer specifying the number of mixture components
   }
+  
   \item{initModel}{
     The number of random initializations of the algorithm. 
     The default is 50. 
   }
+  
   \item{vbleSelec}{
     Logical indicating if a variable selection is performed. 
     The default is TRUE. 
   }
-  \item{discrim}{
-    Logical vector indicating if the role of the variable (1: discriminative, 0: not discriminative).
+  
+  \item{discrim}{Logical vector indicating if the role of the variable (1: discriminative, 0: not discriminative).
     It is used only when vbleSelec=FALSE.
     The default considers all the variables as discriminative (rep(1,ncol(x))). 
   }
+  
   \item{paramEstim}{
     Logical indicating if the maximum likelihood (ML) inference is performed for the best model (according to the MICL criterion). 
     The default is TRUE. 
   }
+  
   \item{nbcores}{
     Number of cores.
     The default is 1.
@@ -68,9 +67,8 @@ nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3
 
 }
 \value{
-  An object of class \code{\linkS4class{VSLCMresultsContinuous}} or \code{\linkS4class{VSLCMresultsCategorical}} providing the model maximizing the MICL criterion.
-  Thus, it indicates which variables are relevant to the clustering. It also provides the maximum
-  likelihood estimates associated to this model.
+  An object of class \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}  containing the model maximizing the MICL criterion.
+  Thus, it indicates which variables are relevant to the clustering. It also provides the maximum likelihood estimates associated to this model.
 }
 
 \references{
@@ -88,13 +86,11 @@ require(VarSelLCM)
 # x contains the observed variables
 # z the known statu (i.e. 1: absence and 2: presence of heart disease)
 data(heart)
+z <- heart[,"Class"]
+x <- heart[,-13]
 
 # Cluster analysis without variable selection
-# Cluster analysis without variable selection
-res_without <- VarSelCluster(x, 2, vbleSelec = F)
-
-res_without <- VarSelCluster(x, 2, vbleSelec = F)
-
+res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 
 # Cluster analysis with variable selection (with parallelisation)
 res_with <- VarSelCluster(x, 2, nbcores = 2)
@@ -106,11 +102,9 @@ print(table(z, res_with@partitions@zMAP))
 # Summary of the best model
 summary(res_with)
 
-
 # Parameters of the best model
 print(res_with)
 
 # Plot of the best model
 plot(res_with)
-
 }

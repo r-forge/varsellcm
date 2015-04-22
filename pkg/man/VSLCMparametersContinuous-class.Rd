@@ -6,9 +6,6 @@
 \description{
 This class contains the model information
 }
-
-
-
 \section{Slots}{
   \describe{
     \item{\code{pi}:}{proportions.}
@@ -16,10 +13,7 @@ This class contains the model information
     \item{\code{sd}:}{standart deviations.}
   }
 }
-
-
 \examples{
 showClass("VSLCMparamContinuous")
 }
-
 \keyword{classes}
