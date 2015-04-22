@@ -81,40 +81,36 @@ nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3
 
 
 \examples{
-# Variable selection and parameter estimation of a continuous data set with missing values
+# Package loading
 require(VarSelLCM)
-data(stones)
 
-results <- VarSelCluster(stones, 2)
+# Data loading:
+# x contains the observed variables
+# z the known statu (i.e. 1: absence and 2: presence of heart disease)
+data(heart)
 
-summary(results)
+# Cluster analysis without variable selection
+# Cluster analysis without variable selection
+res_without <- VarSelCluster(x, 2, vbleSelec = F)
 
-print(results)
-
-plot(results)
-
-newind <- VarSelImputation(results, 1)
-
-# Variable selection and parameter estimation of a categorical data set without missing values
-data(birds)
-
-results <- VarSelCluster(birds, 2)
-
-summary(results)
-
-print(results)
-
-plot(results)
+res_without <- VarSelCluster(x, 2, vbleSelec = F)
 
 
-# Variable selection and parameter estimation of a mixed data set without missing values
-data(heterodata)
+# Cluster analysis with variable selection (with parallelisation)
+res_with <- VarSelCluster(x, 2, nbcores = 2)
 
-results <- VarSelCluster(heterodata, 2)
+# Confusion matrices: variable selection decreases the misclassification error rate
+print(table(z, res_without@partitions@zMAP))
+print(table(z, res_with@partitions@zMAP))
 
-summary(results)
+# Summary of the best model
+summary(res_with)
 
-print(results)
 
-plot(results)
+# Parameters of the best model
+print(res_with)
+
+# Plot of the best model
+plot(res_with)
+
 }
