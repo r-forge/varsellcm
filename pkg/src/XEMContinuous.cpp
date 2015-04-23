@@ -42,7 +42,7 @@ void XEMContinuous::ComputeTmpLogProba(){
 int XEMContinuous::FiltreDegenere(){
   int output = 0;
   if (min(min(paramCurrent_p->m_sd))<0.000001)
-    output = 1;
+  output = 1;
   return output;
 }
 
@@ -64,7 +64,6 @@ void XEMContinuous::Output(S4 * reference_p){
       Mat<double> mu=ones<mat>(g, data_p->m_ncols);
       Mat<double> sd=ones<mat>(g, data_p->m_ncols);
       int loc=0;
-      
       for (int j=0; j<data_p->m_ncols; j++){
         if (omega(j) == 0){
           vec tmp = data_p->m_x.col(j);
@@ -78,12 +77,17 @@ void XEMContinuous::Output(S4 * reference_p){
           loc ++;
         }
       }
-      as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
       as<S4>(reference_p->slot("param")).slot("mu") = wrap(trans(mu));
       as<S4>(reference_p->slot("param")).slot("sd") = wrap(trans(sd));
       as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
       as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") =  double(m_nbdegenere)/double(nbKeep);
-      Estep();
+      if (sum(omega)==0){
+        as<S4>(reference_p->slot("param")).slot("pi") = wrap(ones<vec>(g) * (1/g));
+        tmplogproba = ones<mat>(data_p->m_nrows,g) * (1/g);
+      }else{
+        as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+        Estep();
+      } 
       as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
       as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
     }else{

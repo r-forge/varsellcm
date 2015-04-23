@@ -81,11 +81,16 @@ void XEMCategorical::Output(S4 * reference_p){
         loc ++;
       }
     }
-    as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
     as<S4>(reference_p->slot("param")).slot("alpha") = wrap(alpha);    
     as<S4>(reference_p->slot("criteria")).slot("loglikelihood") = loglikeoutput;
-      as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = m_nbdegenere/nbKeep;
-    Estep();
+    as<S4>(reference_p->slot("criteria")).slot("degeneracyrate") = m_nbdegenere/nbKeep;
+    if (sum(omega)==0){
+      as<S4>(reference_p->slot("param")).slot("pi") = wrap(ones<vec>(g) * (1/g));
+      tmplogproba = ones<mat>(data_p->m_nrows,g) * (1/g);
+    }else{
+      as<S4>(reference_p->slot("param")).slot("pi") = wrap(trans(paramCurrent_p->m_pi));
+      Estep();
+    }    
     as<S4>(reference_p->slot("partitions")).slot("tik") = wrap(tmplogproba);
     as<S4>(reference_p->slot("partitions")).slot("zMAP") = wrap(FindZMAP());
   }

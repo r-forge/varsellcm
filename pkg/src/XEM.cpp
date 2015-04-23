@@ -28,44 +28,48 @@ void XEM::InitCommumParamXEM(const colvec & om, const int & gv, const S4 & strat
   location = find(omega == 1);
   iterCurrent = iterSmall;
   loglikeoutput=log(0);
+  if (sum(omega) == 0){
+    loglikeoutput = 0;
+  }
 }
 
 void XEM::Run(){
   if (paramEstim){
     // Partie Small EM
-    for (int ini=0; ini<nbSmall; ini++){
-      SwitchParamCurrent(ini);
-      OneEM();
-      loglikeSmall(ini) = ComputeLogLike();
-    }
-    // On conserve les meilleurs initialisations
-    uvec indices = sort_index(loglikeSmall);
-    iterCurrent = iterKeep;
-    m_nbdegenere = 0;
-    if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
-
-    int degenere = 0;
-    for (int tmp1=0; tmp1<nbKeep; tmp1++){
-      SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
-      OneEM();
-      loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
+    if (sum(omega)>0){
+      for (int ini=0; ini<nbSmall; ini++){
+        SwitchParamCurrent(ini);
+        OneEM();
+        loglikeSmall(ini) = ComputeLogLike();
+      }
+      // On conserve les meilleurs initialisations
+      uvec indices = sort_index(loglikeSmall);
+      iterCurrent = iterKeep;
+      m_nbdegenere = 0;
+      if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
+      
+      int degenere = 0;
+      for (int tmp1=0; tmp1<nbKeep; tmp1++){
+        SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
+        OneEM();
+        loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
+        degenere = FiltreDegenere();
+        if (degenere==1){
+          m_nbdegenere ++;
+          loglikeSmall(indices(nbSmall - tmp1 - 1)) = log(0);
+        }
+      }
+      uword  index;
+      double indicebest = (loglikeSmall).max(index);
+      SwitchParamCurrent(index);
+      loglikeoutput = ComputeLogLike();
       degenere = FiltreDegenere();
       if (degenere==1){
         m_nbdegenere ++;
-        loglikeSmall(indices(nbSmall - tmp1 - 1)) = log(0);
+        loglikeoutput = log(0);
       }
+      indices = sort_index(loglikeSmall);
     }
-    
-    uword  index;
-    double indicebest = (loglikeSmall).max(index);
-    SwitchParamCurrent(index);
-    loglikeoutput = ComputeLogLike();
-    degenere = FiltreDegenere();
-    if (degenere==1){
-      m_nbdegenere ++;
-      loglikeoutput = log(0);
-    }
-    indices = sort_index(loglikeSmall);
   }
 }
 
