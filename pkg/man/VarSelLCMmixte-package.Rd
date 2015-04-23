@@ -48,7 +48,7 @@ z <- heart[,"Class"]
 x <- heart[,-13]
 
 # Cluster analysis without variable selection
-res_without <- VarSelCluster(x, 2, vbleSelec = F)
+res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 
 # Cluster analysis with variable selection (with parallelisation)
 res_with <- VarSelCluster(x, 2, nbcores = 2)

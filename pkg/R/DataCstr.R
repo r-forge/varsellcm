@@ -136,7 +136,7 @@ VSLCMdata <- function(x, g, redquali=TRUE){
         priors[j,1] <- 1#1.28*2
         priors[j,2] <- 1#sqrt(0.72 * var(x[,j], na.rm = T))
         priors[j,3] <- mean(x[,j], na.rm = T)
-        priors[j,4] <- 1/(100*g)
+        priors[j,4] <- 1/(100)
       }
     }
     ## Pour travailler avec Armadillo on rempli artificellement les NA par 0

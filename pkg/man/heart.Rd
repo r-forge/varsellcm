@@ -25,6 +25,7 @@ Gavin Brown. Diversity in Neural Network Ensembles. The University of Birmingham
 }
 \description{
 This database contains 13 attributes.
+}
 \examples{
 data(heart)
 }
