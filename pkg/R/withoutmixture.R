@@ -12,7 +12,6 @@ setMethod( f = "withoutmixture",
                if (any(obj@data@notNA[,j]==0))
                  obj@data@data[which(obj@data@notNA[,j]==0),j] <- NA
              }
-             
              obj@param@pi <- 1
              obj@param@mu <- matrix(NA, obj@data@d, 1)
              obj@param@sd <- matrix(NA, obj@data@d, 1)
@@ -37,6 +36,37 @@ setMethod( f = "withoutmixture",
              return(obj)         
            }
 )
+## Pour les variables entieres
+setMethod( f = "withoutmixture", 
+           signature(obj="VSLCMresultsInteger"), 
+           definition = function(obj){
+             obj@model@omega <-  as.numeric(obj@model@omega)
+             names(obj@model@omega) <- colnames(obj@data@data)
+             # On remet les valeurs manquantes
+             for (j in 1:obj@data@d){
+               if (any(obj@data@notNA[,j]==0))
+                 obj@data@data[which(obj@data@notNA[,j]==0),j] <- NA
+             }
+             obj@param@pi <- 1
+             obj@param@lambda <- matrix(colMeans(x, na.rm = T), obj@data@d, 1)
+             rownames(obj@param@lambda)  <-   colnames(obj@data@data)
+             colnames(obj@param@lambda) <-  paste("class-",1:length(obj@param@pi),sep="")
+             proba <- rep(0, obj@data@n)
+             for (j in 1:obj@data@d)
+               proba[which(obj@data@notNA[,j]==1)] <- proba[which(obj@data@notNA[,j]==1)] + dpois(obj@data@data[which(obj@data@notNA[,j]==1),j], obj@param@lambda[j,1], log = TRUE)
+             
+             obj@partitions@zMAP <- rep(1, obj@data@n)
+             obj@partitions@zOPT <- rep(1, obj@data@n)
+             obj@partitions@tik <- matrix(1, obj@data@n, 1)
+             obj@criteria@loglikelihood <- sum(proba)
+             obj@criteria@BIC <- obj@criteria@loglikelihood - 0.5*obj@data@d*log(obj@data@n)
+             obj@criteria@ICL <- ICLinteger(obj) 
+             obj@criteria@MICL <- obj@criteria@ICL
+             obj@criteria@degeneracyrate <- 0
+             return(obj)         
+           }
+)
+
 ## Pour les variables catégorielles
 setMethod( f = "withoutmixture", 
            signature(obj="VSLCMresultsCategorical"), 
@@ -61,23 +91,16 @@ setMethod( f = "withoutmixture",
              obj@criteria@ICL <- ICLcategorical(obj) 
              obj@criteria@MICL <- obj@criteria@ICL
              obj@criteria@degeneracyrate <- 0
-             
-             
-             
              # On remet les valeurs manquantes
              if (any(obj@data@shortdata == 0)){
                for (j in 1:ncol(obj@data@shortdata))
                  obj@data@shortdata[which(obj@data@shortdata[,j] == 0), ] <- NA
              }
-             
-             
              colnames(obj@partitions@tik )=paste("class-",1:obj@model@g,sep="")
-             
-             
-             
              return(obj)           
            }
 )
+
 ## Pour les variables mixed
 setMethod( f = "withoutmixture", 
            signature(obj="VSLCMresultsMixed"), 

@@ -1,8 +1,7 @@
-//#include "AlgorithmContinuous.h"
-//#include "AlgorithmCategorical.h"
 #include "AlgorithmMixed.h"
 #include "XEMContinuous.h"
 #include "XEMCategorical.h"
+#include "XEMInteger.h"
 #include "XEMMixed.h"
 
 //[[Rcpp::export]]
@@ -17,7 +16,14 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     XEMContinuous *xem_p  = new XEMContinuous(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);
-  }else if (namestr == "Categorical"){
+  }else if (namestr == "Integer"){
+    DataInteger * data_p = new DataInteger(as<S4>(reference.slot("data")));
+    //AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
+    //algo_p->Run(reference_p);
+    XEMInteger *xem_p  = new XEMInteger(data_p, reference_p);
+    xem_p->Run(); 
+    xem_p->Output(reference_p);
+ }else if (namestr == "Categorical"){
     DataCategorical * data_p = new DataCategorical(as<S4>(reference.slot("data")));
     AlgorithmCategorical *algo_p = new AlgorithmCategorical(data_p, reference_p);
     algo_p->Run(reference_p);
@@ -44,6 +50,10 @@ S4  ComputeMICL(S4 reference, StringVector name){
     DataContinuous * data_p = new DataContinuous(as<S4>(reference.slot("data")));
     AlgorithmContinuous *algo_p = new AlgorithmContinuous(data_p, reference_p);
     algo_p->ComputeMICL(reference_p);
+  }else if (namestr == "Integer"){
+   // DataInteger * data_p = new DataInteger(as<S4>(reference.slot("data")));
+  //  AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
+    //algo_p->ComputeMICL(reference_p);
   }else if (namestr == "Categorical"){
     DataCategorical * data_p = new DataCategorical(as<S4>(reference.slot("data")));
     AlgorithmCategorical *algo_p = new AlgorithmCategorical(data_p, reference_p);

@@ -36,6 +36,14 @@ ICLcontinuous <- function(obj){
   return(ICLexact)
 }
 
+## ICL exact dans le cas de variables entiere
+ICLinteger <- function(obj){
+  print("ToDO ICL")
+  ICLexact <- -Inf
+  return(ICLexact)
+}
+
+
 ## Intégrale sur une variable catégorielle pour 1 classe ou non discriminante
 IntegreOneVariableCategorical <- function(y,  mj){
   y <- y[which(is.na(y) == FALSE)]

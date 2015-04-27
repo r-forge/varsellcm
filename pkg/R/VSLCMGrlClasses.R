@@ -66,6 +66,15 @@ setClass(
 )
 
 ########################################################################################################################
+## Classe S4 VSLCMparamInteger contenant les proportions (pi), et les parameters (lambda)
+########################################################################################################################
+setClass(
+  Class = "VSLCMparamInteger", 
+  representation = representation(pi="numeric", lambda="matrix"), 
+  prototype = prototype(pi=numeric(), lambda=matrix())
+)
+
+########################################################################################################################
 ## Classe S4 VSLCMparamCategorical contenant les proportions (pi), les probas (alpha)
 ########################################################################################################################
 setClass(
@@ -80,8 +89,8 @@ setClass(
 ########################################################################################################################
 setClass(
   Class = "VSLCMparamMixed", 
-  representation = representation(pi="numeric", paramContinuous="VSLCMparamContinuous", paramCategorical="VSLCMparamCategorical"), 
-  prototype = prototype(pi=numeric(), paramContinuous=new("VSLCMparamContinuous"), paramCategorical=new("VSLCMparamCategorical"))
+  representation = representation(pi="numeric", paramContinuous="VSLCMparamContinuous", paramInteger="VSLCMparamInteger", paramCategorical="VSLCMparamCategorical"), 
+  prototype = prototype(pi=numeric(), paramContinuous=new("VSLCMparamContinuous"), paramInteger=new("VSLCMparamInteger"), paramCategorical=new("VSLCMparamCategorical"))
 )
 
 ########################################################################################################################
@@ -90,9 +99,21 @@ setClass(
 setClass(
   Class = "VSLCMresultsContinuous", 
   representation = representation(data="VSLCMdataContinuous", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
-    model="VSLCMmodel", strategy="VSLCMstrategy", param="VSLCMparamContinuous"), 
+                                  model="VSLCMmodel", strategy="VSLCMstrategy", param="VSLCMparamContinuous"), 
   prototype = prototype(data=new("VSLCMdataContinuous"), criteria=new("VSLCMcriteria"), partitions=new("VSLCMpartitions"),
-    model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamContinuous"))
+                        model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamContinuous"))
+)
+
+
+########################################################################################################################
+## Classe S4 VSLCMresultsInteger
+########################################################################################################################
+setClass(
+  Class = "VSLCMresultsInteger", 
+  representation = representation(data="VSLCMdataInteger", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
+                                  model="VSLCMmodel", strategy="VSLCMstrategy", param="VSLCMparamInteger"), 
+  prototype = prototype(data=new("VSLCMdataInteger"), criteria=new("VSLCMcriteria"), partitions=new("VSLCMpartitions"),
+                        model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamInteger"))
 )
 
 ########################################################################################################################

@@ -8,8 +8,19 @@ setMethod( f = "MICL",
            signature(obj="VSLCMresultsContinuous"), 
            definition = function(obj){
              obj@strategy@vbleSelec <- TRUE
-             obj@data <- VSLCMdata(obj@data@data, obj@model@g)
+             obj@data <- VSLCMdata(obj@data@data)
              reference <- ComputeMICL(obj, "Continuous")
+             reference <- DesignOutput(reference)
+             return(reference)         
+           }
+)
+## Pour les variables entieres
+setMethod( f = "MICL", 
+           signature(obj="VSLCMresultsInteger"), 
+           definition = function(obj){
+             obj@strategy@vbleSelec <- TRUE
+             obj@data <- VSLCMdata(obj@data@data)
+             reference <- ComputeMICL(obj, "Integer")
              reference <- DesignOutput(reference)
              return(reference)         
            }
@@ -24,9 +35,8 @@ setMethod( f = "MICL",
                tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
                tmp[,j] <- factor(tmp[,j])
              }
-             
              colnames(tmp) <- colnames(obj@data@shortdata)
-             obj@data <- VSLCMdata(tmp, obj@model@g)
+             obj@data <- VSLCMdata(tmp)
              reference <- ComputeMICL(obj, "Categorical")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -37,16 +47,21 @@ setMethod( f = "MICL",
            signature(obj="VSLCMresultsMixed"), 
            definition = function(obj){
              obj@strategy@vbleSelec <- TRUE
-             
-             tmp <- data.frame(obj@data@dataCategorical@data)
-             for (j in 1:ncol(tmp)){
-               tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@dataCategorical@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
-               tmp[,j] <- factor(tmp[,j])
+             tmp <- data.frame
+             if (obj@data@withCategorical){
+               tmp <- data.frame(obj@data@dataCategorical@data)
+               for (j in 1:ncol(tmp)){
+                 tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@dataCategorical@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
+                 tmp[,j] <- factor(tmp[,j])
+               }
              }
-             tmp <- cbind(obj@data@dataContinuous@data, tmp)
+             if (obj@data@withInteger)
+               tmp <- cbind(obj@data@dataInteger@data, tmp)
+             if (obj@data@withContinuous)
+               tmp <- cbind(obj@data@dataContinuous@data, tmp)
              colnames(tmp) <- names(obj@model@omega)
              
-             obj@data <- VSLCMdata(tmp, obj@model@g)
+             obj@data <- VSLCMdata(tmp)
              reference <- ComputeMICL(obj, "Mixed")
              reference <- DesignOutput(reference)
              return(reference)           
@@ -66,6 +81,14 @@ setMethod( f = "VarSelModelMLE",
            signature(obj="VSLCMresultsContinuous",it="numeric"), 
            definition = function(obj,it){
              reference <- OptimizeMICL(obj, "Continuous")
+             return(reference)         
+           }
+)
+## Pour les variables entiers
+setMethod( f = "VarSelModelMLE", 
+           signature(obj="VSLCMresultsInteger",it="numeric"), 
+           definition = function(obj,it){
+             reference <- OptimizeMICL(obj, "Integer")
              return(reference)         
            }
 )
@@ -114,6 +137,8 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
   
   if (class(data) == "VSLCMdataContinuous")
     reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+  else if (class(data) == "VSLCMdataInteger")
+    reference <- new("VSLCMresultsInteger", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataCategorical")
     reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataMixed")
