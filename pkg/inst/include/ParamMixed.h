@@ -11,6 +11,7 @@ m_pi : proportions
 
 #include "DataMixed.h"
 #include "ParamContinuous.h"
+#include "ParamInteger.h"
 #include "ParamCategorical.h"
 
 class ParamMixed : public Param{

@@ -18,8 +18,8 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     xem_p->Output(reference_p);
   }else if (namestr == "Integer"){
     DataInteger * data_p = new DataInteger(as<S4>(reference.slot("data")));
-    //AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
-    //algo_p->Run(reference_p);
+    AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
+    algo_p->Run(reference_p);
     XEMInteger *xem_p  = new XEMInteger(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);

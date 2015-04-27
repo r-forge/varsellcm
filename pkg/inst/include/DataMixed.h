@@ -7,6 +7,7 @@ Ces élements sont:
 #define DataMixed_H
   
 #include "DataContinuous.h"
+#include "DataInteger.h"
 #include "DataCategorical.h"
 
 
