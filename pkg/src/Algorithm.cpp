@@ -56,7 +56,7 @@ void Algorithm::ComputeMICL(S4 * output_p){
   //Col<double> tmp2= as<S4>(output_p->slot("partitions")).slot("zMAP");
   m_omegaCurrent = tmp;
   m_omegaBest= tmp;
-  for (int ini=0; ini<15; ini++){
+  for (int ini=0; ini<50; ini++){
     prec = log(0);
     m_omegaCurrent = tmp;
     //m_zCandCurrent = tmp2-1;
@@ -65,6 +65,8 @@ void Algorithm::ComputeMICL(S4 * output_p){
     m_miclCurrent = Integre_Complete_Like_Cand();
     while (prec < m_miclCurrent){
       prec = m_miclCurrent;
+      Optimize_partition();
+      Optimize_partition();
       Optimize_partition();
     }
     if (m_miclCurrent > m_miclBest){

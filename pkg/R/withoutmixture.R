@@ -1,5 +1,3 @@
-
-
 setGeneric ( name= "withoutmixture",  def = function(obj){ standardGeneric("withoutmixture")})
 ## Pour les variables continues
 setMethod( f = "withoutmixture", 
@@ -78,9 +76,13 @@ setMethod( f = "withoutmixture",
              proba <- rep(0, obj@data@n)
              nbparam <- 0
              for (j in 1:obj@data@d){
-               obj@param@alpha[[j]] <- as.numeric(table(obj@data@data[,j])/sum(table(obj@data@data[,j])))
-               who <- which(is.na(obj@data@data[,j])==FALSE)
-               proba[who] <- proba[who] + log(obj@param@alpha[[j]][obj@data@data[who,j]])
+               obj@param@alpha[[j]] <- matrix(table(obj@data@data[,j])/sum(table(obj@data@data[,j])), nrow=1)
+               lev <- names(table(obj@data@data[,j]))
+               colnames(obj@param@alpha[[j]]) <- lev
+               for (h in 1:length(lev)){
+                 who <- which(obj@data@data[,j]==lev[h])
+                 proba[who] <- proba[who] + log(obj@param@alpha[[j]][1,h])
+               }
                nbparam <- nbparam + length(obj@param@alpha[[j]])-1
              }
              obj@partitions@zMAP <- rep(1, obj@data@n)
@@ -106,33 +108,59 @@ setMethod( f = "withoutmixture",
            signature(obj="VSLCMresultsMixed"), 
            definition = function(obj){
              obj@model@omega <-  as.numeric(obj@model@omega)
-             namestmp <- c(colnames(obj@data@dataContinuous@data),colnames(obj@data@dataCategorical@shortdata))
+             namestmp <- numeric()
+             if (obj@data@withContinuous) namestmp <- c(namestmp, colnames(obj@data@dataContinuous@data))
+             if (obj@data@withInteger) namestmp <- c(namestmp, colnames(obj@data@dataInteger@data))
+             if (obj@data@withCategorical) namestmp <- c(namestmp, colnames(obj@data@dataCategorical@data))
              names(obj@model@omega) <- namestmp
              
              obj@param@pi <- 1
              proba <- rep(0, obj@data@n)
-             nbparam <- obj@data@dataContinuous@d*2
+             nbparam <- 0
              
-             obj@param@paramContinuous@pi <- 1
-             obj@param@paramContinuous@mu <- matrix(NA, obj@data@dataContinuous@d, 1)
-             obj@param@paramContinuous@sd <- matrix(NA, obj@data@dataContinuous@d, 1)
-             rownames(obj@param@paramContinuous@mu)  <-   colnames(obj@data@dataContinuous@data)
-             rownames(obj@param@paramContinuous@sd)  <-   colnames(obj@data@dataContinuous@data)
-             colnames(obj@param@paramContinuous@mu) <-  paste("class-",1:length(obj@param@paramContinuous@pi),sep="")
-             colnames(obj@param@paramContinuous@sd) <-  paste("class-",1:length(obj@param@paramContinuous@pi),sep="")
-             proba <- rep(0, obj@data@dataContinuous@n)
-             for (j in 1:obj@data@dataContinuous@d){
-               obj@param@paramContinuous@mu[j,1] <- mean(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j])
-               obj@param@paramContinuous@sd[j,1] <- sd(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j])
-               proba[which(obj@data@dataContinuous@notNA[,j]==1)] <- proba[which(obj@data@dataContinuous@notNA[,j]==1)] + dnorm(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j], obj@param@paramContinuous@mu[j,1], obj@param@paramContinuous@sd[j,1], log = TRUE)
+             if (obj@data@withContinuous){
+               obj@param@paramContinuous@pi <- 1
+               names(obj@param@paramContinuous@pi) <-  paste("class-",1:length(obj@param@paramContinuous@pi),sep="")
+               obj@param@paramContinuous@mu <- matrix(NA, obj@data@dataContinuous@d, 1)
+               obj@param@paramContinuous@sd <- matrix(NA, obj@data@dataContinuous@d, 1)
+               rownames(obj@param@paramContinuous@mu)  <-   colnames(obj@data@dataContinuous@data)
+               rownames(obj@param@paramContinuous@sd)  <-   colnames(obj@data@dataContinuous@data)
+               colnames(obj@param@paramContinuous@mu) <-  paste("class-",1:length(obj@param@paramContinuous@pi),sep="")
+               colnames(obj@param@paramContinuous@sd) <-  paste("class-",1:length(obj@param@paramContinuous@pi),sep="")
+               for (j in 1:obj@data@dataContinuous@d){
+                 obj@param@paramContinuous@mu[j,1] <- mean(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j])
+                 obj@param@paramContinuous@sd[j,1] <- sd(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j])
+                 proba[which(obj@data@dataContinuous@notNA[,j]==1)] <- proba[which(obj@data@dataContinuous@notNA[,j]==1)] + dnorm(obj@data@dataContinuous@data[which(obj@data@dataContinuous@notNA[,j]==1),j], obj@param@paramContinuous@mu[j,1], obj@param@paramContinuous@sd[j,1], log = TRUE)
+               }  
+               shortomega <- obj@model@omega[which(names(obj@model@omega) %in% colnames(obj@data@dataContinuous@data))]
+               nbparam <- nbparam + length(shortomega) * 2
+             }
+             if (obj@data@withInteger){
+               obj@param@paramInteger@pi <- 1
+               names(obj@param@paramInteger@pi) <-  paste("class-",1:length(obj@param@paramInteger@pi),sep="")
+               obj@param@paramInteger@lambda <- matrix(colMeans(obj@data@dataInteger@data, na.rm = TRUE), obj@data@dataInteger@d, 1)
+               rownames(obj@param@paramInteger@lambda)  <-   colnames(obj@data@dataInteger@data)
+               colnames(obj@param@paramInteger@lambda) <-  paste("class-",1:length(obj@param@paramInteger@pi),sep="")
+               for (j in 1:obj@data@dataInteger@d)
+                 proba[which(obj@data@dataContinuous@notNA[,j]==1)] <- proba[which(obj@data@dataContinuous@notNA[,j]==1)] + dpois(obj@data@dataInteger@data[which(obj@data@dataInteger@notNA[,j]==1),j], obj@param@paramInteger@lambda[j,1], log = TRUE)
+               shortomega <- obj@model@omega[which(names(obj@model@omega) %in% colnames(obj@data@dataContinuous@data))]
+               nbparam <- nbparam + length(shortomega)
              }             
-             obj@param@paramCategorical@pi <- 1
-             obj@param@paramCategorical@alpha <- list()
-             for (j in 1:obj@data@dataCategorical@d){
-               obj@param@paramCategorical@alpha[[j]] <- as.numeric(table(obj@data@dataCategorical@data[,j])/sum(table(obj@data@dataCategorical@data[,j])))
-               who <- which(is.na(obj@data@dataCategorical@data[,j])==FALSE)
-               proba[who] <- proba[who] + log(obj@param@paramCategorical@alpha[[j]][obj@data@dataCategorical@data[who,j]])
-               nbparam <- nbparam + length(obj@param@paramCategorical@alpha[[j]])-1
+             if (obj@data@withCategorical){
+               obj@param@paramCategorical@pi <- 1
+               obj@param@paramCategorical@alpha <- list()
+               for (j in 1:obj@data@dataCategorical@d){
+                 obj@param@paramCategorical@alpha[[j]] <- matrix(table(obj@data@dataCategorical@data[,j])/sum(table(obj@data@dataCategorical@data[,j])), nrow = 1)
+                 lev <- names(table(obj@data@dataCategorical@data[,j]))
+                 colnames(obj@param@paramCategorical@alpha[[j]]) <- lev
+                 for (h in 1:length(lev)){
+                   who <- which(obj@data@dataCategorical@data[,j]==lev[h])
+                   proba[who] <- proba[who] + log(obj@param@paramCategorical@alpha[[j]][1,h])
+                 }
+                 colnames(obj@param@paramCategorical@alpha[[j]] ) <- lev
+                 rownames(obj@param@paramCategorical@alpha[[j]] ) <- "class-1"
+                 nbparam <- nbparam + length(obj@param@paramCategorical@alpha[[j]])-1
+               }
              }
              obj@partitions@zMAP <- rep(1, obj@data@n)
              obj@partitions@zOPT <- rep(1, obj@data@n)
@@ -142,15 +170,6 @@ setMethod( f = "withoutmixture",
              obj@criteria@ICL <- ICLmixed(obj) 
              obj@criteria@MICL <- obj@criteria@ICL
              obj@criteria@degeneracyrate <- 0                         
-             nbparam <- obj@model@g-1 
-             if (obj@data@withContinuous)
-               nbparam <- nbparam + obj@data@dataContinuous@d* 2
-             
-             if (obj@data@withCategorical){
-               for (j in 1:obj@data@dataCategorical@d)
-                 nbparam <- nbparam + (length(obj@data@dataCategorical@modalitynames[[j]])-1)
-               
-             }
              obj@criteria@BIC <- obj@criteria@loglikelihood - nbparam*0.5*log(obj@data@n)
              
              return(obj)           

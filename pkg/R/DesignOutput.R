@@ -11,7 +11,6 @@ setMethod( f = "DesignOutput",
              reference@model@omega <-  as.numeric(reference@model@omega)
              names(reference@model@omega) <- colnames(reference@data@data)
              if (reference@model@g>1){
-               
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
@@ -91,19 +90,15 @@ setMethod( f = "DesignOutput",
              names(reference@model@omega) <- colnames(reference@data@data)
              
              if (reference@model@g>1){
-               # On remet les valeurs manquantes
-               if (any(reference@data@shortdata == 0)){
-                 for (j in 1:ncol(reference@data@shortdata))
-                   reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
-               }
+
                if (reference@strategy@paramEstim == TRUE){
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
                    reference@criteria@MICL <- numeric()
                  }else{
-                   reference@partitions@zOPT <- 1 + reference@partitions@zOPT[attr(reference@data@shortdata,"index")]
+                   reference@partitions@zOPT <- 1 + as.numeric(reference@partitions@zOPT[attr(reference@data@shortdata,"index")])
                  }
-                 reference@partitions@zMAP <- 1 + reference@partitions@zMAP[attr(reference@data@shortdata,"index")]
+                 reference@partitions@zMAP <- 1 + as.numeric(reference@partitions@zMAP[attr(reference@data@shortdata,"index")])
                  # Attention zOPT correspond aux profiles, on repasse donc au niveau des individus
                  reference@param@pi <- as.numeric(reference@param@pi)
                  names(reference@param@pi) <- paste("class-",1:length(reference@param@pi),sep="")
@@ -115,9 +110,15 @@ setMethod( f = "DesignOutput",
                  names(reference@param@alpha) <- colnames(reference@data@shortdata)
                  if (reference@model@g>1)
                    reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
-                 colnames(reference@partitions@tik )=paste("class-",1:reference@model@g,sep="")
+                 colnames(reference@partitions@tik)=paste("class-",1:reference@model@g,sep="")
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
                  reference@criteria@ICL <- ICLcategorical(reference) 
+               }
+               
+               # On remet les valeurs manquantes
+               if (any(reference@data@shortdata == 0)){
+                 for (j in 1:ncol(reference@data@shortdata))
+                   reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
                }
              }
              return(reference)

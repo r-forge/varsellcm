@@ -2,69 +2,47 @@
 ## Fonctions principales du package, les seules accessibles par l'utilisateur sont VarSelCluster,
 ## Imputation (voir Imputation.R) et MICL
 ########################################################################################################################
-setGeneric ( name= "MICL",  def = function(obj){ standardGeneric("MICL")})
+setGeneric ( name= "MICL",  def = function(x, obj){ standardGeneric("MICL")})
 ## Pour les variables continues
 setMethod( f = "MICL", 
-           signature(obj="VSLCMresultsContinuous"), 
-           definition = function(obj){
+           signature(x="data.frame", obj="VSLCMresultsContinuous"), 
+           definition = function(x, obj){
              obj@strategy@vbleSelec <- TRUE
-             obj@data <- VSLCMdata(obj@data@data)
-             reference <- ComputeMICL(obj, "Continuous")
-             reference <- DesignOutput(reference)
-             return(reference)         
+             obj@data  <- VSLCMdata(x)
+             tmp <- ComputeMICL(obj, "Continuous")
+             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))         
            }
 )
 ## Pour les variables entieres
 setMethod( f = "MICL", 
-           signature(obj="VSLCMresultsInteger"), 
-           definition = function(obj){
+           signature(x="data.frame", obj="VSLCMresultsInteger"), 
+           definition = function(x, obj){
              obj@strategy@vbleSelec <- TRUE
-             obj@data <- VSLCMdata(obj@data@data)
-             reference <- ComputeMICL(obj, "Integer")
-             reference <- DesignOutput(reference)
-             return(reference)         
+             # travail sur les données manquantes
+             obj@data  <- VSLCMdata(x)
+             tmp <- ComputeMICL(obj, "Integer")
+             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))          
            }
 )
 ## Pour les variables catégorielles
 setMethod( f = "MICL", 
-           signature(obj="VSLCMresultsCategorical"), 
-           definition = function(obj){
+           signature(x="data.frame", obj="VSLCMresultsCategorical"), 
+           definition = function(x, obj){
              obj@strategy@vbleSelec <- TRUE
-             tmp <- data.frame(obj@data@data)
-             for (j in 1:ncol(tmp)){
-               tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
-               tmp[,j] <- factor(tmp[,j])
-             }
-             colnames(tmp) <- colnames(obj@data@shortdata)
-             obj@data <- VSLCMdata(tmp)
-             reference <- ComputeMICL(obj, "Categorical")
-             reference <- DesignOutput(reference)
-             return(reference)           
+             obj@data  <- VSLCMdata(x)
+             tmp <- ComputeMICL(obj, "Categorical")
+             tmp@partitions@zOPT <-  1 + as.numeric(obj@partitions@zOPT[attr(obj@data@shortdata,"index")])
+             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT))       
            }
 )
 ## Pour les variables mixed
 setMethod( f = "MICL", 
-           signature(obj="VSLCMresultsMixed"), 
-           definition = function(obj){
+           signature(x="data.frame", obj="VSLCMresultsMixed"), 
+           definition = function(x, obj){
              obj@strategy@vbleSelec <- TRUE
-             tmp <- data.frame
-             if (obj@data@withCategorical){
-               tmp <- data.frame(obj@data@dataCategorical@data)
-               for (j in 1:ncol(tmp)){
-                 tmp[which((is.na(tmp[,j])==FALSE)),j] <- obj@data@dataCategorical@modalitynames[[j]][tmp[which((is.na(tmp[,j])==FALSE)),j]]
-                 tmp[,j] <- factor(tmp[,j])
-               }
-             }
-             if (obj@data@withInteger)
-               tmp <- cbind(obj@data@dataInteger@data, tmp)
-             if (obj@data@withContinuous)
-               tmp <- cbind(obj@data@dataContinuous@data, tmp)
-             colnames(tmp) <- names(obj@model@omega)
-             
-             obj@data <- VSLCMdata(tmp)
-             reference <- ComputeMICL(obj, "Mixed")
-             reference <- DesignOutput(reference)
-             return(reference)           
+             obj@data  <- VSLCMdata(x)
+             tmp <- ComputeMICL(obj, "Mixed")
+             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))     
            }
 )
 
@@ -133,7 +111,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
   # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
   strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
   # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
-  data <- VSLCMdata(x, g)
+  data <- VSLCMdata(x)
   
   if (class(data) == "VSLCMdataContinuous")
     reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
@@ -201,7 +179,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
         }
         else
           reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
-
+        
         # On conserve les paramètres maximisant la vraisemblance
         tmploglike <- rep(NA, length(reference))
         for (it in 1:length(tmploglike)) {if (reference[[it]]@criteria@degeneracyrate!=1) tmploglike[it] <- reference[[it]]@criteria@loglikelihood}
@@ -213,4 +191,4 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol
   }
   return(DesignOutput(reference))
   #return(reference)
-  }
+}

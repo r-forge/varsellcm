@@ -61,25 +61,25 @@ ICLinteger <- function(obj){
 
 
 ## Intégrale sur une variable catégorielle pour 1 classe ou non discriminante
-IntegreOneVariableCategorical <- function(y,  mj){
-  y <- y[which(is.na(y) == FALSE)]
-  output <- lgamma(mj * 0.5) - mj * lgamma(0.5)- lgamma(length(y) + mj*0.5)
-  for (h in 1:mj)
-    output <- output + lgamma(sum((y==h)) + 0.5)
-  return(output)
-}
+IntegreOneVariableCategorical <- function(eff)
+  return(lgamma(length(eff) * 0.5) - length(eff) * lgamma(0.5) + sum(lgamma(eff + 0.5)) - lgamma(sum(eff + 0.5)))
+
 
 ## ICL exact dans le cas de variables catégorielles
 ICLcategorical <- function(obj){
-  ICLexact <- lgamma(obj@model@g/2) - obj@model@g*lgamma(1/2) - lgamma(obj@data@n + obj@model@g/2)
-  for (k in 1:obj@model@g)
-    ICLexact <- ICLexact + lgamma(sum((obj@partitions@zMAP == k))+1/2)
+  ICLexact <- lgamma(obj@model@g/2) - obj@model@g*lgamma(1/2) + sum(lgamma(table(c(1:obj@model@g, obj@partitions@zMAP)) - 1/2)) - lgamma(obj@data@n + obj@model@g/2)
   for (j in 1:obj@data@d){
-    if (obj@model@omega[j]==0)
-      ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@data[,j],  length(obj@data@modalitynames[[j]]))
-    else{
-      for (k in unique(obj@partitions@zMAP))
-        ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@data[which(obj@partitions@zMAP == k),j],  length(obj@data@modalitynames[[j]]))
+    eff <- rep(0, length(obj@data@modalitynames[[j]]))
+    if (obj@model@omega[j]==0){
+      for (h in 1:length(eff))
+        eff[h] <- sum(obj@data@data[,j] == obj@data@modalitynames[[j]][h], na.rm = TRUE)
+      ICLexact <- ICLexact  + IntegreOneVariableCategorical(eff)
+    }else{
+      for (k in 1:obj@model@g){
+        for (h in 1:length(eff))
+          eff[h] <- sum(obj@data@data[which(obj@partitions@zMAP == k),j] == obj@data@modalitynames[[j]][h], na.rm = TRUE)
+        ICLexact <- ICLexact  + IntegreOneVariableCategorical(eff)        
+      }
     }
   }
   names(ICLexact) <- NULL
@@ -123,13 +123,18 @@ ICLmixed <- function(obj){
     loc <- 0
     for (j in who){
       loc <- loc + 1
-      if (obj@model@omega[j]==0)
-        ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@dataCategorical@data[,loc],  length(obj@data@dataCategorical@modalitynames[[loc]]))
-      else{
-        for (k in unique(obj@partitions@zMAP))
-          ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@dataCategorical@data[which(obj@partitions@zMAP == k),loc],  length(obj@data@dataCategorical@modalitynames[[loc]]))
-      }
-      
+      eff <- rep(0, length(obj@data@dataCategorical@modalitynames[[loc]]))
+      if (obj@model@omega[j]==0){
+        for (h in 1:length(eff))
+          eff[h] <- sum(obj@data@dataCategorical@data[,loc] == obj@data@dataCategorical@modalitynames[[loc]][h], na.rm = TRUE)
+        ICLexact <- ICLexact  + IntegreOneVariableCategorical(eff)
+      }else{
+        for (k in unique(obj@partitions@zMAP)){
+          for (h in 1:length(eff))
+            eff[h] <- sum(obj@data@dataCategorical@data[which(obj@partitions@zMAP == k),loc] == obj@data@dataCategorical@modalitynames[[loc]][h], na.rm = T)
+          ICLexact <- ICLexact  + IntegreOneVariableCategorical(eff)
+        }
+      }    
     }
   }
   names(ICLexact) <- NULL

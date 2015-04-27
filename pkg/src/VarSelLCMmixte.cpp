@@ -51,9 +51,9 @@ S4  ComputeMICL(S4 reference, StringVector name){
     AlgorithmContinuous *algo_p = new AlgorithmContinuous(data_p, reference_p);
     algo_p->ComputeMICL(reference_p);
   }else if (namestr == "Integer"){
-   // DataInteger * data_p = new DataInteger(as<S4>(reference.slot("data")));
-  //  AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
-    //algo_p->ComputeMICL(reference_p);
+    DataInteger * data_p = new DataInteger(as<S4>(reference.slot("data")));
+    AlgorithmInteger *algo_p = new AlgorithmInteger(data_p, reference_p);
+    algo_p->ComputeMICL(reference_p);
   }else if (namestr == "Categorical"){
     DataCategorical * data_p = new DataCategorical(as<S4>(reference.slot("data")));
     AlgorithmCategorical *algo_p = new AlgorithmCategorical(data_p, reference_p);

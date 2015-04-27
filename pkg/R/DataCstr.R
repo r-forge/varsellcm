@@ -134,7 +134,6 @@ VSLCMdata <- function(x, redquali=TRUE){
   if ((all(type %in% c("numeric", "integer", "factor"))==FALSE))
     stop("At least one variable is neither numeric, integer nor factor!")
 
-  
   # cas des variables categorielles
   if (length(idxcat) == d){
     shortdata <- matrix(NA, n, d)
@@ -174,7 +173,7 @@ VSLCMdata <- function(x, redquali=TRUE){
     colnames(mat) <-  colnames(x)
     colnames(notNA) <- colnames(x)
     output <-  new("VSLCMdataContinuous", n=n, d=d, data=mat, notNA=notNA, priors=priors)    
-  } else  if (length(idxinte) == d){ 
+  }else  if (length(idxinte) == d){ 
     mat <- apply(x, 2, as.numeric)
     # construction des priors
     priors <- matrix(1, d, 2)
