@@ -14,8 +14,9 @@ Ces élements sont:
 class DataMixed : public Data{
   public:
     DataContinuous * m_continuousData_p;
+    DataInteger * m_integerData_p;
     DataCategorical * m_categoricalData_p;
-    bool m_withContinuous, m_withCategorical;
+    bool m_withContinuous, m_withInteger, m_withCategorical;
 
   DataMixed();
   DataMixed(const S4 &);

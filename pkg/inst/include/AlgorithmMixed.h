@@ -20,6 +20,7 @@ class AlgorithmMixed : public Algorithm{
   public:
   const DataMixed * data_p;
   AlgorithmContinuous * algoCont_p;
+  AlgorithmInteger * algoInte_p;
   AlgorithmCategorical * algoCate_p;
   
   // Constructeur et destructeur par défaut
@@ -28,11 +29,6 @@ class AlgorithmMixed : public Algorithm{
   
   // Constructeur utilisé qui prend en entrée un pointeur du jeu de données et un pointeur de l'object S4 retourné sous R
   AlgorithmMixed(const DataMixed *, const S4 *);
-  // Permet d'inialiser les éléments de la classe qui sont liées aux données
-  //void InitSpecificParamAlgo(const DataMixed * datapasse);
-  // Calcul de la vraisemblance intégrée pour une variable non discriminante (indice en entrée) associée à l'echantillon vec
-  //double IntegreOneVariable(const vec & v, const int & j){return 0;};
-  
   // Les trois fonction suivantes sont à redéfinir pour chaque classe héritiaire d'Algorithm
   // Calcul la vraisemblance complétée intégrée pour le modèle m_omegaCurrent et la partition m_zCandCurrent
   virtual double Integre_Complete_Like_Cand();

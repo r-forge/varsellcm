@@ -17,6 +17,7 @@ m_pi : proportions
 class ParamMixed : public Param{
   public:
   ParamContinuous m_paramContinuous;
+  ParamInteger m_paramInteger;
   ParamCategorical m_paramCategorical;
   
   ParamMixed();

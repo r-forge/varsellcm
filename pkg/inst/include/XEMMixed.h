@@ -23,8 +23,8 @@ class XEMMixed : public XEM{
   ParamMixed * paramCurrent_p;
   const DataMixed * data_p;
   Col<double> m_weightTMP;
-  uvec locationContinuous, locationCategorical;
-  Col<double> omegaContinuous, omegaCategorical;
+  uvec locationContinuous, locationInteger, locationCategorical;
+  Col<double> omegaContinuous, omegaInteger, omegaCategorical;
   
   // Constructeurs et destructeurs par défaut (non utilisé)
   XEMMixed(){};
@@ -45,7 +45,7 @@ class XEMMixed : public XEM{
   virtual void SwitchParamCurrent(int);
   // Acutalise l'object S4 retourné sous R
   virtual void Output(S4 *);
-    virtual int  FiltreDegenere();
+  virtual int  FiltreDegenere();
 
 };
 #endif

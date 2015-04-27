@@ -133,11 +133,19 @@ VSLCMdata <- function(x, redquali=TRUE){
   idxcat <- which(type=="factor")
   if ((all(type %in% c("numeric", "integer", "factor"))==FALSE))
     stop("At least one variable is neither numeric, integer nor factor!")
-  mat <- apply(x, 2, as.numeric)
+
   
   # cas des variables categorielles
   if (length(idxcat) == d){
-    shortdata <- mat
+    shortdata <- matrix(NA, n, d)
+    for (j in 1:d){
+      lev <- levels(x[,j])
+      repere <- 0
+      for (h in 1:length(lev)){
+        repere <- repere + 1
+        shortdata[which(x[,j]==lev[h]),j] <- repere
+      }
+    }
     weightdata <- rep(1, n)
     ## Pour travailler avec Armadillo on rempli artificellement les NA par 0
     shortdata[is.na(shortdata)] <- 0
@@ -152,8 +160,9 @@ VSLCMdata <- function(x, redquali=TRUE){
       if (length(modalitynames[[j]]) != length(unique(x[which(is.na(x[,j])==FALSE),j])))
         stop(paste("The number of observed modalities is not equal to the number of levels for variable", colnames(x)[j]))
     }
-    output <-  new("VSLCMdataCategorical", n=n, d=d, data=mat, shortdata=shortdata, weightdata=weightdata, modalitynames=modalitynames)
+    output <-  new("VSLCMdataCategorical", n=n, d=d, data=as.matrix(x), shortdata=shortdata, weightdata=weightdata, modalitynames=modalitynames)
   }else  if (length(idxcont) == d){ 
+    mat <- apply(x, 2, as.numeric)
     # construction des priors
     priors <- matrix(1, d, 4)
     priors[,4] <- 1/100
@@ -166,6 +175,7 @@ VSLCMdata <- function(x, redquali=TRUE){
     colnames(notNA) <- colnames(x)
     output <-  new("VSLCMdataContinuous", n=n, d=d, data=mat, notNA=notNA, priors=priors)    
   } else  if (length(idxinte) == d){ 
+    mat <- apply(x, 2, as.numeric)
     # construction des priors
     priors <- matrix(1, d, 2)
     colnames(priors) <- c("alpha", "beta")

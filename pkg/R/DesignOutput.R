@@ -25,7 +25,7 @@ setMethod( f = "DesignOutput",
                  if (reference@criteria@degeneracyrate != 1){
                    rownames(reference@param@mu)  <-   colnames(reference@data@data)
                    rownames(reference@param@sd)  <-   colnames(reference@data@data)
-                   if (reference@criteria@degeneracyrate>0.1)
+                   if (reference@criteria@degeneracyrate>0.5)
                      warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
                    reference@param@pi <- as.numeric(reference@param@pi)
                    names(reference@param@pi) <-  paste("class-",1:length(reference@param@pi),sep="")
@@ -65,7 +65,7 @@ setMethod( f = "DesignOutput",
                if (reference@strategy@paramEstim){
                  if (reference@criteria@degeneracyrate != 1){
                    rownames(reference@param@lambda)  <-   colnames(reference@data@data)
-                   if (reference@criteria@degeneracyrate>0.1)
+                   if (reference@criteria@degeneracyrate>0.5)
                      warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
                    reference@param@pi <- as.numeric(reference@param@pi)
                    names(reference@param@pi) <-  paste("class-",1:length(reference@param@pi),sep="")
@@ -129,19 +129,14 @@ setMethod( f = "DesignOutput",
            signature(reference="VSLCMresultsMixed"), 
            definition = function(reference){
              reference@model@omega <-  as.numeric(reference@model@omega)
-             namestmp <- c(colnames(reference@data@dataContinuous@data),colnames(reference@data@dataCategorical@shortdata))
+             namestmp <- numeric()
+             if (reference@data@withContinuous) namestmp <- c(namestmp, colnames(reference@data@dataContinuous@data))
+             if (reference@data@withInteger) namestmp <- c(namestmp, colnames(reference@data@dataInteger@data))
+             if (reference@data@withCategorical) namestmp <- c(namestmp, colnames(reference@data@dataCategorical@data))
              names(reference@model@omega) <- namestmp
-             
              if (reference@model@g>1){
-               for (j in 1:reference@data@dataContinuous@d){
-                 if (any(reference@data@dataContinuous@notNA[,j]==0))
-                   reference@data@dataContinuous@data[which(reference@data@dataContinuous@notNA[,j]==0),j] <- NA
-               }
                # On remet les valeurs manquantes
-               if (any(reference@data@dataCategorical@shortdata == 0)){
-                 for (j in 1:ncol(reference@data@dataCategorical@shortdata))
-                   reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
-               }
+                              
                if (reference@strategy@paramEstim == TRUE){
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
@@ -152,49 +147,75 @@ setMethod( f = "DesignOutput",
                  }
                  
                  if (reference@criteria@degeneracyrate != 1){
-                   if (reference@criteria@degeneracyrate>0.1)
+                   if (reference@criteria@degeneracyrate>0.5)
                      warning(paste("The rate of degeneracy for the EM algorithm is", reference@criteria@degeneracyrate ), call. = FALSE)
-                   
-                   rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
-                   rownames(reference@param@paramContinuous@sd)  <-   colnames(reference@data@dataContinuous@data)
-                   reference@param@paramContinuous@pi <- as.numeric(reference@param@paramContinuous@pi)
-                   names(reference@param@paramContinuous@pi) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-                   colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-                   colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-                   # On remet les valeurs manquantes
                    
                    reference@param@pi <- as.numeric(reference@param@pi)
                    names(reference@param@pi) <- paste("class-",1:length(reference@param@pi),sep="")
-                   reference@param@paramCategorical@pi <- as.numeric(reference@param@paramCategorical@pi)
-                   names(reference@param@paramCategorical@pi) <-  paste("class-",1:length(reference@param@paramCategorical@pi),sep="")
-                   
-                   for (j in 1:reference@data@dataCategorical@d){
-                     reference@param@paramCategorical@alpha[[j]] <- matrix(reference@param@paramCategorical@alpha[[j]], nrow = reference@model@g)
-                     rownames(reference@param@paramCategorical@alpha[[j]]) <- paste("class-",1:length(reference@param@pi),sep="")
-                     colnames(reference@param@paramCategorical@alpha[[j]]) <- reference@data@dataCategorical@modalitynames[[j]]
-                   }
-                   names(reference@param@paramCategorical@alpha) <- colnames(reference@data@dataCategorical@shortdata)
-                   
                    reference@partitions@tik <- reference@partitions@tik 
                    colnames(reference@partitions@tik ) <- paste("class-",1:reference@model@g,sep="")
                    nbparam <- reference@model@g-1 
+                   
                    if (reference@data@withContinuous){
+                     rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
+                     rownames(reference@param@paramContinuous@sd)  <-   colnames(reference@data@dataContinuous@data)
+                     reference@param@paramContinuous@pi <- as.numeric(reference@param@paramContinuous@pi)
+                     names(reference@param@paramContinuous@pi) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                     colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                     colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
                      shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataContinuous@data))]
                      nbparam <- nbparam + sum(shortomega) * reference@model@g * 2 + sum(1-shortomega) * 2
                    }
+                   
+                   if (reference@data@withInteger){
+                     rownames(reference@param@paramInteger@lambda)  <-   colnames(reference@data@dataInteger@data)
+                     reference@param@paramInteger@pi <- as.numeric(reference@param@paramInteger@pi)
+                     names(reference@param@paramInteger@pi) <-  paste("class-",1:length(reference@param@paramInteger@pi),sep="")
+                     colnames(reference@param@paramInteger@lambda) <-  paste("class-",1:length(reference@param@paramInteger@pi),sep="")
+                     shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataInteger@data))]
+                     nbparam <- nbparam + sum(shortomega) * reference@model@g  + sum(1-shortomega)
+                   }
                    if (reference@data@withCategorical){
+                     reference@param@paramCategorical@pi <- as.numeric(reference@param@paramCategorical@pi)
+                     names(reference@param@paramCategorical@pi) <-  paste("class-",1:length(reference@param@paramCategorical@pi),sep="")
+                     for (j in 1:reference@data@dataCategorical@d){
+                       reference@param@paramCategorical@alpha[[j]] <- matrix(reference@param@paramCategorical@alpha[[j]], nrow = reference@model@g)
+                       rownames(reference@param@paramCategorical@alpha[[j]]) <- paste("class-",1:length(reference@param@pi),sep="")
+                       colnames(reference@param@paramCategorical@alpha[[j]]) <- reference@data@dataCategorical@modalitynames[[j]]
+                     }                     
+                     names(reference@param@paramCategorical@alpha) <- colnames(reference@data@dataCategorical@shortdata)
                      shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataCategorical@shortdata))]
                      for (j in 1:length(shortomega)){
                        nbparam <- nbparam + (length(reference@data@dataCategorical@modalitynames[[j]])-1) * (1 + (reference@model@g-1)*shortomega[j])
                      }
                    }
                    reference@criteria@BIC <- reference@criteria@loglikelihood - nbparam*0.5*log(reference@data@n)
+                   names(reference@criteria@BIC) <- NULL
                    reference@criteria@ICL <- ICLmixed(reference) 
                  }else{
                    warning("All the models got error (degeneracy)", call. = FALSE)  
                  }
                }
              }
+             if (reference@data@withContinuous){
+               for (j in 1:reference@data@dataContinuous@d){
+                 if (any(reference@data@dataContinuous@notNA[,j]==0))
+                   reference@data@dataContinuous@data[which(reference@data@dataContinuous@notNA[,j]==0),j] <- NA
+               }
+             }
+             if (reference@data@withInteger){
+               for (j in 1:reference@data@dataInteger@d){
+                 if (any(reference@data@dataInteger@notNA[,j]==0))
+                   reference@data@dataInteger@data[which(reference@data@dataInteger@notNA[,j]==0),j] <- NA
+               }
+             }
+             if (reference@data@withCategorical){
+               if (any(reference@data@dataCategorical@shortdata == 0)){
+                 for (j in 1:ncol(reference@data@dataCategorical@shortdata))
+                   reference@data@dataCategorical@shortdata[which(reference@data@dataCategorical@shortdata[,j] == 0), ] <- NA
+               }
+             }
+             
              return(reference)
            }
 )

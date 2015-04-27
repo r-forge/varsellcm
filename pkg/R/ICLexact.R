@@ -82,6 +82,7 @@ ICLcategorical <- function(obj){
         ICLexact <- ICLexact  + IntegreOneVariableCategorical(obj@data@data[which(obj@partitions@zMAP == k),j],  length(obj@data@modalitynames[[j]]))
     }
   }
+  names(ICLexact) <- NULL
   return(ICLexact)
 }
 
@@ -103,6 +104,20 @@ ICLmixed <- function(obj){
     }
   }
   
+  if (obj@data@withInteger){
+    who <- which(names(obj@model@omega) %in% colnames(obj@data@dataInteger@data))
+    loc <- 0
+    for (j in who){
+      loc <- loc + 1
+      if (obj@model@omega[j]==0){
+        ICLexact <- ICLexact  + IntegreOneVariableInteger(obj@data@dataInteger@data[which(obj@data@dataInteger@notNA[,loc]==1),loc], obj@data@dataInteger@priors[loc,])
+      }else{
+        for (k in unique(obj@partitions@zMAP))
+          ICLexact <- ICLexact  + IntegreOneVariableInteger(obj@data@dataInteger@data[which( (obj@partitions@zMAP==k)*obj@data@dataInteger@notNA[,loc] ==1),loc], obj@data@dataInteger@priors[loc,])
+      }
+    }
+  }
+  
   if (obj@data@withCategorical){
     who <- which(names(obj@model@omega) %in% colnames(obj@data@dataCategorical@shortdata))
     loc <- 0
@@ -117,5 +132,6 @@ ICLmixed <- function(obj){
       
     }
   }
+  names(ICLexact) <- NULL
   return(ICLexact)
 }
