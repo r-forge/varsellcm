@@ -60,12 +60,26 @@ setMethod(
   signature = c("VSLCMresultsMixed"),
   definition = function(object){
     cat("Data set:\n   Number of individuals:", object@data@n,"\n")
-    cat("   Number of categorical variables:", object@data@dataCategorical@d, "\n")
-    miss <- sum(sweep(is.na(object@data@dataCategorical@shortdata),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
-    cat("   Percentile of missing values for the categorical variables:", miss,"\n\n")
-    cat("   Number of continuous variables:", object@data@dataContinuous@d, "\n")
-    cat("   Percentile of missing values:", round(100*(1-mean(object@data@dataContinuous@notNA)),2),"\n\n")
-    
+    if (object@data@withContinuous){
+      cat("   Number of continuous variables:", object@data@dataContinuous@d, "\n")
+      cat("   Percentile of missing values:", round(100*(1-mean(object@data@dataContinuous@notNA)),2),"\n")
+    }else{
+      cat("   Number of continuous variables:", 0, "\n")
+    }
+    if (object@data@withInteger){
+      cat("   Number of integer variables:", object@data@dataInteger@d, "\n")
+      cat("   Percentile of missing values:", round(100*(1-mean(object@data@dataInteger@notNA)),2),"\n")
+    }else{
+      cat("   Number of integer variables:", 0, "\n")
+    }
+    if (object@data@withCategorical){
+      cat("   Number of categorical variables:", object@data@dataCategorical@d, "\n")
+      miss <- sum(sweep(is.na(object@data@dataCategorical@shortdata),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
+      cat("   Percentile of missing values for the categorical variables:", miss,"\n")
+    }else{
+      cat("   Number of categorical variables:", 0, "\n")
+    }
+    cat("\n")
     
     cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
     if (sum(object@model@omega)>0){
