@@ -62,13 +62,13 @@ setMethod(
     cat("Data set:\n   Number of individuals:", object@data@n,"\n")
     if (object@data@withContinuous){
       cat("   Number of continuous variables:", object@data@dataContinuous@d, "\n")
-      cat("   Percentile of missing values:", round(100*(1-mean(object@data@dataContinuous@notNA)),2),"\n")
+      cat("   Percentile of missing values for the continuous variables:", round(100*(1-mean(object@data@dataContinuous@notNA)),2),"\n")
     }else{
       cat("   Number of continuous variables:", 0, "\n")
     }
     if (object@data@withInteger){
       cat("   Number of integer variables:", object@data@dataInteger@d, "\n")
-      cat("   Percentile of missing values:", round(100*(1-mean(object@data@dataInteger@notNA)),2),"\n")
+      cat("   Percentile of missing values for the integer variables:", round(100*(1-mean(object@data@dataInteger@notNA)),2),"\n")
     }else{
       cat("   Number of integer variables:", 0, "\n")
     }

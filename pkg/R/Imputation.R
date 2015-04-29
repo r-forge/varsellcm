@@ -11,6 +11,19 @@ ImputCont <- function(data, tik, param){
   return(output)
 }
 
+ImputInte <- function(data, tik, param){
+  output <- as.data.frame(data@data)
+  for (j in 1:data@d){
+    if (sum(data@notNA[,j])<data@n){
+      who <- which(data@notNA[,j]==0)
+      output[who, j] <- 0
+      for (k in 1:ncol(tik))
+        output[who, j] <- output[who, j] + tik[who,k]*param@lambda[j,k]
+    }  
+  }
+  return(output)
+}
+
 
 ImputCate <- function(data, tik, param){
   output <- as.data.frame(data@data)
@@ -36,11 +49,28 @@ VarSelImputation <- function(obj, ind){
   
   if (class(obj)=="VSLCMresultsContinuous")
     output <- ImputCont(obj@data, obj@partitions@tik, obj@param)[ind,]
+  else if (class(obj)=="VSLCMresultsInteger")
+    output <- ImputInte(obj@data, obj@partitions@tik, obj@param)[ind,]
   else if (class(obj)=="VSLCMresultsCategorical")
     output <- ImputCate(obj@data, obj@partitions@tik, obj@param)[ind,]
-  else if (class(obj)=="VSLCMresultsMixed")
-    output <- cbind(ImputCont(obj@data@dataContinuous, obj@partitions@tik, obj@param@paramContinuous)[ind,], ImputCate(obj@data@dataCategorical, obj@partitions@tik, obj@param@paramCategorical)[ind,])
-  else
+  else if (class(obj)=="VSLCMresultsMixed"){
+    output <- matrix(NA, length(ind), obj@data@d)
+    colnames(output) <- names(obj@model@omega)
+    output <- as.data.frame(output)
+    col <- 1
+    if (obj@data@withContinuous){
+      output[,c(col:(col+obj@data@dataContinuous@d-1))] <- ImputCont(obj@data@dataContinuous, obj@partitions@tik, obj@param@paramContinuous)[ind,]
+      col <- col + obj@data@dataContinuous@d
+    }
+    if (obj@data@withInteger){
+      output[,c(col: (col+obj@data@dataInteger@d-1))] <- ImputInte(obj@data@dataInteger, obj@partitions@tik, obj@param@paramInteger)[ind,]
+      col <- col + obj@data@dataInteger@d
+    }
+    if (obj@data@withCategorical){
+      output[,c(col: (col+obj@data@dataCategorical@d-1))] <- ImputCate(obj@data@dataCategorical, obj@partitions@tik, obj@param@paramCategorical)[ind,]
+      col <- col + obj@data@dataCategorical@d
+    }
+  }  else
     stop("obj don't arise from function VarSelCluster")
   
   

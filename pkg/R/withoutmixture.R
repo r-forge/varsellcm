@@ -142,7 +142,7 @@ setMethod( f = "withoutmixture",
                rownames(obj@param@paramInteger@lambda)  <-   colnames(obj@data@dataInteger@data)
                colnames(obj@param@paramInteger@lambda) <-  paste("class-",1:length(obj@param@paramInteger@pi),sep="")
                for (j in 1:obj@data@dataInteger@d)
-                 proba[which(obj@data@dataContinuous@notNA[,j]==1)] <- proba[which(obj@data@dataContinuous@notNA[,j]==1)] + dpois(obj@data@dataInteger@data[which(obj@data@dataInteger@notNA[,j]==1),j], obj@param@paramInteger@lambda[j,1], log = TRUE)
+                 proba[which(obj@data@dataInteger@notNA[,j]==1)] <- proba[which(obj@data@dataInteger@notNA[,j]==1)] + dpois(obj@data@dataInteger@data[which(obj@data@dataInteger@notNA[,j]==1),j], obj@param@paramInteger@lambda[j,1], log = TRUE)
                shortomega <- obj@model@omega[which(names(obj@model@omega) %in% colnames(obj@data@dataContinuous@data))]
                nbparam <- nbparam + length(shortomega)
              }             
