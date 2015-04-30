@@ -14,6 +14,7 @@ setMethod( f = "DesignOutput",
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
+                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                }
                # On remet les valeurs manquantes
                for (j in 1:reference@data@d){
@@ -55,6 +56,7 @@ setMethod( f = "DesignOutput",
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
+                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                }
                # On remet les valeurs manquantes
                for (j in 1:reference@data@d){
@@ -95,6 +97,7 @@ setMethod( f = "DesignOutput",
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
                    reference@criteria@MICL <- numeric()
+                   reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  }else{
                    reference@partitions@zOPT <- 1 + as.numeric(reference@partitions@zOPT[attr(reference@data@shortdata,"index")])
                  }
@@ -142,6 +145,7 @@ setMethod( f = "DesignOutput",
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
                    reference@criteria@MICL <- numeric()
+                   reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  }else{
                    reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                    reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
