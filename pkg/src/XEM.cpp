@@ -113,5 +113,5 @@ void XEM::OneEM(){
     loglike = ComputeLogLike();
   }
   // Une verif
-  if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
+  //if (prec>(loglike+tolKeep)) cout << "pb EM " << endl;
 }

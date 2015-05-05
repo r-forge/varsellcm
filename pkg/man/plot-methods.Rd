@@ -1,11 +1,11 @@
 \docType{methods}
-\name{print}
-\alias{print}
-\alias{print,VSLCMresultsContinuous-method}
-\alias{print,VSLCMresultsInteger-method}
-\alias{print,VSLCMresultsCategorical-method}
-\alias{print,VSLCMresultsMixed-method}
-\title{Produce a presentation of results provided by function VarSelCluster}
+\name{plot}
+\alias{plot}
+\alias{plot,VSLCMresultsContinuous-method}
+\alias{plot,VSLCMresultsInteger-method}
+\alias{plot,VSLCMresultsCategorical-method}
+\alias{plot,VSLCMresultsMixed-method}
+\title{Produce result plot of  results provided by function VarSelCluster}
 \arguments{
   \item{object}{An object of class \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}}  or \code{\linkS4class{VSLCMresultsMixed}}}
 }
@@ -13,7 +13,7 @@
   NULL. Summaries to standard out.
 }
 \description{
-  Produce a presentation of a  class VSLCMresultsContinuous, VSLCMresultsInteger, VSLCMresultsCategorical or VSLCMresultsMixed.
+  Produce result plot of a class VSLCMresultsContinuous, VSLCMresultsInteger, VSLCMresultsCategorical or VSLCMresultsMixed.
 }
 \examples{
 # Package loading
@@ -27,11 +27,11 @@ z <- heart[,"Class"]
 x <- heart[,-13]
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
+res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=30)
 
 # Parameters of the best model
-print(res_with)
+plot(res_with)
 }
 \seealso{
-  \code{\link{print}}
+  \code{\link{plot}}
 }

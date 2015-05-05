@@ -46,7 +46,7 @@ setMethod( f = "withoutmixture",
                  obj@data@data[which(obj@data@notNA[,j]==0),j] <- NA
              }
              obj@param@pi <- 1
-             obj@param@lambda <- matrix(colMeans(x, na.rm = T), obj@data@d, 1)
+             obj@param@lambda <- matrix(colMeans(obj@data@data, na.rm = T), obj@data@d, 1)
              rownames(obj@param@lambda)  <-   colnames(obj@data@data)
              colnames(obj@param@lambda) <-  paste("class-",1:length(obj@param@pi),sep="")
              proba <- rep(0, obj@data@n)

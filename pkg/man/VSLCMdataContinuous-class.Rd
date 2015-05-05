@@ -4,7 +4,7 @@
 
 \title{Class \code{"VSLCMdataContinuous"}}
 \description{
-This class contains the model information
+This class contains the data information
 }
 
 \section{Slots}{

@@ -95,7 +95,6 @@ setMethod( f = "VarSelModelMLE",
 ## x: tableau de données sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
 ## g: nombre de classes (numeric de taille 1)
 ## La fonction possède également 9 paramètres optionnels
-## initModel: nomber d'initialisations de l'algorithme d'optimisation de MICL
 ## vbleSelec: logical indiquant si la sélection de variables est effectuée
 ## paramEstim: logical indiquant si l'estimation des paramètres est effectuée
 ## nbcores: nombre de coeurs de calcul utilisés
@@ -105,8 +104,9 @@ setMethod( f = "VarSelModelMLE",
 ## iterKeep: nombre d'itérations maximum des EM
 ## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
 ########################################################################################################################
-VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
+VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
   # Verifie les paramètres d'entrées
+  discrim <- rep(1,ncol(x))
   CheckInputs(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
   strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    

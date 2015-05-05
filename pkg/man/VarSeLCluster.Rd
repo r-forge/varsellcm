@@ -3,14 +3,12 @@
 \title{VarSelCluster}
 
 \description{
-   This function performs the variable selection for a model-based clustering of data set having missing values. 
-   The data distribution follows a locally independent mixture model whose the one-dimensional marginal distributions
-   belong to the exponential family (i.e. Gaussian or multinomial).
-   Missing values are dealing by assuming that data are missing at random.
-   The model selection is carried out by maximizing the MICL criterion.
-}
+  Variable Selection for model-based clustering managed by the Latent Class Model. This model analyses mixed-type data (data with continuous and/or integer and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.
+  }
 \usage{
-VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
+VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, 
+paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20,
+nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
@@ -29,11 +27,7 @@ VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, discrim=rep(1,ncol(x)), paramE
     Logical indicating if a variable selection is performed. 
     The default is TRUE. 
   }
-  
-  \item{discrim}{Logical vector indicating if the role of the variable (1: discriminative, 0: not discriminative).
-    It is used only when vbleSelec=FALSE.
-    The default considers all the variables as discriminative (rep(1,ncol(x))). 
-  }
+
   
   \item{paramEstim}{
     Logical indicating if the maximum likelihood (ML) inference is performed for the best model (according to the MICL criterion). 
@@ -93,7 +87,7 @@ x <- heart[,-13]
 res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 2)
+res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
 # Confusion matrices: variable selection decreases the misclassification error rate
 print(table(z, res_without@partitions@zMAP))

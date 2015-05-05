@@ -1,18 +1,23 @@
 useDynLib(VarSelLCM)
 export(VarSelCluster)
 export(VarSelImputation)
-export(MICL)
 exportClasses(
      "VSLCMcriteria",
      "VSLCMpartitions",
      "VSLCMstrategy",
      "VSLCMmodel",
      "VSLCMdataContinuous",
+     "VSLCMdataInteger",
      "VSLCMdataCategorical",
+     "VSLCMdataMixed",
      "VSLCMparamContinuous",
+     "VSLCMparamInteger",
      "VSLCMparamCategorical",
+     "VSLCMparamMixed",
      "VSLCMresultsContinuous",
-     "VSLCMresultsCategorical"
+     "VSLCMresultsInteger",
+     "VSLCMresultsCategorical",
+     "VSLCMresultsMixed"
      )
 exportMethods(summary)
 exportMethods(print)
