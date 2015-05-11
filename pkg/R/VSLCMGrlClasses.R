@@ -1,10 +1,10 @@
 ########################################################################################################################
-## Différentes classes S4 accessibles à l'utilisateur et étant des slots des classes S4
+## Differentes classes S4 accessibles a l'utilisateur et etant des slots des classes S4
 ## VSLCMresultsContinuous et/ou VSLCMresultsCategorical
 ########################################################################################################################
 
 ########################################################################################################################
-## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des critères BIC, ICL et MICL
+## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des criteres BIC, ICL et MICL
 ########################################################################################################################
 setClass(Class = "VSLCMcriteria", 
          representation = representation(loglikelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric", degeneracyrate="numeric"), 
@@ -21,7 +21,7 @@ setClass(
 )
 
 ########################################################################################################################
-## Classe S4 VSLCMstrategy contenant les paramètres de réglages détailles dans VarSELLCMmixte.R
+## Classe S4 VSLCMstrategy contenant les parametres de reglages detailles dans VarSELLCMmixte.R
 ########################################################################################################################
 setClass(
   Class = "VSLCMstrategy", 
@@ -39,7 +39,7 @@ VSLCMstrategy <- function(initModel=50, nbcores=1, vbleSelec=TRUE, paramEstim=TR
       iterKeep=iterKeep, tolKeep=tolKeep)
 }
 
-## Utilisé lors de la parallellisation
+## Utilise lors de la parallellisation
 JustModelStrategy <- function(strategy, nb.cpus){
   output <- strategy
   output@paramEstim <- FALSE
@@ -85,7 +85,7 @@ setClass(
 
 
 ########################################################################################################################
-## Classe S4 VSLCMparamMixed contenant les paramètres continus et categoriels
+## Classe S4 VSLCMparamMixed contenant les parametres continus et categoriels
 ########################################################################################################################
 setClass(
   Class = "VSLCMparamMixed", 

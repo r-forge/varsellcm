@@ -18,13 +18,13 @@ setMethod( f = "MICL",
            signature(x="data.frame", obj="VSLCMresultsInteger"), 
            definition = function(x, obj){
              obj@strategy@vbleSelec <- TRUE
-             # travail sur les données manquantes
+             # travail sur les donnees manquantes
              obj@data  <- VSLCMdata(x)
              tmp <- ComputeMICL(obj, "Integer")
              return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))          
            }
 )
-## Pour les variables catégorielles
+## Pour les variables categorielles
 setMethod( f = "MICL", 
            signature(x="data.frame", obj="VSLCMresultsCategorical"), 
            definition = function(x, obj){
@@ -48,10 +48,10 @@ setMethod( f = "MICL",
 
 
 ########################################################################################################################
-## La fonction VarSelModelMLE permet d'effectuer l'estimation des paramètres en considèrant que les variables données
+## La fonction VarSelModelMLE permet d'effectuer l'estimation des parametres en considerant que les variables donnees
 ## dans le slot model de l'objet VSLCMresultsContinuous ou VSLCMresultsCategorical.
 ## Il appelle le code c++ et retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical en fonction de la
-## nature des données.
+## nature des donnees.
 ########################################################################################################################
 setGeneric ( name= "VarSelModelMLE",  def = function(obj,it){ standardGeneric("VarSelModelMLE")})
 ## Pour les variables continues
@@ -70,7 +70,7 @@ setMethod( f = "VarSelModelMLE",
              return(reference)         
            }
 )
-## Pour les variables catégorielles
+## Pour les variables categorielles
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsCategorical",it="numeric"), 
            definition = function(obj, it){
@@ -91,26 +91,26 @@ setMethod( f = "VarSelModelMLE",
 ########################################################################################################################
 ## La fonction VarSelCluster est disponible pour l'utilisateur et permet d'appeller les fonctions VarSelModelSelection et
 ## VarSelModelMLE et retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical
-## La fonction possède deux paramètres obligatoires:
-## x: tableau de données sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
+## La fonction possede deux parametres obligatoires:
+## x: tableau de donnees sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
 ## g: nombre de classes (numeric de taille 1)
-## La fonction possède également 9 paramètres optionnels
-## vbleSelec: logical indiquant si la sélection de variables est effectuée
-## paramEstim: logical indiquant si l'estimation des paramètres est effectuée
-## nbcores: nombre de coeurs de calcul utilisés
+## La fonction possede egalement 9 parametres optionnels
+## vbleSelec: logical indiquant si la selection de variables est effectuee
+## paramEstim: logical indiquant si l'estimation des parametres est effectuee
+## nbcores: nombre de coeurs de calcul utilises
 ## nbSmall: nombre d'initialisations du small EM
-## iterSmall: nombre d'itérations des small EM
-## nbKeep: nombre de chaines conservées après le small EM
-## iterKeep: nombre d'itérations maximum des EM
+## iterSmall: nombre d'iterations des small EM
+## nbKeep: nombre de chaines conservees apres le small EM
+## iterKeep: nombre d'iterations maximum des EM
 ## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
 ########################################################################################################################
 VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
-  # Verifie les paramètres d'entrées
+  # Verifie les parametres d'entrees
   discrim <- rep(1,ncol(x))
   CheckInputs(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
-  # Création de l'objet S4 VSLCMstrategy contenant les paramètres de réglage
+  # Creation de l'objet S4 VSLCMstrategy contenant les parametres de reglage
   strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
-  # Création de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
+  # Creation de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
   data <- VSLCMdata(x)
   
   if (class(data) == "VSLCMdataContinuous")
@@ -127,7 +127,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
   if (g==1){
     reference <- withoutmixture(reference)
   }else{
-    # Estimation du modèle et/ou des paramètres
+    # Estimation du modele et/ou des parametres
     if (strategy@parallel == FALSE)
       reference <- VarSelModelMLE(reference, 0)
     else{
@@ -152,11 +152,11 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
                                 FUN = VarSelModelMLE,
                                 obj=reference,
                                 mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
-        # On conserve le meilleur modèle au sens de MICL
+        # On conserve le meilleur modele au sens de MICL
         tmpMICL <- rep(NA, length(reference))
         for (it in 1:length(reference)) tmpMICL[it] <- reference[[it]]@criteria@MICL
         reference <- reference[[which.max(tmpMICL)]]
-        # On parallelise aussi pour les EM donc on réparti les initialisations sur les différents coeurs
+        # On parallelise aussi pour les EM donc on reparti les initialisations sur les differents coeurs
       }
       reference@strategy <- strategy 
       nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores, 4)
@@ -180,7 +180,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
         else
           reference <- mclapply(X = as.list(rep(0, nb.cpus)), FUN = VarSelModelMLE, obj=reference, mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
         
-        # On conserve les paramètres maximisant la vraisemblance
+        # On conserve les parametres maximisant la vraisemblance
         tmploglike <- rep(NA, length(reference))
         for (it in 1:length(tmploglike)) {if (reference[[it]]@criteria@degeneracyrate!=1) tmploglike[it] <- reference[[it]]@criteria@loglikelihood}
         if (all(is.na(tmploglike))) tmploglike[1]=1

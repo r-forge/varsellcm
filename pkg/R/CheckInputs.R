@@ -1,4 +1,4 @@
-# Verifie les paramètres d'entrées
+# Verifie les parametres d entrees
 CheckInputs <- function(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
   if ( (is.numeric(g)==FALSE) || (length(g)!=1))
     stop("The component number have to be an integer of length one!")

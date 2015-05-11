@@ -1,6 +1,6 @@
 ########################################################################################################################
-## La fonction DesignOutput permet de mettre en forme les paramètres en fonction de leur nature VSLCMresultsContinuous
-## ou VSLCMresultsCategorical. Elle est appelée à la fin de l'estimation des paramètres
+## La fonction DesignOutput permet de mettre en forme les parametres en fonction de leur nature VSLCMresultsContinuous
+## ou VSLCMresultsCategorical. Elle est appelee a la fin de l'estimation des parametres
 ########################################################################################################################
 setGeneric ( name= "DesignOutput",  def = function(reference){ standardGeneric("DesignOutput")})
 
