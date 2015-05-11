@@ -1,6 +1,6 @@
 Package: VarSelLCM
 Type: Package
-Title: Variable Selection for Model-Based Clustering of Continuous, Integer, Categorical or Mixed Data Set with Missing Values.
+Title: Variable Selection for Model-Based Clustering of Continuous, Integer, Categorical or Mixed Data Set with Missing Values
 Version: 1.9.1
 Date: 2015-06-01
 Author: Matthieu Marbac and Mohammed Sedki
