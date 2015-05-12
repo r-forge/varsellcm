@@ -43,9 +43,6 @@ Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 
 \examples{
 # Package loading
-# Package loading
-require(Rcpp)
-require(RcppArmadillo)
 require(VarSelLCM)
 
 # Data loading:
