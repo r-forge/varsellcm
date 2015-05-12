@@ -74,6 +74,8 @@ nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 
 \examples{
 # Package loading
+require(Rcpp)
+require(RcppArmadillo)
 require(VarSelLCM)
 
 # Data loading:
