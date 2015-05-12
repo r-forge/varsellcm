@@ -7,7 +7,7 @@
 ## La classe S4 VSLCMdataContinuous est relatives a des donnees continues. Elle possede 5 slots:
 ## n: nombre d'observations
 ## d: nombre de variables
-## data: matrix où les colonnes sont numeric et correspondent aux donees
+## data: matrix ou les colonnes sont numeric et correspondent aux donees
 ## notNA: matrix of logical valant 1 si la realisation est observee et 0 sinon
 ## priors: valeur des priors pour chaque variable (en ligne)
 ########################################################################################################################
@@ -35,7 +35,7 @@ setClass(
 ## La classe S4 VSLCMdataInteger est relatives a des donnees entieres Elle possede 5 slots:
 ## n: nombre d observations
 ## d: nombre de variables
-## data: matrix où les colonnes sont numeric et correspondent aux donees
+## data: matrix ou les colonnes sont numeric et correspondent aux donees
 ## notNA: matrix of logical valant 1 si la realisation est observee et 0 sinon
 ## priors: valeur des priors pour chaque variable (en ligne)
 ########################################################################################################################
@@ -62,7 +62,7 @@ setClass(
 ## La classe S4 VSLCMdataCategorical est relatives a des donnees categorielles. Elle possede 6 slots:
 ## n: nombre d observations
 ## d: nombre de variables
-## data: matrix où les facteurs orginiaux ont ete converti en numeric
+## data: matrix ou les facteurs orginiaux ont ete converti en numeric
 ## shortdata: matrix contenant les profils uniques
 ## weightdata: poids de chaque profil
 ## modalitynames: list contenant les noms de modalites pour chaque variable

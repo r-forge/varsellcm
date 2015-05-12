@@ -65,7 +65,7 @@ setMethod( f = "withoutmixture",
            }
 )
 
-## Pour les variables catégorielles
+## Pour les variables categorielles
 setMethod( f = "withoutmixture", 
            signature(obj="VSLCMresultsCategorical"), 
            definition = function(obj){
