@@ -27,7 +27,7 @@ z <- heart[,"Class"]
 x <- heart[,-13]
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 1, initModel=40)
+res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
 # Parameters of the best model
 print(res_with)

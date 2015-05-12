@@ -56,7 +56,7 @@ x <- heart[,-13]
 res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 1, initModel=40)
+res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
 # Confusion matrices: variable selection decreases the misclassification error rate
 print(table(z, res_without@partitions@zMAP))

@@ -38,7 +38,7 @@ data(hepatitis)
 x <- hepatitis[,-ncol(hepatitis)]
 
 # Variable selection and parameter estiamtion
-res_with <- VarSelCluster(x, 2, nbcores = 1)
+res_with <- VarSelCluster(x, 2, nbcores = 2)
 
 # Imputation of the individuals : 119, 142, 148 and 149
 ximput <- VarSelImputation(res_with, c(119,142, 148, 149))
