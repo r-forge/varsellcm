@@ -28,6 +28,7 @@ VarSelImputation(obj, ind)
 
 
 \examples{
+\dontrun{
 # Package loading
 require(VarSelLCM)
 
@@ -48,4 +49,5 @@ print(x[c(119,142,148,149),])
 
 # Individuals with imputation
 print(ximput)
+}
 }

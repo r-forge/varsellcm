@@ -16,6 +16,7 @@
   Produce result plot of a class VSLCMresultsContinuous, VSLCMresultsInteger, VSLCMresultsCategorical or VSLCMresultsMixed.
 }
 \examples{
+\dontrun{
 # Package loading
 require(VarSelLCM)
 
@@ -31,6 +32,7 @@ res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=30)
 
 # Parameters of the best model
 plot(res_with)
+}
 }
 \seealso{
   \code{\link{plot}}

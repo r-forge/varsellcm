@@ -16,6 +16,7 @@
   Produce a presentation of a  class VSLCMresultsContinuous, VSLCMresultsInteger, VSLCMresultsCategorical or VSLCMresultsMixed.
 }
 \examples{
+\dontrun{
 # Package loading
 require(VarSelLCM)
 
@@ -31,6 +32,7 @@ res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
 # Parameters of the best model
 print(res_with)
+}
 }
 \seealso{
   \code{\link{print}}

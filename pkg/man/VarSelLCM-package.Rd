@@ -42,6 +42,7 @@ Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 
 
 \examples{
+\dontrun{
 # Package loading
 require(VarSelLCM)
 
@@ -70,5 +71,6 @@ print(res_with)
 
 # Plot of the best model
 plot(res_with)
+}
 }
 \keyword{ package }

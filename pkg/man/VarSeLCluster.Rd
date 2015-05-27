@@ -73,6 +73,7 @@ nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 
 
 \examples{
+\dontrun{
 # Package loading
 require(VarSelLCM)
 
@@ -101,4 +102,5 @@ print(res_with)
 
 # Plot of the best model
 plot(res_with)
+}
 }
