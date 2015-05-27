@@ -8,10 +8,10 @@
 
   \item{\code{Bilirubin}}{continuous}
   \item{\code{AlbuMin}}{continuous}
-  \item{\code{Age}}{integer}
-  \item{\code{AlkPhosphate}}{integer}
-  \item{\code{Sgot}}{integer}
-  \item{\code{ProTime}}{integer}
+  \item{\code{Age}}{count}
+  \item{\code{AlkPhosphate}}{count}
+  \item{\code{Sgot}}{count}
+  \item{\code{ProTime}}{count}
   \item{\code{Sex}}{binary}
   \item{\code{Steroid}}{binary}
   \item{\code{Antivirals}}{binary}
@@ -31,7 +31,7 @@
 Diaconis,P. & Efron,B. (1983). Computer-Intensive Methods in Statistics. Scientific American, Volume 248. 
 }
 \description{
-This data set contains a mixture of integer and real valued attributes, with information about patients affected by the Hepatitis disease.
+This data set contains a mixture of count and real valued attributes, with information about patients affected by the Hepatitis disease.
 
 The task is to predict if these patients will die (1) or survive (2).
 }

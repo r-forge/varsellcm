@@ -9,7 +9,7 @@
 }
 
 \description{
-The package uses a finite mixture model for analyzing mixed-type data (data with continuous and/or integer and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model. This package also performs the imputation of  missing values.
+The package uses a finite mixture model for analyzing mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model. This package also performs the imputation of  missing values.
 }
 
 \details{
