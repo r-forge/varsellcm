@@ -79,7 +79,7 @@ require(VarSelLCM)
 
 # Data loading:
 # x contains the observed variables
-# z the known statu (i.e. 1: absence and 2: presence of heart disease)
+# z the known statue (i.e. 1: absence and 2: presence of heart disease)
 data(heart)
 z <- heart[,"Class"]
 x <- heart[,-13]
@@ -98,7 +98,8 @@ summary(res_with)
 
 
 
-# Display the confusion matrices between the true partition and the partitions obtained with and witout variable selection
+# Display the confusion matrices between the true partition and the partitions obtained
+# with and witout variable selection
 # Variable selection provides a better partitioning accuracy (smaller misclassification error rate)
 print(table(z, res_without@partitions@zMAP))
 print(table(z, res_with@partitions@zMAP))
