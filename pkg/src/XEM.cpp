@@ -46,7 +46,7 @@ void XEM::Run(){
       uvec indices = sort_index(loglikeSmall);
       iterCurrent = iterKeep;
       m_nbdegenere = 0;
-      if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
+      //if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
       
       int degenere = 0;
       for (int tmp1=0; tmp1<nbKeep; tmp1++){
@@ -56,7 +56,7 @@ void XEM::Run(){
         degenere = FiltreDegenere();
         if (degenere==1){
           m_nbdegenere ++;
-          loglikeSmall(indices(nbSmall - tmp1 - 1)) = log(0);
+          loglikeSmall(indices(nbSmall - tmp1 - 1)) = -999999999999999999999999999;
         }
       }
       uword  index;
@@ -66,7 +66,7 @@ void XEM::Run(){
       degenere = FiltreDegenere();
       if (degenere==1){
         m_nbdegenere ++;
-        loglikeoutput = log(0);
+        loglikeoutput = -999999999999999999999999999;
       }
       indices = sort_index(loglikeSmall);
     }

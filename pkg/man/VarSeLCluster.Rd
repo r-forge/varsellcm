@@ -12,14 +12,14 @@ nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
 }
 
 \arguments{
-  \item{x}{A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric", Count variables must be "integer"  and categorical variables must be "factor".}
+  \item{x}{A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric", count variables must be "integer"  and categorical variables must be "factor".}
   
   \item{g}{
     An integer specifying the number of mixture components
   }
   
   \item{initModel}{
-    The number of random initializations of the algorithm. 
+    The number of random initialization of the algorithm. 
     The default is 50. 
   }
   
@@ -90,14 +90,20 @@ res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 # Cluster analysis with variable selection (with parallelisation)
 res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
-# Confusion matrices: variable selection decreases the misclassification error rate
+# Display the results without and with variable selection
+# Variable selection provides better information criteria (BIC, ICL and MICL)
+# Moreover, cluster interpretation focuses on only 8 variables
+summary(res_without)
+summary(res_with)
+
+
+
+# Display the confusion matrices between the true partition and the partitions obtained with and witout variable selection
+# Variable selection provides a better partitioning accuracy (smaller misclassification error rate)
 print(table(z, res_without@partitions@zMAP))
 print(table(z, res_with@partitions@zMAP))
 
-# Summary of the best model
-summary(res_with)
-
-# Parameters of the best model
+# Display details of the best model
 print(res_with)
 
 # Plot of the best model
