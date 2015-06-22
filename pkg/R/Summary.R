@@ -22,8 +22,11 @@ setMethod(
       cat("   loglike:", object@criteria@loglikelihood,"\n")    
       cat("   BIC:    ", object@criteria@BIC,"\n")    
       cat("   ICL:    ", object@criteria@ICL,"\n") 
-      if (object@strategy@vbleSelec)
-        cat("   MICL:   ", object@criteria@MICL,"\n")      
+      if (object@strategy@vbleSelec){
+        
+        cat("   MICL:   ", object@criteria@MICL,"\n")    
+        cat("   Best values has been found ", object@criteria@cvrate, "times\n")
+      }  
     }
     cat("\n")
     if (object@criteria@degeneracyrate>0.1)
@@ -53,8 +56,11 @@ setMethod(
       cat("   loglike:", object@criteria@loglikelihood,"\n")    
       cat("   BIC:    ", object@criteria@BIC,"\n")    
       cat("   ICL:    ", object@criteria@ICL,"\n") 
-      if (object@strategy@vbleSelec)
-        cat("   MICL:   ", object@criteria@MICL,"\n")      
+      if (object@strategy@vbleSelec){
+        
+        cat("   MICL:   ", object@criteria@MICL,"\n")    
+        cat("   Best values has been found ", object@criteria@cvrate, "times\n")
+      } 
     }
     cat("\n")
     if (object@criteria@degeneracyrate>0.1)
@@ -83,8 +89,11 @@ setMethod(
     cat("   loglike:", object@criteria@loglikelihood,"\n")    
     cat("   BIC:    ", object@criteria@BIC,"\n")    
     cat("   ICL:    ", object@criteria@ICL,"\n")
-    if (object@strategy@vbleSelec)
-      cat("   MICL:   ", object@criteria@MICL,"\n")       
+    if (object@strategy@vbleSelec){
+      
+      cat("   MICL:   ", object@criteria@MICL,"\n")    
+      cat("   Best values has been found ", object@criteria@cvrate, "times\n")
+    }  
   }
 )
 
@@ -125,8 +134,11 @@ setMethod(
       cat("   loglike:", object@criteria@loglikelihood,"\n")    
       cat("   BIC:    ", object@criteria@BIC,"\n")    
       cat("   ICL:    ", object@criteria@ICL,"\n")
-      if (object@strategy@vbleSelec)
-        cat("   MICL:   ", object@criteria@MICL,"\n")  
+      if (object@strategy@vbleSelec){
+        
+        cat("   MICL:   ", object@criteria@MICL,"\n")    
+        cat("   Best values has been found ", object@criteria@cvrate, "times\n")
+      }  
     }
     cat("\n")
     if (object@criteria@degeneracyrate>0.1)

@@ -16,6 +16,7 @@ This class contains the information criteria
     \item{\code{ICL}:}{Values of the ICL criterion}
     \item{\code{MICL}:}{Values of the MICL criterion}  
     \item{\code{nbparam}:}{Number of parameters}  
+    \item{\code{cvrate}:}{Occurrence where the couple (m,z) maximizing the MICL criterion has been found.}
     \item{\code{degeneracyrate}:}{Rate of EM having degenerated}  
   }
 }

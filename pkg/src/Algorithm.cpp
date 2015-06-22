@@ -25,6 +25,7 @@ void Algorithm::Run(S4 * output_p){
   if (vbleSelec){
     double prec = log(0);
     m_omegaBest = omegainit.col(0);
+    int cvrate=0;
     for (int ini=0; ini<omegainit.n_cols; ini++){
       m_omegaCurrent = omegainit.col(ini);
       if (sum(m_omegaCurrent)==0)
@@ -42,11 +43,15 @@ void Algorithm::Run(S4 * output_p){
         m_miclBest = m_miclCurrent;
         m_omegaBest = m_omegaCurrent;
         m_zStarBest = m_zStarCurrent;
+        cvrate = 1;
+      }else if (m_miclCurrent ==  m_miclBest){
+        cvrate ++;
       }
     }
     as<S4>(output_p->slot("model")).slot("omega") = wrap(trans(m_omegaBest));
     as<S4>(output_p->slot("partitions")).slot("zOPT") = wrap(trans(m_zStarBest));
     as<S4>(output_p->slot("criteria")).slot("MICL") = m_miclBest;  
+    as<S4>(output_p->slot("criteria")).slot("cvrate") = cvrate;  
   }
 }
 

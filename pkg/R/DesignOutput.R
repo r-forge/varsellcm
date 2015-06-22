@@ -44,6 +44,7 @@ setMethod( f = "DesignOutput",
                  }
                }
              }
+             names(reference@criteria@nbparam) <- NULL
              return(reference)
            }
 )
@@ -85,6 +86,7 @@ setMethod( f = "DesignOutput",
                  }
                }
              }
+             names(reference@criteria@nbparam) <- NULL
              return(reference)
            }
 )
@@ -131,6 +133,7 @@ setMethod( f = "DesignOutput",
                    reference@data@shortdata[which(reference@data@shortdata[,j] == 0), ] <- NA
                }
              }
+             names(reference@criteria@nbparam) <- NULL
              return(reference)
            }
 )
@@ -229,6 +232,7 @@ setMethod( f = "DesignOutput",
                }
              }
              
+             names(reference@criteria@nbparam) <- NULL
              return(reference)
            }
 )

@@ -152,11 +152,17 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
                                 FUN = VarSelModelMLE,
                                 obj=reference,
                                 mc.cores = nb.cpus, mc.preschedule = TRUE, mc.cleanup = TRUE)
+        
         # On conserve le meilleur modele au sens de MICL
         tmpMICL <- rep(NA, length(reference))
         for (it in 1:length(reference)) tmpMICL[it] <- reference[[it]]@criteria@MICL
+        
+        cvrate <- 0
+        for (it in which(tmpMICL==max(tmpMICL))){
+          cvrate <- cvrate + reference[[it]]@criteria@cvrate
+        }
         reference <- reference[[which.max(tmpMICL)]]
-        # On parallelise aussi pour les EM donc on reparti les initialisations sur les differents coeurs
+        reference@criteria@cvrate = cvrate
       }
       reference@strategy <- strategy 
       nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores, 4)
