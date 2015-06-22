@@ -3,8 +3,8 @@
 \title{VarSelCluster}
 
 \description{
-  Variable Selection for model-based clustering managed by the Latent Class Model. This model analyses mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.
-  }
+Variable Selection for model-based clustering by using the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random). It assumes independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. Variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.
+}
 \usage{
 VarSelCluster(x, g, initModel=50, vbleSelec=TRUE, 
 paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20,
@@ -15,11 +15,11 @@ nbKeep=50, iterKeep=10**3, tolKeep=10**(-3))
   \item{x}{A data frame where rows correspond to observations and columns correspond to variables. Continuous variables must be  "numeric", count variables must be "integer"  and categorical variables must be "factor".}
   
   \item{g}{
-    An integer specifying the number of mixture components
+    An integer specifying the number of mixture components.
   }
   
   \item{initModel}{
-    The number of random initialization of the algorithm. 
+    The number of random initializations of the algorithm. 
     The default is 50. 
   }
   
