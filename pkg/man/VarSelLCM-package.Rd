@@ -19,6 +19,7 @@ Type: \tab Package\cr
 Version: \tab 2.0\cr
 Date: \tab 2015-06-01\cr
 License: \tab GPL (>= 2)\cr
+URL: \tab http://varsellcm.r-forge.r-project.org/\cr
 }
 The main functions to use are \code{\link{VarSelCluster}} and \code{\link{VarSelImputation}}.
 
