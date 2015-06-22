@@ -1,0 +1,280 @@
+/* Définition des polices personnalisées */
+ 
+@font-face
+{
+    font-family: 'BallparkWeiner';
+    src: url('polices/ballpark.eot');
+    src: url('polices/ballpark.eot?#iefix') format('embedded-opentype'),
+         url('polices/ballpark.woff') format('woff'),
+         url('polices/ballpark.ttf') format('truetype'),
+         url('polices/ballpark.svg#BallparkWeiner') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+ 
+@font-face
+{
+    font-family: 'Dayrom';
+    src: url('polices/dayrom.eot');
+    src: url('polices/dayrom.eot?#iefix') format('embedded-opentype'),
+         url('polices/dayrom.woff') format('woff'),
+         url('polices/dayrom.ttf') format('truetype'),
+         url('polices/dayrom.svg#Dayrom') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Eléments principaux de la page */
+ 
+body
+{
+    background: gray;/*url('pictures/fond_bleu.png');*/
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    color: #181818;
+}
+ 
+#bloc_page
+{
+    width: 1250px;
+    margin: auto;
+     #006699 ;
+}
+ 
+section h1, footer h1, nav a
+{
+    font-family: Dayrom, serif;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+
+/* Header */
+ 
+
+ 
+#titre_principal
+{
+    display: inline-block;
+}
+ 
+header h1
+{
+    font-family: 'BallparkWeiner', serif;
+    font-size: 2.1em;
+    font-weight: normal;
+}
+ 
+#logo, header h1
+{
+    display: inline-block;
+    margin-bottom: 0px;
+}
+ 
+header h2
+{
+    font-family: Dayrom, serif;
+    font-size: 1.1em;
+    margin-top: 0px;
+    font-weight: normal;
+}
+
+
+/* Navigation */
+ 
+/*nav
+{   
+    margin-top: -150px;
+    height: 200px;
+    border-radius: 65px;
+    display: inline-block;
+    width: 900px;
+    text-align: right;
+    margin-bottom: 25px;
+}*/
+nav
+{ 
+    text-align: right;
+
+    position: absolute;
+    bottom: 0;
+    border-radius: 0px 0px 5px 5px;
+    width: 99.5%;
+    height: 33px;
+    padding-top: 15px;
+    padding-left: 4px;
+    font-size: 0.8em;
+}
+nav ul
+{
+    list-style-type: none;
+    margin-bottom: 25px;
+}
+ 
+nav li
+{
+    display: inline-block;
+    margin-right: 15px;
+    margin-bottom: 125px;
+
+}
+ 
+nav a
+{
+    font-size: 1.5em;
+    color: #ecf4ff;
+    padding-bottom: 3px;
+    text-decoration: none;
+    margin-bottom: 25px;
+}
+ 
+nav a:hover
+{
+    color: #760001;
+    border-bottom: 3px solid #760001;
+    margin-bottom: 25px;
+}
+
+
+
+#banniere_image
+{
+    margin-top: 15px;
+    height: 200px;
+    border-radius: 5px;
+    background: url('pictures/krk2.png') no-repeat;
+    position: relative;
+    box-shadow: 0px 4px 4px #1c1a19;
+    margin-bottom: 25px;
+}
+ 
+#banniere_description_sup
+{
+    font-family: 'BallparkWeiner', serif;
+    font-size: 2.1em;
+    font-weight: normal;
+    position: absolute;
+    bottom: 0;
+    border-radius: 0px 0px 5px 5px;
+    width: 99.5%;
+    height: 200px;
+    padding-top: 15px;
+    padding-left: 4px;
+    color: white;
+    font-size: 0.8em;
+}
+
+#banniere_description_inf
+{
+    position: absolute;
+    bottom: 0;
+    border-radius: 0px 0px 5px 5px;
+    width: 100%;
+    height: 33px;
+    padding-top: 15px;
+    padding-left: 0px;
+    background-color: rgb(24,24,24); /* Pour les anciens navigateurs */
+    background-color: rgba(24,24,24,0.8);
+    color: #ecf4ff;
+    font-size: 0.8em;
+}
+ 
+/* Corps */
+ 
+article, aside
+{
+    width: 970px;
+    display: inline-block;
+    vertical-align: top;
+    text-align: justify;
+    background-color:#ecf4ff;
+/*  background-color:white;*/
+    box-shadow: 0px 2px 5px #1c1a19;
+    border-radius: 5px;
+    padding: 10px;
+}
+ 
+article, 
+{
+
+    width: 625px;
+    margin-right: 15px;
+
+}
+aside
+{
+    position: relative;
+    width: 235px;
+   /*background-color: rgb(24,24,24);
+        background-color: rgba(24,24,24,0.8);*/
+      /*  background-color:black;*/
+    background-color: rgba(24,24,24,0.8);
+    box-shadow: 0px 2px 5px #1c1a19;
+    border-radius: 5px;
+    padding: 10px;
+    color: white;
+    font-size: 0.9em;
+   border-color:white;
+
+}
+ 
+ 
+article a, aside a
+{
+
+    color: #778011;
+   /*color:blue;*/
+    padding-bottom: 3px;
+    text-decoration: none;
+
+
+}
+ 
+article a:hover, aside a:hover
+{
+    color: #760001;
+    border-bottom: 1px solid #760001;
+    margin-bottom: 2px;
+}
+
+
+.ico_categorie
+{
+    vertical-align: middle;
+    margin-right: 8px;
+}
+ 
+article p, article ul,article li
+{
+    font-size: 1em;
+  margin-bottom: 2px;
+}
+ 
+ article ul
+ {
+   
+  margin-bottom: 8px;
+ }
+
+#fleche_bulle
+{
+    position: absolute;
+    top: 100px;
+    left: -12px;
+}
+ 
+
+aside img
+{
+    margin-right: 5px;
+}
+
+
+/* Footer */
+ 
+footer
+{
+    text-align: center;
+    padding-top: 25px;
+    color:white;
+}
+ 
