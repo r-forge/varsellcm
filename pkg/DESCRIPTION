@@ -13,5 +13,5 @@ ByteCompile: true
 LazyLoad: yes
 Collate: 'CheckInputs.R' 'DataCstr.R' 'VSLCMGrlClasses.R' 'ICLexact.R'
         'DesignOutput.R' 'Summary.R' 'Print.R' 'VarSelLCM.R'
-        'RcppExports.R' 'Plot.R' 'Imputation.R' 'withoutmixture.R'
+        'RcppExports.R' 'Plot.R' 'Imputation.R' 'withoutmixture.R' 
 Packaged: 2015-05-01 13:45:12 UTC; marbac
