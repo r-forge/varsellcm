@@ -5,7 +5,7 @@
 
 
 \title{
- Variable Selection in model-based clustering managed by the Latent Class Model for analysis mixed-type data with missing values.
+Variable Selection in model-based clustering managed by the Latent Class Model for analysis mixed-type data with missing values.
 }
 
 \description{
