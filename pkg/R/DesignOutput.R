@@ -35,7 +35,9 @@ setMethod( f = "DesignOutput",
                    reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                    reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
                    colnames(reference@partitions@tik) <-  paste("class-",1:reference@model@g,sep="")
-                   reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
+                   nbparam <- (reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))
+                   reference@criteria@nbparam <- nbparam
+                   reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
                    reference@criteria@ICL <- ICLcontinuous(reference) 
                  }else{
                    warning("All the models got error (degeneracy)", call. = FALSE)
@@ -74,7 +76,9 @@ setMethod( f = "DesignOutput",
                    reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                    reference@partitions@zOPT <- as.numeric(reference@partitions@zOPT) + 1
                    colnames(reference@partitions@tik) <-  paste("class-",1:reference@model@g,sep="")
-                   reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
+                   nbparam <- (reference@model@g-1 + reference@model@g*sum(reference@model@omega) + sum(1-reference@model@omega))
+                   reference@criteria@nbparam <- nbparam
+                   reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
                    reference@criteria@ICL <- ICLinteger(reference) 
                  }else{
                    warning("All the models got error (degeneracy)", call. = FALSE)
@@ -92,7 +96,6 @@ setMethod( f = "DesignOutput",
              names(reference@model@omega) <- colnames(reference@data@data)
              
              if (reference@model@g>1){
-
                if (reference@strategy@paramEstim == TRUE){
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
@@ -114,7 +117,11 @@ setMethod( f = "DesignOutput",
                  if (reference@model@g>1)
                    reference@partitions@tik <- reference@partitions@tik[attr(reference@data@shortdata,"index"),] 
                  colnames(reference@partitions@tik)=paste("class-",1:reference@model@g,sep="")
-                 reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*(reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))*log(reference@data@n)
+                 nbparam <- (reference@model@g-1)
+                 for (j in 1:reference@data@d)
+                   nbparam <- nbparam + (length(reference@data@modalitynames[[j]])-1)*(1 + (reference@model@g-1)*reference@model@omega[j])
+                 reference@criteria@nbparam <- nbparam
+                 reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
                  reference@criteria@ICL <- ICLcategorical(reference) 
                }
                
@@ -194,6 +201,7 @@ setMethod( f = "DesignOutput",
                        nbparam <- nbparam + (length(reference@data@dataCategorical@modalitynames[[j]])-1) * (1 + (reference@model@g-1)*shortomega[j])
                      }
                    }
+                   reference@criteria@nbparam <- nbparam
                    reference@criteria@BIC <- reference@criteria@loglikelihood - nbparam*0.5*log(reference@data@n)
                    names(reference@criteria@BIC) <- NULL
                    reference@criteria@ICL <- ICLmixed(reference) 

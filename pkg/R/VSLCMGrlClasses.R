@@ -7,8 +7,8 @@
 ## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des criteres BIC, ICL et MICL
 ########################################################################################################################
 setClass(Class = "VSLCMcriteria", 
-         representation = representation(loglikelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric", degeneracyrate="numeric"), 
-         prototype = prototype(loglikelihood=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric(), degeneracyrate=numeric() )
+         representation = representation(loglikelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric", nbparam="numeric", degeneracyrate="numeric"), 
+         prototype = prototype(loglikelihood=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric(), nbparam=numeric(), degeneracyrate=numeric() )
 )
 
 ########################################################################################################################
