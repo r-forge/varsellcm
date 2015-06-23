@@ -30,11 +30,10 @@ ImputCate <- function(data, tik, param){
   for (j in 1:data@d){
     if (any(is.na(data@data[,j]))){
       who <- which(is.na(data@data[,j])==T)
-      output[who, j] <- apply(tik[who,]%*%param@alpha[[j]],1,which.max)
+      output[who, j] <- data@modalitynames[[j]][apply(tik[who,]%*%param@alpha[[j]],1,which.max)]
     }
-    output[,j] <- as.factor(data@modalitynames[[j]][output[,j]])
+   # output[,j] <- as.factor(data@modalitynames[[j]][output[,j]])
   }
-  colnames(output) <- colnames(data@shortdata)
   return(output)
 }
 

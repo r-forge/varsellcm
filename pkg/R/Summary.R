@@ -111,14 +111,14 @@ setMethod(
     }
     if (object@data@withInteger){
       cat("   Number of integer variables:", object@data@dataInteger@d, "\n")
-      val <- round(100*(1-mean(object@data@dataInteger@notNA)),2)
+      val <- round(100*mean(1-object@data@dataInteger@notNA),2)
       if (val>0)
         cat("   Percentile of missing values for the integer variables:", val,"\n")
     }
     
     if (object@data@withCategorical){
       cat("   Number of categorical variables:", object@data@dataCategorical@d, "\n")
-      miss <- sum(sweep(is.na(object@data@dataCategorical@shortdata),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
+      miss <- 100*sum(sweep(is.na(res_with@data@dataCategorical@data),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
       if (miss>0)
         cat("   Percentile of missing values for the categorical variables:", miss,"\n")
     }
