@@ -15,11 +15,11 @@
 
 
 ### Introduction
-  *VarSelLCM* performs the variable selection for model-based clustering managed by the Latent Class Model. This model analyses mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection.
+  *VarSelLCM* carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.
 
-  The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  
+  The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  
   
-This package also performs the imputation of missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
+This package also proposes an imputation method for the missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
 
 Tool functions (*summary, print* and *plot*) facilitate the result interpretation.
 
@@ -111,9 +111,7 @@ print(paste("Quadratic error without variable selection:",sum((SimulHetero[,1]-x
 
 **Plot of the parameters for putting the light on the discriminative variables**
 
-The method *plot()* illustrates the role of each variable by class.  The role of the one continuous variable $j$ in component
-$k$ is given by 
-
+The method *plot()* illustrates the discriminative power of each variable by class.  The discriminative power of continuous variable $j$ in component $k$ is given by 
 $$\int_{R}\Big[\pi_k p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. $$
 The same quantity is used for categorical and counting variable
 replacing integral by sum.
@@ -121,4 +119,10 @@ replacing integral by sum.
 ```{r fig.width=9, fig.height=5}
 # Plot of the parameters
 plot(res_with)
+```
+
+**Details about the estimates**
+```{r, comment=""}
+# Show the parameters
+print(res_with)
 ```

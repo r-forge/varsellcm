@@ -53,7 +53,7 @@ code > span.er { color: #ff0000; font-weight: bold; }
 <div id="header">
 <h1 class="title">Vignette of <strong>VarSelLCM</strong></h1>
 <h4 class="author"><em>Matthieu Marbac and Mohammed Sedki</em></h4>
-<h4 class="date"><em>22 juin 2015</em></h4>
+<h4 class="date"><em>23 juin 2015</em></h4>
 </div>
 
 <div id="TOC">
@@ -66,9 +66,9 @@ code > span.er { color: #ff0000; font-weight: bold; }
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p><em>VarSelLCM</em> performs the variable selection for model-based clustering managed by the Latent Class Model. This model analyses mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection.</p>
-<p>The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.</p>
-<p>This package also performs the imputation of missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.</p>
+<p><em>VarSelLCM</em> carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.</p>
+<p>The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.</p>
+<p>This package also proposes an imputation method for the missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.</p>
 <p>Tool functions (<em>summary, print</em> and <em>plot</em>) facilitate the result interpretation.</p>
 </div>
 <div id="tutorial-1-benefits-of-the-variable-selection" class="section level2">
@@ -138,14 +138,14 @@ Information Criteria:
    BIC:     -6540.059 
    ICL:     -6618.836 
    MICL:    -6618.306 
-   Best values has been found  10 times</code></pre>
+   Best values has been found  2 times</code></pre>
 <p><strong>Variable selection increases the partitioning accuracy</strong></p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Confusion matrices: variable selection decreases the misclassification error rate</span>
 <span class="kw">print</span>(<span class="kw">table</span>(z, res_without@partitions@zMAP))</code></pre>
 <pre><code>   
 z     1   2
-  1  46 104
-  2  96  24</code></pre>
+  1 104  46
+  2  24  96</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">table</span>(z, res_with@partitions@zMAP))</code></pre>
 <pre><code>   
 z     1   2
@@ -194,11 +194,100 @@ ximput_without &lt;-<span class="st"> </span><span class="kw">VarSelImputation</
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(<span class="kw">paste</span>(<span class="st">&quot;Quadratic error without variable selection:&quot;</span>,<span class="kw">sum</span>((SimulHetero[,<span class="dv">1</span>]-ximput_without[,<span class="dv">1</span>])**<span class="dv">2</span>)))</code></pre>
 <pre><code>[1] &quot;Quadratic error without variable selection: 524.20757852508&quot;</code></pre>
 <p><strong>Plot of the parameters for putting the light on the discriminative variables</strong></p>
-<p>The method <em>plot()</em> illustrates the role of each variable by class. The role of the one continuous variable <span class="math">\(j\)</span> in component <span class="math">\(k\)</span> is given by</p>
-<p><span class="math">\[\int_{R}\Big[\pi_k p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. \]</span> The same quantity is used for categorical and counting variable replacing integral by sum.</p>
+<p>The method <em>plot()</em> illustrates the discriminative power of each variable by class. The discriminative power of continuous variable <span class="math">\(j\)</span> in component <span class="math">\(k\)</span> is given by <span class="math">\[\int_{R}\Big[\pi_k p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. \]</span> The same quantity is used for categorical and counting variable replacing integral by sum.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Plot of the parameters</span>
 <span class="kw">plot</span>(res_with)</code></pre>
 <p><img src="data:image/png;base64,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" title alt style="display: block; margin: auto;" /></p>
+<p><strong>Details about the estimates</strong></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Show the parameters</span>
+<span class="kw">print</span>(res_with)</code></pre>
+<pre><code>Data set:
+   Number of individuals: 100 
+   Number of continuous variables: 4 
+   Percentile of missing values for the continuous variables: 5 
+   Number of integer variables: 2 
+   Number of categorical variables: 3 
+
+Model:
+   Number of components: 3 
+   Number of relevant variables for the clustering 3 
+
+Names of the relevant variables for the clustering:
+  [1] &quot;X1&quot; &quot;X4&quot; &quot;X7&quot;
+
+
+Information Criteria:
+   loglike: -1339.429 
+   BIC:     -1408.507 
+   ICL:     -1424.048 
+   MICL:    -1424.048 
+   Best values has been found  16 times
+
+
+ Parameters per class:
+Class 1 
+Proportion: 0.317136 
+Parameters of continuous variable 
+           mean        sd
+X1 -15.89028531 2.0788484
+X2  -0.02462772 0.9907010
+X3   0.12511199 0.9933192
+X4   2.91610992 1.3268895
+
+Parameters of integer variable 
+   lambda
+X5   3.16
+X6   3.05
+
+Parameters of categorical variables 
+    Level.1  Level.2  Level.3
+X7 0.184799 0.630292 0.184908
+X8     0.28     0.31     0.41
+X9     0.28     0.38     0.34
+
+
+*******************
+Class 2 
+Proportion: 0.33 
+Parameters of continuous variable 
+          mean        sd
+X1  3.95960395 0.8545069
+X2 -0.02462772 0.9907010
+X3  0.12511199 0.9933192
+X4 18.90909091 1.2640396
+
+Parameters of integer variable 
+   lambda
+X5   3.16
+X6   3.05
+
+Parameters of categorical variables 
+   Level.1 Level.2 Level.3
+X7 0.69697       0 0.30303
+X8    0.28    0.31    0.41
+X9    0.28    0.38    0.34
+
+
+*******************
+Class 3 
+Proportion: 0.352864 
+Parameters of continuous variable 
+          mean        sd
+X1 -0.48315725 0.8500616
+X2 -0.02462772 0.9907010
+X3  0.12511199 0.9933192
+X4  6.95791118 1.6336869
+
+Parameters of integer variable 
+   lambda
+X5   3.16
+X6   3.05
+
+Parameters of categorical variables 
+    Level.1  Level.2  Level.3
+X7 0.599079 0.028656 0.372265
+X8     0.28     0.31     0.41
+X9     0.28     0.38     0.34</code></pre>
 </div>
 
 
