@@ -56,7 +56,7 @@ void XEM::Run(){
         degenere = FiltreDegenere();
         if (degenere==1){
           m_nbdegenere ++;
-          loglikeSmall(indices(nbSmall - tmp1 - 1)) = -999999999999999999999999999;
+          loglikeSmall(indices(nbSmall - tmp1 - 1)) = -999999999999;
         }
       }
       uword  index;
@@ -66,7 +66,7 @@ void XEM::Run(){
       degenere = FiltreDegenere();
       if (degenere==1){
         m_nbdegenere ++;
-        loglikeoutput = -999999999999999999999999999;
+        loglikeoutput = -999999999999;
       }
       indices = sort_index(loglikeSmall);
     }
