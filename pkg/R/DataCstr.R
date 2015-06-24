@@ -101,7 +101,8 @@ setClass(
     withCategorical="logical",
     dataContinuous="VSLCMdataContinuous",
     dataInteger="VSLCMdataInteger",
-    dataCategorical="VSLCMdataCategorical"
+    dataCategorical="VSLCMdataCategorical",
+    var.names="character"
   ), 
   prototype = prototype(
     n=numeric(),
@@ -111,7 +112,8 @@ setClass(
     withCategorical=logical(),
     dataContinuous=new("VSLCMdataContinuous"),
     dataInteger=new("VSLCMdataInteger"),
-    dataCategorical=new("VSLCMdataCategorical")
+    dataCategorical=new("VSLCMdataCategorical"),
+    var.names=character()
   )
 )
 
@@ -122,7 +124,7 @@ setClass(
 VSLCMdata <- function(x, redquali=TRUE){
   # Ajout d'un nom de variable si celui-ci est manquant
   if (is.null(colnames(x))) colnames(x) <- paste("X",1:ncol(x), sep="")
-  
+  if (max(table(colnames(x)))>1) stop("At least two variables have the same name!")
   n <- nrow(x)
   d <- ncol(x)
   # recherche des indices de variables numeric et factor
@@ -204,7 +206,8 @@ VSLCMdata <- function(x, redquali=TRUE){
     
     output <- new("VSLCMdataMixed", n=n, d=d, 
                   withContinuous=(length(idxcont) != 0),  withInteger=(length(idxinte) != 0), withCategorical=(length(idxcat) != 0),
-                  dataContinuous=output$continuous, dataInteger=output$integer, dataCategorical=output$categorical)
+                  dataContinuous=output$continuous, dataInteger=output$integer, dataCategorical=output$categorical,   var.names=colnames(x)
+)
   }
   return(output)
 }

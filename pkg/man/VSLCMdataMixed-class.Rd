@@ -17,6 +17,7 @@
     \item{\code{dataContinuous}:}{Instance of \code{\linkS4class{VSLCMdataContinuous}}  related to the continuous variables.}
     \item{\code{dataInteger}:}{Instance of \code{\linkS4class{VSLCMdataInteger}}  related to the integer variables.}
     \item{\code{dataCategorical}:}{Instance of \code{\linkS4class{VSLCMdataCategorical}}  related to the categorical variables.}
+    \item{\code{var.names}:}{Names of the variables}}
   }
 }
 \examples{

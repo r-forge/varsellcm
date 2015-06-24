@@ -12,7 +12,7 @@ setMethod(
     val <- round(100*(1-mean(object@data@notNA)),2)
     if (val>0)
       cat("   Percentile of missing values:", ,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering:",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
       print(head(object@model@names.relevant))
@@ -42,11 +42,11 @@ setMethod(
   signature = c("VSLCMresultsInteger"),
   definition = function(object){
     cat("Data set:\n   Number of individuals:", object@data@n,"\n")
-    cat("   Number of integer variables:", object@data@d, "\n")
+    cat("   Number of count variables:", object@data@d, "\n")
     val <- round(100*(1-mean(object@data@notNA)),2)
     if (val>0)
       cat("   Percentile of missing values:", ,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering:",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
       print(head(object@model@names.relevant))
@@ -80,7 +80,7 @@ setMethod(
     miss <- sum(sweep(is.na(object@data@shortdata),1,object@data@weightdata,"*")) / (object@data@n * object@data@d)
     if (miss>0)
       cat("   Percentile of missing values:", miss,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering:",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
       print(head(object@model@names.relevant))
@@ -110,7 +110,7 @@ setMethod(
         cat("   Percentile of missing values for the continuous variables:", val,"\n")
     }
     if (object@data@withInteger){
-      cat("   Number of integer variables:", object@data@dataInteger@d, "\n")
+      cat("   Number of count variables:", object@data@dataInteger@d, "\n")
       val <- round(100*mean(1-object@data@dataInteger@notNA),2)
       if (val>0)
         cat("   Percentile of missing values for the integer variables:", val,"\n")
@@ -124,7 +124,7 @@ setMethod(
     }
     cat("\n")
     
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering:",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
       cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
       print(head(object@model@names.relevant))

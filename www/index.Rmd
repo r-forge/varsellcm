@@ -1,57 +1,197 @@
 ---
-  title: "**VarSelLCM**"  
+title: '**VarSelLCM**'
+output: html_document
 ---
 
 
 *Variable Selection for Model-Based Clustering of Continuous, Count, Categorical or Mixed-Type Data Set with Missing Values.*
 
 **Description:**
-
+  
 * *Authors*: **Matthieu Marbac** and **Mohammed Sedki**.
 * *License*: [GPL-2](http://www.gnu.org/licenses/gpl-2.0.html).
-* *Download*: [link](http://cran.at.r-project.org/web/packages/VarSelLCM/index.html).
+* *Download VarSelLCM 2.0 (beta version for mixed-type data)*: [link](https://r-forge.r-project.org/R/?group_id=2011).  
+*  *Download VarSelLCM 1.2 (stable version for continuous data)*: [link](http://cran.r-project.org/web/packages/VarSelLCM/).
 * *Reference*: [Variable selection for model-based clustering using the integrated complete-data likelihood](http://arxiv.org/abs/1501.06314), Marbac, M. and Sedki, M., 2015, preprint.
 
+**Site map:**  
 
+* <a href="#intro">Introduction</a>.
+* <a href="#tutorial">Tutorial (overview of the VarSelLCM functions)</a>.
+* <a href="#heart">Cluster analysis of a mixed-type data set</a>.
+* <a href="#golub">Cluster analysis of a challenging continuous data set</a>.
+
+<a id="intro"></a>
 
 ### Introduction
-  *VarSelLCM* carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.
+*VarSelLCM* carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.
 
-  The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  
-  
+The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  
+
 This package also proposes an imputation method for the missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
 
 Tool functions (*summary, print* and *plot*) facilitate the result interpretation.
 
 
-### Tutorial 1:  benefits of the variable selection
+
+<a id="tutorial"></a>
+
+###  Overview of the VarSelLCM functions
+
+
 **Loadings**
+
 ```{r, comment=""}
-# Package loading
 library(VarSelLCM)
-# Data loading:
-# x contains the observed variables
-# z the known statu (i.e. 1: absence and 2: presence of heart disease)
+# data loading (last column indicates the true class membership)
+data(thyroid)
+```
+
+**Clustering with variable selection**
+
+```{r, comment=""}
+# Cluster analysis with variable selection
+res <- VarSelCluster(thyroid[,-ncol(thyroid)], 3)
+
+# Cluster analysis with variable selection with parallel computing (8 cores) and 60 initializations
+res <- VarSelCluster(thyroid[,-ncol(thyroid)], 3, nbcores = 8, initModel = 40)
+```
+
+**Model Summary**
+
+```{r, comment=""}
+# Summary of the selected model (4 variables are relevant and 1 variable is irrelevant)
+summary(res)
+```
+
+**Imputation of missing values by using the model parameters**  
+  Function *VarSelImputation()* performs the imputation on
+individuals having missing values by taking the expectation of the
+missing variables conditionally on the model, its estimates and the
+observed variables, as follows
+$$
+  \forall j \notin \mathcal{O}_i, x_{ij}=\mathbb{E}\left[x_{ij} \mid m, \hat{\theta}, x_{i\mathcal{O}_i}\right],
+$$
+  where $x_{i\mathcal{O}_i}=(x_{ij}; j\in\mathcal{O}_i)$. 
+```{r, comment=""}
+# Imputation of missing values by using the model parameters
+# (print only for indivudals 8, 9 and 10)
+ximput <- VarSelImputation(res)
+print(thyroid[8:10,-ncol(thyroid)])
+print(ximput[8:10,])
+```
+
+**Details about the estimates**
+
+```{r, comment=""}
+# Print the parameters
+print(res)
+```
+**Discriminative power of the relevant variables**  
+The method *plot()* illustrates the discriminative power of each variable by class.  The discriminative power of continuous variable $j$ in component $k$ is given by 
+$$\int_{R}\Big[p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. $$
+  The same quantity is used for categorical and counting variable
+replacing integral by sum.
+
+```{r fig.width=9, fig.height=9}
+# Plot of the parameters
+plot(res)
+```
+
+<a id="heart"></a>
+
+### Cluster analysis of a mixed-type data set
+
+**Loadings**
+
+```{r, comment=""}
+# data loading (last column indicates the true class membership)
 data(heart)
-z <- heart[,"Class"]
-x <- heart[,-13]
+summary(heart)
+```
+
+**Search of the number of components**
+
+```{r, comment=""}
+criteria <- matrix(NA, 4, 3)
+colnames(criteria) <- c("BIC", "ICL", "MICL")
+rownames(criteria) <- paste(1:4, "components", sep="")
+for (k in 1:4){
+  tmp <- VarSelCluster(heart[, -ncol(heart)], k, nbcores = 8)
+  criteria[k,] <- c(tmp@criteria@BIC, tmp@criteria@ICL, tmp@criteria@MICL)
+}
+# Print the values of the information criteria
+print(criteria)
+
+# The three criteria detect the "true" number of components (i.e. two)
+apply(criteria, 2, which.max)
 ```
 
 
-**Cluster analysis with and without variable selection**
+**Model summary**
 ```{r, comment=""}
-# Cluster analysis without variable selection
-res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
+# Computation of the model with two components with variable selection
+res_with <- VarSelCluster(heart[, -ncol(heart)], 2, nbcores = 8)
 
-# Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
+# Summary of the model with variable selection
+summary(res_with)
+```
+
+**Variable selection increases the partitioning accuracy**
+
+```{r, comment=""}
+# Confusion matrices: variable selection decreases the misclassification error rate
+
+# Computation of the model with two components without variable selection
+res_without <- VarSelCluster(heart[, -ncol(heart)], 2, vbleSelec = FALSE)
+
+# Matrix obtained without variable selection (misclassification: 70 individuals)
+print(table(heart[,ncol(heart)], res_without@partitions@zMAP))
+
+# Matrix obtained without variable selection (misclassification: 57 individuals)
+print(table(heart[,ncol(heart)], res_with@partitions@zMAP))
+```
+
+<a id="golub"></a>
+
+### Cluster analysis of a challenging continuous data set
+
+```{r, comment=""}
+# data loading (last column indicates the true class membership)
+data(golub)
+```
+
+
+**Search of the number of components**
+
+```{r, comment=""}
+criteria <- matrix(NA, 4, 3)
+colnames(criteria) <- c("BIC", "ICL", "MICL")
+rownames(criteria) <- paste(1:4,"components", sep="")
+for (k in 1:4){
+  tmp <- VarSelCluster(golub[,-ncol(golub)], k, nbcores = 8, initModel = 100)
+  criteria[k,] <- c(tmp@criteria@BIC, tmp@criteria@ICL, tmp@criteria@MICL)
+}
+
+# Print the values of the information criteria
+print(criteria)
+
+# MICL detects the "true" number of components (i.e. two)
+apply(criteria, 2, which.max)
+```
+
+```{r, comment=""}
+# Cluster analysis without variable selection (with parallelisation on four cores)
+res_without <- VarSelCluster(golub[,-ncol(golub)], 2,  vbleSelec = FALSE, nbSmall = 500, nbKeep = 200)
+
+# Cluster analysis with variable selection (with parallelisation on four cores)
+res_with <- VarSelCluster(golub[,-ncol(golub)], 2, nbcores = 8, initModel = 100)
 ```
 
 **Variable selection increases the information criteria**
 ```{r, comment=""}
 # Summary of the model without variable selection
 summary(res_without)
-
 # Summary of the model with variable selection
 summary(res_with)
 ```
@@ -59,70 +199,8 @@ summary(res_with)
 
 **Variable selection increases the partitioning accuracy**
 ```{r, comment=""}
-# Confusion matrices: variable selection decreases the misclassification error rate
-print(table(z, res_without@partitions@zMAP))
-print(table(z, res_with@partitions@zMAP))
-```
-
-
-### Tutorial 2:  dealing with missing values
-**Data set loading and missing value adding**
-```{r, comment=""}
-set.seed(12)
-data(SimulHetero)
-xmiss <- SimulHetero
-xmiss[sample(1:100, 20), 1] <- NA
-summary(xmiss)
-```
-
-**Cluster analysis with and without missing values**
-```{r, comment=""}
-res_without <- VarSelCluster(xmiss, 3, vbleSelec = FALSE)
-res_with <- VarSelCluster(xmiss, 3)
-```
-
-**Information criteria are increased by the variable selection**
-```{r, comment=""}
-res_without <- VarSelCluster(xmiss, 3, vbleSelec = FALSE)
-res_with <- VarSelCluster(xmiss, 3)
-```
-
-**Imputation of missing values by using the model parameters**
-
-Function *VarSelImputation()* performs the imputation on
-individuals having missing values by taking the expectation of the
-missing variables conditionally on the model, its estimates and the
-observed variables, as follows
-$$
-\forall j \notin \mathcal{O}_i, x_{ij}=\mathbb{E}\left[x_{ij} \mid m, \hat{\theta}, x_{i\mathcal{O}_i}\right],
-$$
-where $x_{i\mathcal{O}_i}=(x_{ij}; j\in\mathcal{O}_i)$. 
-
-```{r, comment=""}
-ximput_with <- VarSelImputation(res_with)
-ximput_without <- VarSelImputation(res_without)
-```
-
-**The quadratic error is decreased by performing the variable selection**
-```{r, comment=""}
-print(paste("Quadratic error with variable selection:   ",sum((SimulHetero[,1]-ximput_with[,1])**2)))
-print(paste("Quadratic error without variable selection:",sum((SimulHetero[,1]-ximput_without[,1])**2)))
-```
-
-**Plot of the parameters for putting the light on the discriminative variables**
-
-The method *plot()* illustrates the discriminative power of each variable by class.  The discriminative power of continuous variable $j$ in component $k$ is given by 
-$$\int_{R}\Big[\pi_k p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. $$
-The same quantity is used for categorical and counting variable
-replacing integral by sum.
-
-```{r fig.width=9, fig.height=5}
-# Plot of the parameters
-plot(res_with)
-```
-
-**Details about the estimates**
-```{r, comment=""}
-# Show the parameters
-print(res_with)
+# Confusion matrix for partition provided without variable selection
+table(res_without@partitions@zMAP, golub$class)
+# Confusion matrix for partition provided without variable selection
+table(res_with@partitions@zMAP, golub$class)
 ```

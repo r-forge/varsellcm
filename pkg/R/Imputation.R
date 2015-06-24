@@ -72,6 +72,11 @@ VarSelImputation <- function(obj, ind){
   }  else
     stop("obj don't arise from function VarSelCluster")
   
+  or <- 1:obj@data@d
+  for (j in 1:obj@data@d){
+    or[j] <- which(colnames(output)==obj@data@var.names[j])
+  }
+  output <- output[,or]
   
   return(output)         
 }
