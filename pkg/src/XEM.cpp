@@ -37,10 +37,13 @@ void XEM::Run(){
   if (paramEstim){
     // Partie Small EM
     if (sum(omega)>0){
+      int degenere = 0;
       for (int ini=0; ini<nbSmall; ini++){
         SwitchParamCurrent(ini);
         OneEM();
         loglikeSmall(ini) = ComputeLogLike();
+        if (loglikeSmall(ini) != loglikeSmall(ini))
+        loglikeSmall(ini) = -999999999999;
       }
       // On conserve les meilleurs initialisations
       uvec indices = sort_index(loglikeSmall);
@@ -48,13 +51,11 @@ void XEM::Run(){
       m_nbdegenere = 0;
       //if (nbSmall > nbKeep)    loglikeSmall( indices.head(nbSmall - nbKeep) ) = loglikeSmall( indices.head(nbSmall - nbKeep) ) + log(0);
       
-      int degenere = 0;
       for (int tmp1=0; tmp1<nbKeep; tmp1++){
         SwitchParamCurrent(indices(nbSmall - tmp1 - 1));
         OneEM();
         loglikeSmall(indices(nbSmall - tmp1 - 1)) = ComputeLogLike();
-        degenere = FiltreDegenere();
-        if (degenere==1){
+        if (loglikeSmall(indices(nbSmall - tmp1 - 1)) != loglikeSmall(indices(nbSmall - tmp1 - 1))){
           m_nbdegenere ++;
           loglikeSmall(indices(nbSmall - tmp1 - 1)) = -999999999999;
         }

@@ -13,6 +13,8 @@ This class contains the model information
   \describe{
     \item{\code{g}:}{Number of components}
     \item{\code{omega}:}{Boolean vector indicating if each variable is irrelevant (1) or not (0) to the clustering}
+    \item{\code{names.relevant}:}{Names of the relevant variables}
+    \item{\code{names.irrelevant}:}{Names of the irrelevant variables}
   }
 }
 

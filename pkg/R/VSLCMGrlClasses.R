@@ -52,8 +52,8 @@ JustModelStrategy <- function(strategy, nb.cpus){
 ########################################################################################################################
 setClass(
   Class = "VSLCMmodel", 
-  representation = representation(g="numeric", omega="numeric"), 
-  prototype = prototype(g=numeric(), omega=numeric())
+  representation = representation(g="numeric", omega="numeric", names.relevant="character", names.irrelevant="character"), 
+  prototype = prototype(g=numeric(), omega=numeric(), names.relevant=character(), names.irrelevant=character())
 )
 
 ########################################################################################################################

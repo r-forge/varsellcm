@@ -14,7 +14,6 @@ setMethod( f = "DesignOutput",
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
-                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                }
                # On remet les valeurs manquantes
                for (j in 1:reference@data@d){
@@ -44,7 +43,12 @@ setMethod( f = "DesignOutput",
                  }
                }
              }
-             names(reference@criteria@nbparam) <- NULL
+             names(reference@criteria@nbparam) <- NULL  
+             if (any(reference@model@omega==1))
+               reference@model@names.relevant <- as.character(names(reference@model@omega)[which(reference@model@omega==1)])
+             if (any(reference@model@omega==0))
+               reference@model@names.irrelevant <- names(reference@model@omega)[which(reference@model@omega==0)]
+             
              return(reference)
            }
 )
@@ -59,7 +63,6 @@ setMethod( f = "DesignOutput",
                if (reference@strategy@vbleSelec==FALSE){
                  reference@partitions@zOPT <- numeric()
                  reference@criteria@MICL <- numeric()
-                 reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                }
                # On remet les valeurs manquantes
                for (j in 1:reference@data@d){
@@ -87,6 +90,11 @@ setMethod( f = "DesignOutput",
                }
              }
              names(reference@criteria@nbparam) <- NULL
+             if (any(reference@model@omega==1))
+               reference@model@names.relevant <- as.character(names(reference@model@omega)[which(reference@model@omega==1)])
+             if (any(reference@model@omega==0))
+               reference@model@names.irrelevant <- names(reference@model@omega)[which(reference@model@omega==0)]
+             
              return(reference)
            }
 )
@@ -102,7 +110,6 @@ setMethod( f = "DesignOutput",
                  if (reference@strategy@vbleSelec==FALSE){
                    reference@partitions@zOPT <- numeric()
                    reference@criteria@MICL <- numeric()
-                   reference@partitions@zMAP <- as.numeric(reference@partitions@zMAP) + 1
                  }else{
                    reference@partitions@zOPT <- 1 + as.numeric(reference@partitions@zOPT[attr(reference@data@shortdata,"index")])
                  }
@@ -134,6 +141,11 @@ setMethod( f = "DesignOutput",
                }
              }
              names(reference@criteria@nbparam) <- NULL
+             if (any(reference@model@omega==1))
+               reference@model@names.relevant <- as.character(names(reference@model@omega)[which(reference@model@omega==1)])
+             if (any(reference@model@omega==0))
+               reference@model@names.irrelevant <- names(reference@model@omega)[which(reference@model@omega==0)]
+             
              return(reference)
            }
 )
@@ -233,6 +245,11 @@ setMethod( f = "DesignOutput",
              }
              
              names(reference@criteria@nbparam) <- NULL
+             if (any(reference@model@omega==1))
+               reference@model@names.relevant <- as.character(names(reference@model@omega)[which(reference@model@omega==1)])
+             if (any(reference@model@omega==0))
+               reference@model@names.irrelevant <- names(reference@model@omega)[which(reference@model@omega==0)]
+             
              return(reference)
            }
 )

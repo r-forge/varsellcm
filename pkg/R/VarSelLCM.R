@@ -195,6 +195,9 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
       }
     }
   }
+  
+ 
+  
   return(DesignOutput(reference))
   #return(reference)
 }

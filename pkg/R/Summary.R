@@ -12,10 +12,10 @@ setMethod(
     val <- round(100*(1-mean(object@data@notNA)),2)
     if (val>0)
       cat("   Percentile of missing values:", ,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
-      cat("\nNames of the relevant variables for the clustering:\n  ")
-      print(colnames(object@data@data)[which(object@model@omega==1)])
+      cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
+      print(head(object@model@names.relevant))
     }   
     if (object@criteria@degeneracyrate != 1){
       cat("\n\nInformation Criteria:\n")
@@ -46,10 +46,10 @@ setMethod(
     val <- round(100*(1-mean(object@data@notNA)),2)
     if (val>0)
       cat("   Percentile of missing values:", ,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
-      cat("\nNames of the relevant variables for the clustering:\n  ")
-      print(colnames(object@data@data)[which(object@model@omega==1)])
+      cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
+      print(head(object@model@names.relevant))
     }   
     if (object@criteria@degeneracyrate != 1){
       cat("\n\nInformation Criteria:\n")
@@ -80,10 +80,10 @@ setMethod(
     miss <- sum(sweep(is.na(object@data@shortdata),1,object@data@weightdata,"*")) / (object@data@n * object@data@d)
     if (miss>0)
       cat("   Percentile of missing values:", miss,"\n\n")
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
-      cat("\nNames of the relevant variables for the clustering:\n  ")
-      print(colnames(object@data@shortdata)[which(object@model@omega==1)])
+      cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
+      print(head(object@model@names.relevant))
     }
     cat("\n\nInformation Criteria:\n")
     cat("   loglike:", object@criteria@loglikelihood,"\n")    
@@ -118,16 +118,16 @@ setMethod(
     
     if (object@data@withCategorical){
       cat("   Number of categorical variables:", object@data@dataCategorical@d, "\n")
-      miss <- 100*sum(sweep(is.na(res_with@data@dataCategorical@data),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
+      miss <- 100*sum(sweep(is.na(object@data@dataCategorical@data),1,object@data@dataCategorical@weightdata,"*")) / (object@data@n * object@data@dataCategorical@d)
       if (miss>0)
         cat("   Percentile of missing values for the categorical variables:", miss,"\n")
     }
     cat("\n")
     
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega),"\n")
+    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
     if (sum(object@model@omega)>0){
-      cat("\nNames of the relevant variables for the clustering:\n  ")
-      print(names(object@model@omega)[which(object@model@omega==1)])
+      cat("\nNames of the relevant variables for the clustering (first six relevant variables):\n  ")
+      print(head(object@model@names.relevant))
     }
     if (object@criteria@degeneracyrate != 1){
       cat("\n\nInformation Criteria:\n")
