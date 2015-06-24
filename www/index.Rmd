@@ -14,30 +14,37 @@ output: html_document
 *  *Download VarSelLCM 1.2 (stable version for continuous data)*: [link](http://cran.r-project.org/web/packages/VarSelLCM/).
 * *Reference*: [Variable selection for model-based clustering using the integrated complete-data likelihood](http://arxiv.org/abs/1501.06314), Marbac, M. and Sedki, M., 2015, preprint.
 
+<a id="top"></a>
 **Site map:**  
 
 * <a href="#intro">Introduction</a>.
 * <a href="#tutorial">Tutorial (overview of the VarSelLCM functions)</a>.
+* <a href="#simul">Variable selection and data imputation (simulation)</a>.
 * <a href="#heart">Cluster analysis of a mixed-type data set</a>.
 * <a href="#golub">Cluster analysis of a challenging continuous data set</a>.
 
+All the experiments are used with VarSelLCM 2.0
 <a id="intro"></a>
 
 ### Introduction
 *VarSelLCM* carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.
 
-The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  
+The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  More technical details [here](http://arxiv.org/abs/1501.06314)
 
 This package also proposes an imputation method for the missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
 
 Tool functions (*summary, print* and *plot*) facilitate the result interpretation.
 
+* <a href="#top">Go to the top</a>
 
 
 <a id="tutorial"></a>
 
 ###  Overview of the VarSelLCM functions
 
+This section performs the whole analysis of the *Thyroid* data set . It uses all the functions implemented in the package *VarSelLCM* and can be used as a tutorial. 
+
+First, the cluster analysis is performed with three clusters by doing a variable selection, then a model summary is given. Second, the imputation of missing values is performed by using the model parameters. Finally, the cluster interpretation can be done based on the graphical and numerical presentations of the parameters.
 
 **Loadings**
 
@@ -93,10 +100,61 @@ $$\int_{R}\Big[p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\p
   The same quantity is used for categorical and counting variable
 replacing integral by sum.
 
-```{r fig.width=9, fig.height=9}
+```{r fig.width=7, fig.height=7}
 # Plot of the parameters
 plot(res)
 ```
+* <a href="#top">Go to the top</a>
+
+
+<a id="simul"></a>
+
+### Variable selection and data imputation (simulation)
+
+**Definition of the generating function**
+The first two variables (one continuous and one count) are relevant.  
+*nodiscrim* couples of irrelevant variables are added (one continuous and one count).
+For each variable, a rate of *rho* of missing values is uniformly sampled
+
+```{r, comment=""}
+generator <- function(n=100, rho=0.2, nodiscrim=3){
+  z <- sample(1:3, n, replace=TRUE)
+  x <- data.frame(V1=rnorm(n) + (z==2)*4 - 16*(z==1), V2=as.integer(rpois(n, 2) + (z==2)*rpois(n, 16) + (z==3)*rpois(n, 4)))
+  for (j in 1:nodiscrim) x <- cbind(x, rnorm(n), rpois(n,2))
+  colnames(x) <- paste("V",1:ncol(x),sep="")
+  xmiss <- x
+  for (j in 1:ncol(x)) xmiss[sample(1:n, rho*n),j] <- NA 
+  return(list(allx=x, z=z, xmiss=xmiss))
+}
+```
+
+**Data sets sampling**
+Four situations are studied (4, 8, 12, 16 irrelevant variables). For each of them, 50 samples are generated.
+```{r, comment=""}
+set.seed(123)
+error <- matrix(NA, 200, 2)
+ech <- list()
+for (it in 1:200) ech[[it]] <- generator(nodiscrim= 2 + ((it-1)%/%50)*2)
+```
+
+**Variable selection increases the imputation accuracy**
+
+The rate between the quadratic error obtained with variable selection and the quadratic error obtained without variable selection decreases when the number of irrelevant variable increases. So, variable selection provides a better imputation, especially when many variable is irrelevant. Indeed, its estimates have a smaller variance than the estimates of the model assuming that all the variables are relevant.
+
+```{r, comment="", fig.width=7, fig.height=7}
+for (it in 1:length(ech)){
+  res_without <- VarSelCluster(ech[[it]]$xmiss, 3, vbleSelec = FALSE)
+  res_with <- VarSelCluster(ech[[it]]$xmiss, 3, nbcores = 4)
+  ximput_with <- VarSelImputation(res_with)
+  ximput_without <- VarSelImputation(res_without)
+  error[it,] <- c(sum((ech[[it]]$allx-ximput_with)**2)/sum((ech[[it]]$allx-ximput_without)**2), ncol(ech[[it]]$xmiss))
+}
+
+# Boxplot of the rate between the quadratic error obtained with variable selection and the quadratic error obtained without variable selection (the smaller, the best)
+boxplot(error[,1]~as.factor(error[,2]-2), ylab="Rate between the Quadratic Errors", xlab="Number of Irrelevant Variables")
+abline(h=1, lty=2)
+```
+* <a href="#top">Go to the top</a>
 
 <a id="heart"></a>
 
@@ -151,6 +209,8 @@ print(table(heart[,ncol(heart)], res_without@partitions@zMAP))
 # Matrix obtained without variable selection (misclassification: 57 individuals)
 print(table(heart[,ncol(heart)], res_with@partitions@zMAP))
 ```
+* <a href="#top">Go to the top</a>
+
 
 <a id="golub"></a>
 
