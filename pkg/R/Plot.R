@@ -26,11 +26,11 @@ setMethod(
       nvar <- sum(x@model@omega)
       # split the layout
       if( nvar < 4 & nvar > 1){
-        par( mfrow = c( 1, nvar ) )
+        par( mfrow = c( 1, nvar ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  )
       }else if ( nvar >= 4 ){
         nrow<-round(sqrt(nvar))
         ncol <- ceiling(nvar/nrow)
-        par( mfrow = c( nrow, ncol ) ) 
+        par( mfrow = c( nrow, ncol ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  ) 
       }
       plotCateg(x@data, x@model, x@param)
     }
@@ -72,11 +72,11 @@ setMethod(
       nvar <- sum(x@model@omega)
       # split the layout
       if( nvar < 4 & nvar > 1){
-        par( mfrow = c( 1, nvar ) )
+        par( mfrow = c( 1, nvar ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  )
       }else if ( nvar >= 4 ){
         nrow<-round(sqrt(nvar))
         ncol <- ceiling(nvar/nrow)
-        par( mfrow = c( nrow, ncol ) ) 
+        par( mfrow = c( nrow, ncol ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  ) 
       }
       plotCont(x@data, x@model, x@param)    
     }
@@ -116,11 +116,11 @@ setMethod(
       nvar <- sum(x@model@omega)
       # split the layout
       if( nvar < 4 & nvar > 1){
-        par( mfrow = c( 1, nvar ) )
+        par( mfrow = c( 1, nvar ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  )
       }else if ( nvar >= 4 ){
         nrow<-round(sqrt(nvar))
         ncol <- ceiling(nvar/nrow)
-        par( mfrow = c( nrow, ncol ) ) 
+        par( mfrow = c( nrow, ncol ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  ) 
       }
       plotInte(x@data, x@model, x@param)    
     }
@@ -140,11 +140,11 @@ setMethod(
       nvar <- sum(x@model@omega)
       # split the layout
       if( nvar < 4 & nvar > 1){
-        par( mfrow = c( 1, nvar ) )
+        par( mfrow = c( 1, nvar ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  )
       }else if ( nvar >= 4 ){
         nrow<-round(sqrt(nvar))
         ncol <- ceiling(nvar/nrow)
-        par( mfrow = c( nrow, ncol ) ) 
+        par( mfrow = c( nrow, ncol ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7 ) 
       }
       
       if (x@data@withContinuous)

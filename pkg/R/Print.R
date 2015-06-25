@@ -112,7 +112,7 @@ setMethod(
           
           tmp <- data.frame(mean=x@param@paramContinuous@mu[,k], sd=x@param@paramContinuous@sd[,k])
           if (sum(x@model@omega[names(x@model@omega)%in%rownames(tmp)])>0){
-            cat("Parameters of continuous variable \n")
+            cat("Parameters of continuous variables \n")
             keep <- as.data.frame(tmp[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==1),])
             rownames(keep) <- rownames(tmp)[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==1)]
             colnames(keep) <- c("mean", "sd")
@@ -125,7 +125,7 @@ setMethod(
           tmp <- data.frame(lambda=x@param@paramInteger@lambda[,k])
           rownames(tmp)  <- rownames(x@param@paramInteger@lambda)
           if (sum(x@model@omega[names(x@model@omega)%in%rownames(tmp)])>0){
-            cat("Parameters of integer variable \n")
+            cat("Parameters of count variables \n")
             keep <- as.data.frame(tmp[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==1),])
             rownames(keep) <- rownames(tmp)[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==1)]         
             colnames(keep) <- "lambda"
@@ -165,6 +165,7 @@ setMethod(
         if (x@data@withContinuous){
           tmp <- data.frame(mean=x@param@paramContinuous@mu[,k], sd=x@param@paramContinuous@sd[,k])
           if (any(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0)){
+            cat("Parameters of countinous variables \n")
             keep <- as.data.frame(tmp[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0),])
             rownames(keep) <- rownames(tmp)[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0)]
             colnames(keep) <- c("mean", "sd")
@@ -177,7 +178,7 @@ setMethod(
           tmp <- data.frame(lambda=x@param@paramInteger@lambda[,k])
           rownames(tmp)  <- rownames(x@param@paramInteger@lambda)
           if (any(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0)){
-            cat("Parameters of integer variable \n")
+            cat("Parameters of count variables \n")
             keep <- as.data.frame(tmp[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0),])
             rownames(keep) <- rownames(tmp)[which(x@model@omega[names(x@model@omega)%in%rownames(tmp)]==0)]
             colnames(keep) <- "lambda"
