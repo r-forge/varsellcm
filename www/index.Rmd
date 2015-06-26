@@ -128,6 +128,7 @@ We add $\frac{d-2}{2}$ noisy variables following a standard Gaussian distributio
 Figure presents the boxplot of the ratio between the quadratic error for the imputation provided with variable selection and the quadratic error for the imputation provided without variable selection. Since the mean of this ratio is smaller than one, we conclude that variable selection provides a better imputation. Moreover, its benefit is larger when many irrelevant variables are observed.
 
 **Definition of the generating function**
+
 The first two variables (one continuous and one count) are relevant.  
 *nodiscrim* couples of irrelevant variables are added (one continuous and one count).
 For each variable, a rate of *rho* of missing values is uniformly sampled
@@ -146,6 +147,7 @@ generator <- function(n=100, rho=0.2, nodiscrim=3){
 ```
 
 **Data sets sampling**
+
 Four situations are studied (4, 8, 12, 16 irrelevant variables). For each of them, 50 samples are generated.
 ```{r, comment=""}
 set.seed(123)
