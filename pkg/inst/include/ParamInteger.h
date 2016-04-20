@@ -20,8 +20,9 @@ class ParamInteger : public Param{
   ParamInteger();
   ParamInteger(const ParamInteger & param);
   ParamInteger(const DataInteger *, const colvec & , const int &);
+  ParamInteger(const DataInteger *, const colvec & , const int &, ivec);
   ~ParamInteger(){};
-    void egalise(const colvec );
+    void egalise(const DataInteger * data,const colvec );
 
 };
 #endif

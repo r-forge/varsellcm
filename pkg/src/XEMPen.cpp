@@ -4,14 +4,14 @@ Col<double> dlogGaussianter(const Col<double> & x, const Col<double> & o, const 
   Col<double>tmpval= - 0.5*pow((x - mu),2)/pow(sd,2) - log(sd * sqrt( 2*M_PI));
   if (sum(o)<x.n_rows)  tmpval(find( o == 0)) = zeros<vec>(x.n_rows-sum(o));
   return  tmpval;
-};
+}
 
 Col<double> dlogPoissonter(const Col<double> & x, const Col<double> & o, const double  lambda){
   Col<double>tmpval= -lambda + x*log(lambda);
   for (int i=0; i<tmpval.n_rows;i++) tmpval(i) -= lgamma(x(i)+1);
   if (sum(o)<x.n_rows)  tmpval(find( o == 0)) = zeros<vec>(x.n_rows-sum(o));
   return  tmpval;
-};
+}
 
 XEMPen::XEMPen(const S4 * reference_p, const double pen){
   data_p = new DataMixed(as<S4>(reference_p->slot("data")));
@@ -41,7 +41,7 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
       vu += data_p->m_integerData_p->m_ncols;
     }
     if (data_p->m_withCategorical){
-      nbparamCand[i].subvec(vu, vu + data_p->m_categoricalData_p->m_ncols - 1) = data_p->m_categoricalData_p->m_dl*(g-1)*omegaCand[i].subvec(vu, vu + data_p->m_categoricalData_p->m_ncols - 1) + data_p->m_categoricalData_p->m_dl;
+      nbparamCand[i].subvec(vu, vu + data_p->m_categoricalData_p->m_ncols - 1) = (g-1)*data_p->m_categoricalData_p->m_dl%omegaCand[i].subvec(vu, vu + data_p->m_categoricalData_p->m_ncols - 1) + data_p->m_categoricalData_p->m_dl;
       vu += data_p->m_categoricalData_p->m_ncols;
     }
     // Genere tout les parametres
@@ -69,24 +69,26 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
   }
   // partie entiere
   if (data_p->m_withInteger){
+    lambdanondisc = zeros<vec>(data_p->m_integerData_p->m_ncols);
     for (int j=0; j< data_p->m_integerData_p->m_ncols; j++){
       m_weightTMP =data_p->m_integerData_p->m_notNA.col(j);
-      double lambda = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
-      m_loglikenondis(repere)=sum(dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), lambda));
+      lambdanondisc(j) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
+      m_loglikenondis(repere)=sum(dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), lambdanondisc(j)));
+          repere++;
     }
-    repere++;
   }  
   // partie qualitative
   if (data_p->m_withCategorical){
     for (int j=0; j< data_p->m_categoricalData_p->m_ncols; j++){
-      Col<double> alpha=ones<vec>(data_p->m_categoricalData_p->m_nmodalities(j));
-      for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) alpha(h) = sum(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
-      alpha = alpha/ sum(alpha);
+      alphanondisc.push_back( zeros<vec>(data_p->m_categoricalData_p->m_nmodalities(j) ));
+      alphanondisc[j]=ones<vec>(data_p->m_categoricalData_p->m_nmodalities(j));
+      for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) alphanondisc[j](h) = sum(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+      alphanondisc[j] = alphanondisc[j]/ sum(alphanondisc[j]);
       m_loglikenondis(repere)=0;
-      for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) m_loglikenondis(repere) = m_loglikenondis(repere)  + (data_p->m_categoricalData_p->m_whotakewhat[j][h].n_rows)*log(alpha(h));
+      for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) m_loglikenondis(repere) = m_loglikenondis(repere)  + (data_p->m_categoricalData_p->m_whotakewhat[j][h].n_rows)*log(alphanondisc[j](h));
       m_loglikenondis(repere) = m_loglikenondis(repere);
+      repere++;
     }
-    repere++;
   }
 }
 
@@ -161,9 +163,10 @@ void XEMPen::OneEM(){
     Estep();
     Mstep();
     prec = loglikepen;
+    loglikepen = ComputeLoglikepen();
   }
   // Une verif
-  if (prec>(loglikepen+tolKeep)) cout << "pb EM " << endl;
+  if (prec>(loglikepen+tolKeep)) cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl;
 }
 
 void XEMPen::ComputeTmpLogProba(){
@@ -180,6 +183,7 @@ void XEMPen::ComputeTmpLogProba(){
       for (int k=0; k<g; k++) tmplogproba.col(k) += dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), paramCurrent_p->m_paramInteger.m_lambda(k,j));
       repere++;
     } 
+    //cout << tmplogproba << endl;
   }
   if  (data_p->m_withCategorical){
     for (int j=0; j<data_p->m_categoricalData_p->m_ncols; j++){
@@ -226,45 +230,57 @@ void XEMPen::Mstep(){
   // partie entiere
   if (data_p->m_withInteger){
     for (int j=0; j< data_p->m_integerData_p->m_ncols; j++){
-      if ((*omegaCurrent_p)(repere)==1){
-        for (int k=0; k<g; k++){
-          m_weightTMP = tmplogproba.col(k) % data_p->m_integerData_p->m_notNA.col(j);
-          paramCurrent_p->m_paramInteger.m_lambda(k,j) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
-        }
-      }else{
-        m_weightTMP =data_p->m_integerData_p->m_notNA.col(j);
-        paramCurrent_p->m_paramInteger.m_lambda(0,j) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
-        for (int k=1; k<g; k++){
-          paramCurrent_p->m_paramContinuous.m_mu(k,j) = paramCurrent_p->m_paramInteger.m_lambda(0,j) ;
-        }
+      Col<double> tmplambda = paramCurrent_p->m_paramInteger.m_lambda.col(j);
+      double tmploglike=0;
+      for (int k=0; k<g; k++){
+        m_weightTMP = tmplogproba.col(k) % data_p->m_integerData_p->m_notNA.col(j);
+        tmplambda(k) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
+        tmploglike+= sum(dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), tmplambda(k)) % m_weightTMP);
       }
+      if (tmploglike > (m_loglikenondis(repere) + (g-1)*m_penalty)){
+        (*omegaCurrent_p)(repere)=1;
+        (*nbparamCurrent_p)(repere)=g;
+        paramCurrent_p->m_paramInteger.m_lambda.col(j) = tmplambda;
+      }else{
+        (*omegaCurrent_p)(repere)=0;
+        (*nbparamCurrent_p)(repere)=1;   
+        paramCurrent_p->m_paramInteger.m_lambda.col(j) =  ones<vec>(g) *lambdanondisc(j);
+      } 
       repere++;
     }
   }
   // partie qualitative
   if (data_p->m_withCategorical){
     for (int j=0; j< data_p->m_categoricalData_p->m_ncols; j++){
-      if((*omegaCurrent_p)(repere)==1){
-        for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++){
-          paramCurrent_p->m_paramCategorical.m_alpha[j].col(h) = trans(trans(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) *tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
-        }
-        for (int k=0; k<g; k++)
-        paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = paramCurrent_p->m_paramCategorical.m_alpha[j].row(k)/sum(paramCurrent_p->m_paramCategorical.m_alpha[j].row(k));
-      }else{
-        for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) paramCurrent_p->m_paramCategorical.m_alpha[j](0, h) = sum(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
-        paramCurrent_p->m_paramCategorical.m_alpha[j].row(0) = paramCurrent_p->m_paramCategorical.m_alpha[j].row(0)/ sum(paramCurrent_p->m_paramCategorical.m_alpha[j].row(0));
-        for (int k=1; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = paramCurrent_p->m_paramCategorical.m_alpha[j].row(0);
+      Mat<double> tmpalpha = zeros<mat>(g, data_p->m_categoricalData_p->m_nmodalities(j));
+      double tmploglike=0;
+      for (int k=0; k<g; k++){
+        for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) tmpalpha.col(h) = trans(trans(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) *tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+        tmpalpha.row(k) = tmpalpha.row(k)/sum(tmpalpha.row(k));
+        Col<double> probavari=ones<vec>(data_p->m_nrows);
+        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h]) = probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h])*log(paramCurrent_p->m_paramCategorical.m_alpha[j](k,h));
+        tmploglike+= sum(probavari% m_weightTMP);
+        m_weightTMP = tmplogproba.col(k) % data_p->m_integerData_p->m_notNA.col(j);
+        tmploglike+= sum(probavari% m_weightTMP);
       }
-      repere++;
+      if (tmploglike > (m_loglikenondis(repere) + data_p->m_categoricalData_p->m_dl(j)*(g-1)*m_penalty)){
+        (*omegaCurrent_p)(repere)=1;
+        (*nbparamCurrent_p)(repere)=g;
+        paramCurrent_p->m_paramCategorical.m_alpha[j] = tmpalpha;
+      }else{
+        (*omegaCurrent_p)(repere)=0;
+        (*nbparamCurrent_p)(repere)=1;   
+        for (int k=0; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = trans(lambdanondisc);
+      } 
     }
-  }
+      repere++;
+  }  
 }
-
 
 int XEMPen::FiltreDegenere(){
   int output = 0;
   if (data_p->m_withContinuous){
-    if (min(min(paramCurrent_p->m_paramContinuous.m_sd))<0.000001)      output = 1;
+    if (min(min(paramCurrent_p->m_paramContinuous.m_sd))<0.0001)      output = 1;
   }
   return output;
 }

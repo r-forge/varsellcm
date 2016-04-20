@@ -18,8 +18,9 @@ ayant une valeur manquante pour la variable j
 class DataCategorical : public Data{
   public:
     Mat<double> m_profiles;
-    rowvec m_nmodalities, m_dl;
+    rowvec m_nmodalities;
     colvec m_w;
+    Col<double> m_dl;
     int m_nprofiles;
     vector < vector < uvec > > m_whotakewhat;
   

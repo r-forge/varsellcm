@@ -38,7 +38,6 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     xem_p->Run(); 
     xem_p->Output(reference_p);
   }
-  
   return reference;
 }
 
@@ -65,7 +64,6 @@ S4  ComputeMICL(S4 reference, StringVector name){
   }
   return reference;
 }
-
 
 //[[Rcpp::export]]
 S4  OptimizePenLike(S4 reference, double pen){

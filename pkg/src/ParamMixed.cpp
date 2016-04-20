@@ -17,12 +17,13 @@ ParamMixed::ParamMixed(const ParamMixed & param){
 ParamMixed::ParamMixed(const DataMixed * data,  const colvec & omega, const int & g){
   this->m_pi = ones<vec>(g)/g;  
   int vu=0;
+  ivec who = randi<ivec>(data->m_nrows, distr_param(0, data->m_nrows -1));
   if (data->m_withContinuous){
-    m_paramContinuous = ParamContinuous(data->m_continuousData_p, omega.subvec(vu, vu + data->m_continuousData_p->m_ncols - 1), g);
+    m_paramContinuous = ParamContinuous(data->m_continuousData_p, omega.subvec(vu, vu + data->m_continuousData_p->m_ncols - 1), g, who);
     vu += data->m_continuousData_p->m_ncols;
   }
   if (data->m_withInteger){
-    m_paramInteger = ParamInteger(data->m_integerData_p, omega.subvec(vu, vu + data->m_integerData_p->m_ncols - 1), g);
+    m_paramInteger = ParamInteger(data->m_integerData_p, omega.subvec(vu, vu + data->m_integerData_p->m_ncols - 1), g, who);
     vu += data->m_integerData_p->m_ncols;
   }
   if (data->m_withCategorical){
@@ -31,14 +32,14 @@ ParamMixed::ParamMixed(const DataMixed * data,  const colvec & omega, const int 
   }
 }
 
-void ParamMixed::egalise(const DataMixed * data,const colvec omega){
+void ParamMixed::egalise(const DataMixed * data, const colvec omega){
   int vu=0;
   if (data->m_withContinuous){
     m_paramContinuous.egalise(omega.subvec(vu, vu + data->m_continuousData_p->m_ncols - 1));
     vu += data->m_continuousData_p->m_ncols;
   }
   if (data->m_withInteger){
-    m_paramInteger.egalise(omega.subvec(vu, vu + data->m_integerData_p->m_ncols - 1));
+    m_paramInteger.egalise(data->m_integerData_p, omega.subvec(vu, vu + data->m_integerData_p->m_ncols - 1));
     vu += data->m_integerData_p->m_ncols;
   }
   if (data->m_withCategorical){

@@ -106,26 +106,7 @@ setMethod( f = "VarSelModelMLE",
            }
 )
 
-
-########################################################################################################################
-## La fonction VarSelCluster est disponible pour l'utilisateur et permet d'appeller les fonctions VarSelModelSelection et
-## VarSelModelMLE et retourne un objet VSLCMresultsContinuous ou VSLCMresultsCategorical
-## La fonction possede deux parametres obligatoires:
-## x: tableau de donnees sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
-## g: nombre de classes (numeric de taille 1)
-## La fonction possede egalement 9 parametres optionnels
-## crit.varsel: character (NULL, AIC, BIC, MICL)
-## paramEstim: logical indiquant si l'estimation des parametres est effectuee
-## nbcores: nombre de coeurs de calcul utilises
-## nbSmall: nombre d'initialisations du small EM
-## iterSmall: nombre d'iterations des small EM
-## nbKeep: nombre de chaines conservees apres le small EM
-## iterKeep: nombre d'iterations maximum des EM
-## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
-########################################################################################################################
-VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, crit.varsel="BIC", paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=1000, tolKeep=10**(-6)){
-  # Verifie les parametres d'entrees
-  discrim <- rep(1,ncol(x))
+BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim, nbcores, discrim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
   CheckInputs(x, g, initModel, vbleSelec, crit.varsel, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   # Creation de l'objet S4 VSLCMstrategy contenant les parametres de reglage
   strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, crit.varsel, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
@@ -146,7 +127,41 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, crit.varsel="BIC",
     reference <- new("VSLCMresultsMixed", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else
     stop()      
-  
+  return(reference)
+}
+
+
+
+
+###################################################################################
+##' This function performs the variable selection and the maximum likelihood estimation of the Latent Class Model
+##'
+##' @param x data.frame. Rows correspond to observations and columns correspond to variables. Continuous variables must be "numeric", count variables must be "integer" and categorical variables must be "factor".
+##' @param g numeric. It defines number of components.
+##' @param vbleSelec logical. It indicates if a variable selection is done (1: yes, 0: no; default is 1).
+##' @param crit.varsel character. It defines the information criterion used for the variable selection ("AIC", "BIC" or "MICL"; only used if vbleSelec=1; default is "BIC").
+##' @param initModel numeric. It gives the number of initializations of the alternated algorithm maximizing the MICL criterion (only used if crit.varsel="MICL"; default is 50)
+##' @param nbcores numeric.  It defines the numerber of cores used by the alogrithm (default is 1).
+##' @param discrim numeric. It indicates if each variable is discrimiative (1) or irrelevant (0) (only used if vbleSelec=0; default is rep(1,ncol(x))).
+##' @param nbSmall numeric. It indicates  the number of SmallEM algorithms performed for the ML inference (default is 250).
+##' @param iterSmall numeric. It indicates  the number of iterations for each SmallEM algorithm (default is 20).
+##' @param nbKeep numeric. It indicates the number of chains used for the final EM algorithm (default is 50).
+##' @param iterKeep numeric. It indicates the maximal number of iterations for each EM algorithm (default is 1000).
+##' @param tolKeep numeric. It indicates the maximal gap between two successive iterations of EM algorithm which stops the algorithm (default is 0.001).
+##' 
+##'  
+##' @return Returns an instance of \linkS4class{VSLCMresultsMixed}.
+##' @examples
+##' \dontrun{
+##' data(iris)
+##' res.LCM <- VarSelCluster(x, 2)
+##' summary(res.LCM)
+##' @export
+##'
+##'
+VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,  nbcores=1, discrim=rep(1,ncol(x)), nbSmall=250, iterSmall=20,
+                          nbKeep=50, iterKeep=1000, tolKeep=10**(-6)){
+  reference <- BuildS4Reference(x, g, initModel, vbleSelec, crit.varsel, TRUE, nbcores, discrim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   if (g==1){
     reference <- withoutmixture(reference)
   }else{

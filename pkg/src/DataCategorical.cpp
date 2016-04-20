@@ -10,9 +10,10 @@ DataCategorical::DataCategorical(const S4 & obj){
  this->m_ncols = m_profiles.n_cols;
  this->m_nprofiles = m_profiles.n_rows;
  this->m_whotakewhat.resize(m_ncols);
+ m_dl= trans(m_nmodalities);
  for (int j=0; j<m_ncols; j++){
    m_whotakewhat[j].resize(m_nmodalities(j));
    for (int h=0; h<m_nmodalities(j); h++)  m_whotakewhat[j][h] = find(m_profiles.col(j) == h);
+   m_dl(j) = m_nmodalities(j) - 1;
  }
- m_dl= m_nmodalities - ones<vec>(m_ncols);
 }
