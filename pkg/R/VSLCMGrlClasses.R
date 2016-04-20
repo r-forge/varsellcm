@@ -7,9 +7,12 @@
 ## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des criteres BIC, ICL et MICL
 ########################################################################################################################
 setClass(Class = "VSLCMcriteria", 
-         representation = representation(loglikelihood="numeric", BIC="numeric", ICL="numeric", MICL="numeric", nbparam="numeric", cvrate="numeric", degeneracyrate="numeric"), 
-         prototype = prototype(loglikelihood=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric(), nbparam=numeric(), cvrate=numeric(), degeneracyrate=numeric() )
+         representation = representation(loglikelihood="numeric", AIC="numeric", BIC="numeric", ICL="numeric", MICL="numeric", nbparam="numeric", cvrate="numeric", degeneracyrate="numeric"), 
+         prototype = prototype(loglikelihood=numeric(), AIC=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric(), nbparam=numeric(), cvrate=numeric(), degeneracyrate=numeric() )
 )
+
+InitCriteria <- function()
+  new("VSLCMcriteria", loglikelihood=-Inf, AIC=-Inf, BIC=-Inf, ICL=-Inf, MICL=-Inf)
 
 ########################################################################################################################
 ## Classe S4 VSLCMpartitions contenant la partition MAP (zMAP), la partition zstar (zOPT) et la partition floue (tik)
@@ -25,18 +28,25 @@ setClass(
 ########################################################################################################################
 setClass(
   Class = "VSLCMstrategy", 
-  representation = representation(initModel="numeric", vbleSelec="logical", paramEstim="logical", parallel="logical",
+  representation = representation(initModel="numeric", vbleSelec="logical", crit.varsel="character", paramEstim="logical", parallel="logical",
     nbSmall="numeric", iterSmall="numeric", nbKeep="numeric", iterKeep="numeric", tolKeep="numeric"), 
-  prototype = prototype(initModel=numeric(), vbleSelec=logical(), paramEstim=logical(), parallel=logical(),
+  prototype = prototype(initModel=numeric(),  vbleSelec=logical(), crit.varsel=character(), paramEstim=logical(), parallel=logical(),
     nbSmall=numeric(), iterSmall=numeric(), nbKeep=numeric(), iterKeep=numeric(), tolKeep=numeric())
 ) 
 
 ## Constructeur de la classe S4 VSLCMstrategy
-VSLCMstrategy <- function(initModel=50, nbcores=1, vbleSelec=TRUE, paramEstim=TRUE, nbSmall=100, iterSmall=20, nbKeep=10, iterKeep=100, tolKeep=0.001){
-  if( nbKeep > nbSmall)
-    nbKeep <- nbSmall
-  new("VSLCMstrategy",initModel=initModel, parallel=(nbcores>1), vbleSelec=vbleSelec, paramEstim=paramEstim, nbSmall=nbSmall, iterSmall=iterSmall, nbKeep=nbKeep,
-      iterKeep=iterKeep, tolKeep=tolKeep)
+VSLCMstrategy <- function(initModel, nbcores, vbleSelec, crit.varsel, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep){
+  new("VSLCMstrategy",
+      initModel=initModel,
+      parallel=(nbcores>1),
+      vbleSelec=vbleSelec,
+      crit.varsel=crit.varsel,
+      paramEstim=paramEstim, 
+      nbSmall=nbSmall, 
+      iterSmall=iterSmall, 
+      nbKeep=min(nbKeep, nbSmall),
+      iterKeep=iterKeep, 
+      tolKeep=tolKeep)
 }
 
 ## Utilise lors de la parallellisation

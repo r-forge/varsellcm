@@ -21,3 +21,13 @@ ParamCategorical::ParamCategorical(const DataCategorical * data,  const colvec &
     }
   }
 }
+
+void ParamCategorical::egalise(const colvec omega){
+  for (int j=0; j<omega.n_rows; j++){
+    if (omega(j)==0){
+      for (int k=1; k<m_alpha[j].n_rows;k++){
+        m_alpha[j].row(k)=m_alpha[j].row(0);
+      }
+    }
+  }
+}

@@ -25,6 +25,7 @@ class ParamMixed : public Param{
     
   ParamMixed(const ParamMixed & param);
   ParamMixed(const DataMixed *, const colvec & , const int &);
+  void egalise(const DataMixed *, const colvec );
 
 };
 #endif

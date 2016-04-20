@@ -84,6 +84,7 @@ setMethod( f = "DesignOutput",
                    reference@criteria@nbparam <- nbparam
                    reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
                    reference@criteria@ICL <- ICLinteger(reference) 
+                   reference@criteria@AIC <- reference@criteria@loglikelihood - nbparam
                  }else{
                    warning("All the models got error (degeneracy)", call. = FALSE)
                  }
@@ -132,6 +133,7 @@ setMethod( f = "DesignOutput",
                  reference@criteria@nbparam <- nbparam
                  reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
                  reference@criteria@ICL <- ICLcategorical(reference) 
+                 reference@criteria@AIC <- reference@criteria@loglikelihood - nbparam
                }
                
                # On remet les valeurs manquantes
@@ -186,25 +188,22 @@ setMethod( f = "DesignOutput",
                    if (reference@data@withContinuous){
                      rownames(reference@param@paramContinuous@mu)  <-   colnames(reference@data@dataContinuous@data)
                      rownames(reference@param@paramContinuous@sd)  <-   colnames(reference@data@dataContinuous@data)
-                     reference@param@paramContinuous@pi <- as.numeric(reference@param@paramContinuous@pi)
-                     names(reference@param@paramContinuous@pi) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-                     colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
-                     colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@paramContinuous@pi),sep="")
+                     reference@param@paramContinuous@pi <-  numeric()
+                     colnames(reference@param@paramContinuous@mu) <-  paste("class-",1:length(reference@param@pi),sep="")
+                     colnames(reference@param@paramContinuous@sd) <-  paste("class-",1:length(reference@param@pi),sep="")
                      shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataContinuous@data))]
                      nbparam <- nbparam + sum(shortomega) * reference@model@g * 2 + sum(1-shortomega) * 2
                    }
                    
                    if (reference@data@withInteger){
                      rownames(reference@param@paramInteger@lambda)  <-   colnames(reference@data@dataInteger@data)
-                     reference@param@paramInteger@pi <- as.numeric(reference@param@paramInteger@pi)
-                     names(reference@param@paramInteger@pi) <-  paste("class-",1:length(reference@param@paramInteger@pi),sep="")
-                     colnames(reference@param@paramInteger@lambda) <-  paste("class-",1:length(reference@param@paramInteger@pi),sep="")
+                     reference@param@paramInteger@pi <- numeric()
+                     colnames(reference@param@paramInteger@lambda) <-  paste("class-",1:length(reference@param@pi),sep="")
                      shortomega <- reference@model@omega[which(names(reference@model@omega) %in% colnames(reference@data@dataInteger@data))]
                      nbparam <- nbparam + sum(shortomega) * reference@model@g  + sum(1-shortomega)
                    }
                    if (reference@data@withCategorical){
-                     reference@param@paramCategorical@pi <- as.numeric(reference@param@paramCategorical@pi)
-                     names(reference@param@paramCategorical@pi) <-  paste("class-",1:length(reference@param@paramCategorical@pi),sep="")
+                     reference@param@paramCategorical@pi <- numeric()
                      for (j in 1:reference@data@dataCategorical@d){
                        reference@param@paramCategorical@alpha[[j]] <- matrix(reference@param@paramCategorical@alpha[[j]], nrow = reference@model@g)
                        rownames(reference@param@paramCategorical@alpha[[j]]) <- paste("class-",1:length(reference@param@pi),sep="")
@@ -218,6 +217,7 @@ setMethod( f = "DesignOutput",
                    }
                    reference@criteria@nbparam <- nbparam
                    reference@criteria@BIC <- reference@criteria@loglikelihood - nbparam*0.5*log(reference@data@n)
+                   reference@criteria@AIC <- reference@criteria@loglikelihood - nbparam
                    names(reference@criteria@BIC) <- NULL
                    reference@criteria@ICL <- ICLmixed(reference) 
                  }else{
@@ -249,7 +249,7 @@ setMethod( f = "DesignOutput",
                reference@model@names.relevant <- as.character(names(reference@model@omega)[which(reference@model@omega==1)])
              if (any(reference@model@omega==0))
                reference@model@names.irrelevant <- names(reference@model@omega)[which(reference@model@omega==0)]
-             
+             if (reference@strategy@crit.varsel != "MICL") reference@criteria@MICL <- numeric()
              return(reference)
            }
 )

@@ -14,4 +14,5 @@ DataCategorical::DataCategorical(const S4 & obj){
    m_whotakewhat[j].resize(m_nmodalities(j));
    for (int h=0; h<m_nmodalities(j); h++)  m_whotakewhat[j][h] = find(m_profiles.col(j) == h);
  }
+ m_dl= m_nmodalities - ones<vec>(m_ncols);
 }

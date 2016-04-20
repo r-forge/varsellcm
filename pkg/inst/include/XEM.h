@@ -36,7 +36,7 @@ class XEM{
   // Constructeur et destructeur par défaut
   XEM(){};
   ~XEM(){};
-  // C'est deux fontion initialisent les paramètres commun aux EM
+  // C'est deux fontions initialisent les paramètres communs aux EMs
   void InitCommumParamXEM(const colvec &, const int &);
   void InitCommumParamXEM(const colvec &, const int &, const S4 &);
   

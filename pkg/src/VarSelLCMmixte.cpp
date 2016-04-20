@@ -3,12 +3,12 @@
 #include "XEMCategorical.h"
 #include "XEMInteger.h"
 #include "XEMMixed.h"
+#include "XEMPen.h" 
 
 //[[Rcpp::export]]
 S4  OptimizeMICL(S4 reference, StringVector name){
   S4 * reference_p=&reference;
-  string namestr = as<std::string>(name);
-  
+  string namestr = as<std::string>(name); 
   if (namestr == "Continuous"){
     DataContinuous * data_p = new DataContinuous(as<S4>(reference.slot("data")));
     AlgorithmContinuous *algo_p = new AlgorithmContinuous(data_p, reference_p);
@@ -63,5 +63,15 @@ S4  ComputeMICL(S4 reference, StringVector name){
     AlgorithmMixed *algo_p = new AlgorithmMixed(data_p, reference_p);
     algo_p->ComputeMICL(reference_p);
   }
+  return reference;
+}
+
+
+//[[Rcpp::export]]
+S4  OptimizePenLike(S4 reference, double pen){
+  S4 * reference_p=&reference;
+  XEMPen * xem_p  = new XEMPen(reference_p, pen);
+  xem_p->Run(); 
+  xem_p->Output(reference_p);
   return reference;
 }

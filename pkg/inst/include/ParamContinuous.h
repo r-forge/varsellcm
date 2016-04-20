@@ -21,5 +21,7 @@ class ParamContinuous : public Param{
   ParamContinuous(const ParamContinuous & param);
   ParamContinuous(const DataContinuous *, const colvec & , const int &);
   ~ParamContinuous(){};
+  void egalise(const colvec );
+
 };
 #endif

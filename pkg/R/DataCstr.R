@@ -135,7 +135,7 @@ VSLCMdata <- function(x, redquali=TRUE){
   idxcat <- which(type=="factor")
   if ((all(type %in% c("numeric", "integer", "factor"))==FALSE))
     stop("At least one variable is neither numeric, integer nor factor!")
-
+  
   # cas des variables categorielles
   if (length(idxcat) == d){
     shortdata <- matrix(NA, n, d)
@@ -207,7 +207,51 @@ VSLCMdata <- function(x, redquali=TRUE){
     output <- new("VSLCMdataMixed", n=n, d=d, 
                   withContinuous=(length(idxcont) != 0),  withInteger=(length(idxinte) != 0), withCategorical=(length(idxcat) != 0),
                   dataContinuous=output$continuous, dataInteger=output$integer, dataCategorical=output$categorical,   var.names=colnames(x)
-)
+    )
   }
+  return(output)
+}
+########################################################################################################################
+## La fonction VSLCMdata permet de construire un objet de class S4 VSLCMdataContinuous ou VSLCMdataCategorical en fonction
+## de la nature des variables
+########################################################################################################################
+VSLCMdataMixte <- function(x, redquali=TRUE){
+  # Ajout d'un nom de variable si celui-ci est manquant
+  if (is.null(colnames(x))) colnames(x) <- paste("X",1:ncol(x), sep="")
+  if (max(table(colnames(x)))>1) stop("At least two variables have the same name!")
+  n <- nrow(x)
+  d <- ncol(x)
+  # recherche des indices de variables numeric et factor
+  type <- numeric()
+  for (j in 1:d) type[j] <- class(x[,j])
+  idxcont <- which(type=="numeric")
+  idxinte <- which(type=="integer")
+  idxcat <- which(type=="factor")
+  if ((all(type %in% c("numeric", "integer", "factor"))==FALSE))
+    stop("At least one variable is neither numeric, integer nor factor!")
+  
+
+    output <- list(continuous=new("VSLCMdataContinuous"), integer=new("VSLCMdataInteger"), categorical=new("VSLCMdataCategorical"))
+    if (length(idxcont) != 0){
+      tmpdata <- data.frame(x[,idxcont])
+      colnames(tmpdata) <- colnames(x)[idxcont]
+      output$continuous <- VSLCMdata(tmpdata)
+    }
+    if (length(idxinte) != 0){
+      tmpdata <- data.frame(x[,idxinte])
+      colnames(tmpdata) <- colnames(x)[idxinte]
+      output$integer <- VSLCMdata(tmpdata)
+    }
+    if (length(idxcat) != 0){
+      tmpdata <- data.frame(x[,idxcat])
+      colnames(tmpdata) <- colnames(x)[idxcat]      
+      output$categorical <- VSLCMdata(tmpdata, redquali=FALSE)
+    }
+    
+    output <- new("VSLCMdataMixed", n=n, d=d, 
+                  withContinuous=(length(idxcont) != 0),  withInteger=(length(idxinte) != 0), withCategorical=(length(idxcat) != 0),
+                  dataContinuous=output$continuous, dataInteger=output$integer, dataCategorical=output$categorical,   var.names=colnames(x)
+    )
+  
   return(output)
 }

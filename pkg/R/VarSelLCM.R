@@ -7,7 +7,7 @@ setGeneric ( name= "MICL",  def = function(x, obj){ standardGeneric("MICL")})
 setMethod( f = "MICL", 
            signature(x="data.frame", obj="VSLCMresultsContinuous"), 
            definition = function(x, obj){
-             obj@strategy@vbleSelec <- TRUE
+             obj@strategy@crit.varsel <- TRUE
              obj@data  <- VSLCMdata(x)
              tmp <- ComputeMICL(obj, "Continuous")
              return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))         
@@ -17,7 +17,7 @@ setMethod( f = "MICL",
 setMethod( f = "MICL", 
            signature(x="data.frame", obj="VSLCMresultsInteger"), 
            definition = function(x, obj){
-             obj@strategy@vbleSelec <- TRUE
+             obj@strategy@crit.varsel <- TRUE
              # travail sur les donnees manquantes
              obj@data  <- VSLCMdata(x)
              tmp <- ComputeMICL(obj, "Integer")
@@ -28,7 +28,7 @@ setMethod( f = "MICL",
 setMethod( f = "MICL", 
            signature(x="data.frame", obj="VSLCMresultsCategorical"), 
            definition = function(x, obj){
-             obj@strategy@vbleSelec <- TRUE
+             obj@strategy@crit.varsel <- TRUE
              obj@data  <- VSLCMdata(x)
              tmp <- ComputeMICL(obj, "Categorical")
              tmp@partitions@zOPT <-  1 + as.numeric(obj@partitions@zOPT[attr(obj@data@shortdata,"index")])
@@ -39,7 +39,7 @@ setMethod( f = "MICL",
 setMethod( f = "MICL", 
            signature(x="data.frame", obj="VSLCMresultsMixed"), 
            definition = function(x, obj){
-             obj@strategy@vbleSelec <- TRUE
+             obj@strategy@crit.varsel <- TRUE
              obj@data  <- VSLCMdata(x)
              tmp <- ComputeMICL(obj, "Mixed")
              return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))     
@@ -58,7 +58,11 @@ setGeneric ( name= "VarSelModelMLE",  def = function(obj,it){ standardGeneric("V
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsContinuous",it="numeric"), 
            definition = function(obj,it){
-             reference <- OptimizeMICL(obj, "Continuous")
+             if (obj@strategy@crit.varsel=="MICL"){
+               reference <- OptimizeMICL(obj, "Continuous")               
+             }else{
+               stop("error")
+             }
              return(reference)         
            }
 )
@@ -66,7 +70,11 @@ setMethod( f = "VarSelModelMLE",
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsInteger",it="numeric"), 
            definition = function(obj,it){
-             reference <- OptimizeMICL(obj, "Integer")
+             if (obj@strategy@crit.varsel=="MICL"){
+               reference <- OptimizeMICL(obj, "Integer")
+             }else{
+               stop("error")
+             }
              return(reference)         
            }
 )
@@ -74,7 +82,11 @@ setMethod( f = "VarSelModelMLE",
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsCategorical",it="numeric"), 
            definition = function(obj, it){
-             reference <- OptimizeMICL(obj, "Categorical")
+             if (obj@strategy@crit.varsel=="MICL"){
+               reference <- OptimizeMICL(obj, "Categorical")
+             }else{
+               stop("error")
+             }
              return(reference)           
            }
 )
@@ -82,7 +94,14 @@ setMethod( f = "VarSelModelMLE",
 setMethod( f = "VarSelModelMLE", 
            signature(obj="VSLCMresultsMixed",it="numeric"), 
            definition = function(obj, it){
-             reference <- OptimizeMICL(obj, "Mixed")
+             if (obj@strategy@crit.varsel=="MICL"){
+               reference <- OptimizeMICL(obj, "Mixed")
+             }else{
+               pen <- 0
+               if (obj@strategy@crit.varsel=="AIC") pen <- 1
+               if (obj@strategy@crit.varsel=="BIC") pen <- 0.5*log(obj@data@n)
+               reference <- OptimizePenLike(obj, pen)
+             }
              return(reference)           
            }
 )
@@ -95,7 +114,7 @@ setMethod( f = "VarSelModelMLE",
 ## x: tableau de donnees sous format data.frame avec variables numeric pour les continues et factor pour les categorielles
 ## g: nombre de classes (numeric de taille 1)
 ## La fonction possede egalement 9 parametres optionnels
-## vbleSelec: logical indiquant si la selection de variables est effectuee
+## crit.varsel: character (NULL, AIC, BIC, MICL)
 ## paramEstim: logical indiquant si l'estimation des parametres est effectuee
 ## nbcores: nombre de coeurs de calcul utilises
 ## nbSmall: nombre d'initialisations du small EM
@@ -104,23 +123,27 @@ setMethod( f = "VarSelModelMLE",
 ## iterKeep: nombre d'iterations maximum des EM
 ## tolKeep: difference des vraisemblances de deux iterations successives impliquant un arret de EM
 ########################################################################################################################
-VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=10**3, tolKeep=10**(-3)){
+VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, crit.varsel="BIC", paramEstim=TRUE, nbcores=1, nbSmall=250, iterSmall=20, nbKeep=50, iterKeep=1000, tolKeep=10**(-6)){
   # Verifie les parametres d'entrees
   discrim <- rep(1,ncol(x))
-  CheckInputs(x, g, initModel, vbleSelec, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
+  CheckInputs(x, g, initModel, vbleSelec, crit.varsel, discrim, paramEstim, nbcores, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
   # Creation de l'objet S4 VSLCMstrategy contenant les parametres de reglage
-  strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
+  strategy <- VSLCMstrategy(initModel, nbcores, vbleSelec, crit.varsel, paramEstim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)    
   # Creation de l'objet S4 VSLCMdataContinuous ou VSLCMdataCategorical
-  data <- VSLCMdata(x)
+  if ((vbleSelec==FALSE) || (crit.varsel=="MICL"))
+    data <- VSLCMdata(x)
+  else
+    data <- VSLCMdataMixte(x)
+  
   
   if (class(data) == "VSLCMdataContinuous")
-    reference <- new("VSLCMresultsContinuous", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+    reference <- new("VSLCMresultsContinuous", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataInteger")
-    reference <- new("VSLCMresultsInteger", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+    reference <- new("VSLCMresultsInteger", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataCategorical")
-    reference <- new("VSLCMresultsCategorical", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+    reference <- new("VSLCMresultsCategorical", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataMixed")
-    reference <- new("VSLCMresultsMixed", data=data, criteria=new("VSLCMcriteria", MICL=-Inf), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+    reference <- new("VSLCMresultsMixed", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else
     stop()      
   
@@ -132,7 +155,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
       reference <- VarSelModelMLE(reference, 0)
     else{
       nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1), nbcores)
-      if (strategy@vbleSelec == TRUE){
+      if (strategy@crit.varsel == TRUE){
         reference@strategy <- JustModelStrategy(strategy, nb.cpus)
         
         if(Sys.info()["sysname"] == "Windows")
@@ -167,7 +190,7 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
       reference@strategy <- strategy 
       nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores, 4)
       if (strategy@paramEstim){
-        reference@strategy@vbleSelec <- FALSE
+        reference@strategy@crit.varsel <- NULL
         reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)
         reference@strategy@nbKeep <- ceiling(reference@strategy@nbKeep / nb.cpus)
         
@@ -195,9 +218,6 @@ VarSelCluster <- function(x, g, initModel=50, vbleSelec=TRUE, paramEstim=TRUE, n
       }
     }
   }
-  
- 
-  
   return(DesignOutput(reference))
   #return(reference)
 }

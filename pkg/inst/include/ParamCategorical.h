@@ -20,5 +20,7 @@ class ParamCategorical : public Param{
   ParamCategorical(const ParamCategorical & param);
   ParamCategorical(const DataCategorical *, const colvec & , const int &);
   ~ParamCategorical(){};
+    void egalise(const colvec );
+
 };
 #endif

@@ -21,5 +21,7 @@ class ParamInteger : public Param{
   ParamInteger(const ParamInteger & param);
   ParamInteger(const DataInteger *, const colvec & , const int &);
   ~ParamInteger(){};
+    void egalise(const colvec );
+
 };
 #endif

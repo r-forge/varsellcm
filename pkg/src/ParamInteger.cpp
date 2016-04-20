@@ -30,3 +30,14 @@ ParamInteger::ParamInteger(const DataInteger * data,  const colvec & omega, cons
     }
   }
 }
+
+
+void ParamInteger::egalise(const colvec omega){
+  for (int j=0; j<m_lambda.n_cols; j++){
+    if (omega(j)==0){
+      for (int k=1; k<m_lambda.n_rows;k++){
+        m_lambda(k,j) =m_lambda(0,j) ;
+      }
+    }
+  }
+}

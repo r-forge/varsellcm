@@ -9,3 +9,7 @@ ComputeMICL <- function(reference, name) {
     .Call('VarSelLCM_ComputeMICL', PACKAGE = 'VarSelLCM', reference, name)
 }
 
+OptimizePenLike <- function(reference, pen) {
+    .Call('VarSelLCM_OptimizePenLike', PACKAGE = 'VarSelLCM', reference, pen)
+}
+
