@@ -37,6 +37,7 @@ setMethod( f = "DesignOutput",
                    nbparam <- (reference@model@g-1 + reference@model@g*2*sum(reference@model@omega) + 2*sum(1-reference@model@omega))
                    reference@criteria@nbparam <- nbparam
                    reference@criteria@BIC <- reference@criteria@loglikelihood  - 0.5*nbparam*log(reference@data@n)
+                   reference@criteria@AIC <- reference@criteria@loglikelihood - nbparam
                    reference@criteria@ICL <- ICLcontinuous(reference) 
                  }else{
                    warning("All the models got error (degeneracy)", call. = FALSE)

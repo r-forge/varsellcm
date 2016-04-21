@@ -111,13 +111,6 @@ VSLCMstrategy <- function(initModel, nbcores, vbleSelec, crit.varsel, paramEstim
       tolKeep=tolKeep)
 }
 
-## Utilise lors de la parallellisation
-JustModelStrategy <- function(strategy, nb.cpus){
-  output <- strategy
-  output@paramEstim <- FALSE
-  output@initModel <- ceiling(strategy@initModel / nb.cpus)
-  return(output)
-}
 
 ########################################################################################################################
 ## Classe S4 VSLCMmodel contenant le nombre de classes (g) et le role des variables (omega)

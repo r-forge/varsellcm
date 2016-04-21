@@ -13,7 +13,7 @@ VarSelCluster(x, g, vbleSelec = TRUE, crit.varsel = "BIC", initModel = 50,
 
 \item{g}{numeric. It defines number of components.}
 
-\item{vbleSelec}{logical. It indicates if a variable selection is done (1: yes, 0: no; default is 1).}
+\item{vbleSelec}{logical. It indicates if a variable selection is done (TRUE: yes, FALSE: no; default is 1).}
 
 \item{crit.varsel}{character. It defines the information criterion used for the variable selection ("AIC", "BIC" or "MICL"; only used if vbleSelec=1; default is "BIC").}
 
