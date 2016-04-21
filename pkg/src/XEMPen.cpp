@@ -23,6 +23,7 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
   tolKeep = strat.slot("tolKeep");
   loglikepen = ones<vec>(nbSmall) * log(0);
   m_nbdegenere=0;
+  degeneracy=0;
   g=as<S4>(reference_p->slot("model")).slot("g");
   iterCurrent = iterSmall;
   m_penalty = pen;
@@ -74,7 +75,7 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
       m_weightTMP =data_p->m_integerData_p->m_notNA.col(j);
       lambdanondisc(j) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
       m_loglikenondis(repere)=sum(dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), lambdanondisc(j)));
-          repere++;
+      repere++;
     }
   }  
   // partie qualitative
@@ -94,12 +95,11 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
 
 void XEMPen::Run(){
   // Partie Small EM
-  int degenere = 0;
   for (int ini=0; ini<nbSmall; ini++){
     SwitchCurrent(ini);
     OneEM();
     loglikepen(ini) = ComputeLoglikepen();
-    if (loglikepen(ini) != loglikepen(ini))    loglikepen(ini) = -999999999999;
+   // if (loglikepen(ini) != loglikepen(ini))    loglikepen(ini) = -999999999999;
   }
   // On conserve les meilleurs initialisations
   uvec indices = sort_index(loglikepen);
@@ -109,10 +109,11 @@ void XEMPen::Run(){
     SwitchCurrent(indices(nbSmall - tmp1 - 1));
     OneEM();
     loglikepen(indices(nbSmall - tmp1 - 1)) = ComputeLoglikepen();
-    if (loglikepen(indices(nbSmall - tmp1 - 1)) != loglikepen(indices(nbSmall - tmp1 - 1))){
+    m_nbdegenere += degeneracy;
+    /*if (loglikepen(indices(nbSmall - tmp1 - 1)) != loglikepen(indices(nbSmall - tmp1 - 1))){
       m_nbdegenere ++;
       loglikepen(indices(nbSmall - tmp1 - 1)) = -999999999999;
-    }
+    }*/
   }
   uword  index;
   double indicebest = (loglikepen).max(index);
@@ -138,35 +139,67 @@ colvec XEMPen::FindZMAP(){
 }
 
 double XEMPen::ComputeLoglikepen(){
-  ComputeTmpLogProba();
-  maxtmplogproba = max(tmplogproba, 1);
-  double output=0;
-  if (min(maxtmplogproba) == 0){
-    output = log(0);
-  }else{
-    for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
-    tmplogproba = exp(tmplogproba);
-    rowsums = sum(tmplogproba,1);
-    output = sum(maxtmplogproba) + sum(log(rowsums));
-  }
-  // Ajouter la penalite
-  double nbparam = g-1 + sum(*nbparamCurrent_p);
-  output = output - nbparam*m_penalty;
+  double output=-99999999999999;
+  if (degeneracy==0){
+    ComputeTmpLogProba();
+    maxtmplogproba = max(tmplogproba, 1);
+    output=0;
+    if (min(maxtmplogproba) == 0){
+      output = log(0);
+    }else{
+      for (int k=0; k<g; k++) tmplogproba.col(k)-=maxtmplogproba;
+      tmplogproba = exp(tmplogproba);
+      rowsums = sum(tmplogproba,1);
+      output = sum(maxtmplogproba) + sum(log(rowsums));
+    }
+    // Ajouter la penalite
+    double nbparam = g-1 + sum(*nbparamCurrent_p);
+    output = output - nbparam*m_penalty;
+  }  
   return output;
 }
 
 void XEMPen::OneEM(){
-  double loglikepen = ComputeLoglikepen(), prec = -99999999;
+  degeneracy=0;
+  double loglikepen = ComputeLoglikepen(), prec = -99999999999999;
   int it=0;
-  while ( (it<iterCurrent) && ((loglikepen-prec)>tolKeep) ){
+  //ParamMixed backupparam ;
+  //Col<double> backupmodel;
+  while ( (it<iterCurrent) && ((loglikepen-prec)>tolKeep) && (degeneracy==0)){
     it ++;
     Estep();
+    //backupparam = (* paramCurrent_p);
+    //backupmodel = (* omegaCurrent_p);
     Mstep();
     prec = loglikepen;
     loglikepen = ComputeLoglikepen();
   }
   // Une verif
-  if (prec>(loglikepen+tolKeep)) cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl;
+  if ((degeneracy==0)&&(prec>(loglikepen+tolKeep))){
+     int repere=0;
+    cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl;
+    /*cout << "models " << endl << trans(* omegaCurrent_p)<< endl<< trans(backupmodel)<< endl;
+    cout << "mu " << endl << trans(paramCurrent_p->m_paramContinuous.m_mu)<< endl<< trans(backupparam.m_paramContinuous.m_mu)<< endl;
+    cout << "sd " << endl << trans(paramCurrent_p->m_paramContinuous.m_sd)<< endl<< trans(backupparam.m_paramContinuous.m_sd)<< endl;
+    (* paramCurrent_p) = backupparam ;
+     (* omegaCurrent_p) = backupmodel;
+     double iv=ComputeLoglikepen();
+     Estep();
+    for (int j=0; j< data_p->m_continuousData_p->m_ncols; j++){
+      Col<double> tmpmu = paramCurrent_p->m_paramContinuous.m_mu.col(j)*0;
+      Col<double> tmpsd = paramCurrent_p->m_paramContinuous.m_sd.col(j)*0;
+      double tmploglike=0;
+      for (int k=0; k<g; k++){
+        m_weightTMP = tmplogproba.col(k) % data_p->m_continuousData_p->m_notNA.col(j);
+        tmpmu(k) = sum(data_p->m_continuousData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
+        tmpsd(k) = sqrt(sum( pow(data_p->m_continuousData_p->m_x.col(j) - tmpmu(k),2) % m_weightTMP) / sum(m_weightTMP));
+        tmploglike+= sum(dlogGaussianter(data_p->m_continuousData_p->m_x.col(j), data_p->m_continuousData_p->m_notNA.col(j), tmpmu(k),  tmpsd(k)) % m_weightTMP);
+      }
+      cout << tmploglike << " " << m_loglikenondis(repere) << " " << 2*(g-1)*m_penalty<<endl;
+      cout << trans(tmpmu) << endl << trans(tmpsd) <<endl <<endl;
+      repere++;
+    }*/
+  } 
 }
 
 void XEMPen::ComputeTmpLogProba(){
@@ -204,8 +237,8 @@ void XEMPen::Mstep(){
   int repere=0;
   if (data_p->m_withContinuous){
     for (int j=0; j< data_p->m_continuousData_p->m_ncols; j++){
-      Col<double> tmpmu = paramCurrent_p->m_paramContinuous.m_mu.col(j);
-      Col<double> tmpsd = paramCurrent_p->m_paramContinuous.m_sd.col(j);
+      Col<double> tmpmu = paramCurrent_p->m_paramContinuous.m_mu.col(j)*0;
+      Col<double> tmpsd = paramCurrent_p->m_paramContinuous.m_sd.col(j)*0;
       double tmploglike=0;
       for (int k=0; k<g; k++){
         m_weightTMP = tmplogproba.col(k) % data_p->m_continuousData_p->m_notNA.col(j);
@@ -213,11 +246,13 @@ void XEMPen::Mstep(){
         tmpsd(k) = sqrt(sum( pow(data_p->m_continuousData_p->m_x.col(j) - tmpmu(k),2) % m_weightTMP) / sum(m_weightTMP));
         tmploglike+= sum(dlogGaussianter(data_p->m_continuousData_p->m_x.col(j), data_p->m_continuousData_p->m_notNA.col(j), tmpmu(k),  tmpsd(k)) % m_weightTMP);
       }
+      if (any(tmpsd<0.0001)) {degeneracy=1;}
       if (tmploglike > (m_loglikenondis(repere) + 2*(g-1)*m_penalty)){
         (*omegaCurrent_p)(repere)=1;
         (*nbparamCurrent_p)(repere)=2*g;
         paramCurrent_p->m_paramContinuous.m_mu.col(j) = tmpmu;
         paramCurrent_p->m_paramContinuous.m_sd.col(j) = tmpsd;
+
       }else{
         (*omegaCurrent_p)(repere)=0;
         (*nbparamCurrent_p)(repere)=2;
@@ -273,17 +308,10 @@ void XEMPen::Mstep(){
         for (int k=0; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = trans(lambdanondisc);
       } 
     }
-      repere++;
+    repere++;
   }  
 }
 
-int XEMPen::FiltreDegenere(){
-  int output = 0;
-  if (data_p->m_withContinuous){
-    if (min(min(paramCurrent_p->m_paramContinuous.m_sd))<0.0001)      output = 1;
-  }
-  return output;
-}
 
 void XEMPen::Output(S4 * reference_p){
   as<S4>(reference_p->slot("model")).slot("omega")= wrap(trans( (*omegaCurrent_p)));

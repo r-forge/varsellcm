@@ -9,7 +9,7 @@ class XEMPen{
   DataMixed *data_p;
   S4 * strategy_p;
   Col<double> loglikepen, rowsums, maxtmplogproba, m_weightTMP, m_loglikenondis, munondisc, sdnondisc, lambdanondisc; 
-  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g, m_nbdegenere;
+  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g, m_nbdegenere, degeneracy;
   double tolKeep, m_penalty;
   vector< Col<double> > omegaCand,  nbparamCand, alphanondisc;
   vector <ParamMixed> paramCand;
@@ -26,7 +26,6 @@ class XEMPen{
   void OneEM();
   colvec FindZMAP();
   double ComputeLoglikepen();
-  int FiltreDegenere();
   void Mstep();
   void ComputeTmpLogProba();
   void SwitchCurrent(int);
