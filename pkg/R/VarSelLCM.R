@@ -130,7 +130,80 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
   return(reference)
 }
 
+##' Variable Selection in model-based clustering managed by the Latent Class Model for analysis mixed-type data with missing values.
+##'
+##' The package uses a finite mixture model for analyzing mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model. This package also performs the imputation of missing values.
+##'
+##' \tabular{ll}{
+##'   Package: \tab VarSelLCM\cr 
+##'   Type: \tab Package\cr 
+##'   Version: \tab 2.0.0\cr
+##'   Date: \tab 2016-04-18\cr 
+##'   License: \tab GPL-2\cr 
+##'   LazyLoad: \tab yes\cr
+##'   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
 
+##' }
+##'
+##' The main functions to use are \link{VarSelCluster} and \link{VarSelImputation.}
+##' 
+##' Function \link{VarSelCluster} carries out the model selection by maximizing the MICL criterion, then it performs the maximum likelihood estimation of the selected model via an EM algorithm.
+##' 
+##' Function \link{VarSelImputation} performs the imputation of missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
+##' 
+##' Tool methods \link{summary}, \link{print} and \link{plot} are available for facilitating the interpretation.
+##' 
+##' @name VarSelLCM-package
+##' @aliases VarSelLCM
+##' @rdname VarSelLCM-package
+##' @docType package
+##' @keywords package
+##' @import parallel
+##' @import Rcpp
+##' @import methods
+##' @importFrom mgcv uniquecombs
+##' @importFrom stats runif
+##' @useDynLib VarSelLCM
+##'
+##' @author
+##' Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
+##'
+##' @references M. Marbac and M. Sedki (2015). Variable selection for model-based clustering using the integrated completed-data likelihood. Preprint.
+##' 
+##' @examples
+##' \dontrun{
+##' # Package loading
+##' require(VarSelLCM)
+##' 
+##' # Data loading:
+##' # x contains the observed variables
+##' # z the known statu (i.e. 1: absence and 2: presence of heart disease)
+##' data(heart)
+##' z <- heart[,"Class"]
+##' x <- heart[,-13]
+##' 
+##' # Cluster analysis without variable selection
+##' res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
+##' 
+##' # Cluster analysis with variable selection (with parallelisation)
+##' res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
+##' 
+##' # Confusion matrices: variable selection decreases the misclassification error rate
+##' print(table(z, res_without@partitions@zMAP))
+##' print(table(z, res_with@partitions@zMAP))
+##' 
+##' # Summary of the best model
+##' summary(res_with)
+##' 
+##' # Parameters of the best model
+##' print(res_with)
+##' 
+##' # Plot of the best model
+##' plot(res_with)
+##' 
+##' }
+##' 
+NULL
 
 
 ###################################################################################
@@ -156,6 +229,7 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
 ##' data(iris)
 ##' res.LCM <- VarSelCluster(x, 2)
 ##' summary(res.LCM)
+##' }
 ##' @export
 ##'
 ##'
@@ -166,12 +240,12 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
     reference <- withoutmixture(reference)
   }else{
     # Estimation du modele et/ou des parametres
-    if (strategy@parallel == FALSE)
+    if (reference@strategy@parallel == FALSE)
       reference <- VarSelModelMLE(reference, 0)
     else{
-      nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(strategy@initModel,1), nbcores)
-      if (strategy@crit.varsel == TRUE){
-        reference@strategy <- JustModelStrategy(strategy, nb.cpus)
+      nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@initModel,1), nbcores)
+      if (reference@strategy@crit.varsel == TRUE){
+        reference@strategy <- JustModelStrategy(reference@strategy, nb.cpus)
         
         if(Sys.info()["sysname"] == "Windows")
         {
@@ -202,9 +276,8 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
         reference <- reference[[which.max(tmpMICL)]]
         reference@criteria@cvrate = cvrate
       }
-      reference@strategy <- strategy 
       nb.cpus <- min(detectCores(all.tests = FALSE, logical = FALSE) , max(reference@strategy@nbSmall,1), nbcores, 4)
-      if (strategy@paramEstim){
+      if (reference@strategy@paramEstim){
         reference@strategy@crit.varsel <- NULL
         reference@strategy@nbSmall <- ceiling(reference@strategy@nbSmall / nb.cpus)
         reference@strategy@nbKeep <- ceiling(reference@strategy@nbKeep / nb.cpus)
@@ -229,10 +302,8 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
         for (it in 1:length(tmploglike)) {if (reference[[it]]@criteria@degeneracyrate!=1) tmploglike[it] <- reference[[it]]@criteria@loglikelihood}
         if (all(is.na(tmploglike))) tmploglike[1]=1
         reference <- reference[[which.max(tmploglike)]]
-        reference@strategy <- strategy
       }
     }
   }
   return(DesignOutput(reference))
-  #return(reference)
 }

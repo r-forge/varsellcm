@@ -39,4 +39,11 @@ Returns an instance of \linkS4class{VSLCMresultsMixed}.
 \description{
 This function performs the variable selection and the maximum likelihood estimation of the Latent Class Model
 }
+\examples{
+\dontrun{
+data(iris)
+res.LCM <- VarSelCluster(x, 2)
+summary(res.LCM)
+}
+}
 
