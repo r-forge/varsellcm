@@ -118,17 +118,6 @@ void XEMMixed::Mstep(){
   }
 }
 
-int XEMMixed::FiltreDegenere(){
-  int output = 0;
-  if (data_p->m_withContinuous){
-    if (sum(omega.subvec(0,  data_p->m_continuousData_p->m_ncols - 1))>0){
-      if (min(min(paramCurrent_p->m_paramContinuous.m_sd))<0.000001)
-      output = 1;
-    }
-  }
-  return output;
-}
-
 void XEMMixed::Output(S4 * reference_p){
   if (paramEstim){
     if (m_nbdegenere<nbKeep){

@@ -40,12 +40,6 @@ void XEMInteger::ComputeTmpLogProba(){
   }
 }
 
-int XEMInteger::FiltreDegenere(){
-  int output = 0;
-
-
-  return output;
-}
 
 void XEMInteger::Mstep(){
   paramCurrent_p->m_pi = trans(sum(tmplogproba,0));

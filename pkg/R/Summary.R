@@ -1,7 +1,28 @@
 ########################################################################################################################
 ## Surcharge de la fonction summary pour les objects de classe S4 VSLCMresultsContinuous et VSLCMresultsCategorical
 ########################################################################################################################
+#'
+#' Summary function.
+#' 
+#' This function gives the summary of an instance of \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}.
+#' 
+#' @param object instance of  \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}..
+#' 
+#' @name summary
+#' @rdname summary-methods
+#' @docType methods
+#' @exportMethod summary
+#' 
+#' 
+NULL
 
+#' @rdname summary-methods
+#' @aliases summary summary,VSLCMresultsContinuous-method
+#' @aliases summary summary,VSLCMresultsInteger-method
+#' @aliases summary summary,VSLCMresultsCategorical-method
+#' @aliases summary summary,VSLCMresultsMixed-method
+#'
+#'
 ## Surcharge pour VSLCMresultsContinuous
 setMethod(
   f="summary",

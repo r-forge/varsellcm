@@ -143,7 +143,6 @@ double XEMPen::ComputeLoglikepen(){
   if (degeneracy==0){
     ComputeTmpLogProba();
     maxtmplogproba = max(tmplogproba, 1);
-    output=0;
     if (min(maxtmplogproba) == 0){
       output = log(0);
     }else{

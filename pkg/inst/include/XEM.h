@@ -26,7 +26,7 @@ paramEstim: booléen indiquant si on fait l'estimation
 
 class XEM{
   public:
-  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g, m_nbdegenere;
+  int nbSmall, iterSmall, nbKeep, iterKeep, iterCurrent, g, m_nbdegenere, degeneracy;
   double tolKeep, loglikeoutput;
   Col<double> loglikeSmall, omega, rowsums, maxtmplogproba;
   Mat<double> tmplogproba;
@@ -51,7 +51,6 @@ class XEM{
   colvec FindZMAP();
   // calcul et renvoie de la logvraisemblance (a modifier pour les données avec des poids comme les qualitatives)
   virtual double ComputeLogLike();
-  virtual int FiltreDegenere(){return 0;};
   
   // Les trois fonction suivantes sont à redéfinir pour chaque classe héritiaire d'XEM
   // Etape M
