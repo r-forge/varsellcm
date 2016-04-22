@@ -112,6 +112,7 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
       reference <- VarSelModelMLE(reference, 0)
     else{
       reference <- ParallelCriterion(reference, min(reference@strategy@initModel, nbcores))
+      reference@strategy@vbleSelec <- vbleSelec
     }    
   }
   return(DesignOutput(reference))
