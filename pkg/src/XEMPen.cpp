@@ -99,7 +99,6 @@ void XEMPen::Run(){
     SwitchCurrent(ini);
     OneEM();
     loglikepen(ini) = ComputeLoglikepen();
-   // if (loglikepen(ini) != loglikepen(ini))    loglikepen(ini) = -999999999999;
   }
   // On conserve les meilleurs initialisations
   uvec indices = sort_index(loglikepen);
@@ -110,10 +109,6 @@ void XEMPen::Run(){
     OneEM();
     loglikepen(indices(nbSmall - tmp1 - 1)) = ComputeLoglikepen();
     m_nbdegenere += degeneracy;
-    /*if (loglikepen(indices(nbSmall - tmp1 - 1)) != loglikepen(indices(nbSmall - tmp1 - 1))){
-      m_nbdegenere ++;
-      loglikepen(indices(nbSmall - tmp1 - 1)) = -999999999999;
-    }*/
   }
   uword  index;
   double indicebest = (loglikepen).max(index);
@@ -162,13 +157,14 @@ void XEMPen::OneEM(){
   degeneracy=0;
   double loglikepen = ComputeLoglikepen(), prec = -99999999999999;
   int it=0;
-  //ParamMixed backupparam ;
-  //Col<double> backupmodel;
+  ParamMixed backupparam ;
+  Col<double> backupmodel, backupnbparam;
   while ( (it<iterCurrent) && ((loglikepen-prec)>tolKeep) && (degeneracy==0)){
     it ++;
     Estep();
-    //backupparam = (* paramCurrent_p);
-    //backupmodel = (* omegaCurrent_p);
+    backupparam = (* paramCurrent_p);
+    backupmodel = (* omegaCurrent_p);
+    backupnbparam=(*nbparamCurrent_p);
     Mstep();
     prec = loglikepen;
     loglikepen = ComputeLoglikepen();
@@ -176,28 +172,11 @@ void XEMPen::OneEM(){
   // Une verif
   if ((degeneracy==0)&&(prec>(loglikepen+tolKeep))){
      int repere=0;
-    cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl;
-    /*cout << "models " << endl << trans(* omegaCurrent_p)<< endl<< trans(backupmodel)<< endl;
-    cout << "mu " << endl << trans(paramCurrent_p->m_paramContinuous.m_mu)<< endl<< trans(backupparam.m_paramContinuous.m_mu)<< endl;
-    cout << "sd " << endl << trans(paramCurrent_p->m_paramContinuous.m_sd)<< endl<< trans(backupparam.m_paramContinuous.m_sd)<< endl;
-    (* paramCurrent_p) = backupparam ;
-     (* omegaCurrent_p) = backupmodel;
-     double iv=ComputeLoglikepen();
-     Estep();
-    for (int j=0; j< data_p->m_continuousData_p->m_ncols; j++){
-      Col<double> tmpmu = paramCurrent_p->m_paramContinuous.m_mu.col(j)*0;
-      Col<double> tmpsd = paramCurrent_p->m_paramContinuous.m_sd.col(j)*0;
-      double tmploglike=0;
-      for (int k=0; k<g; k++){
-        m_weightTMP = tmplogproba.col(k) % data_p->m_continuousData_p->m_notNA.col(j);
-        tmpmu(k) = sum(data_p->m_continuousData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
-        tmpsd(k) = sqrt(sum( pow(data_p->m_continuousData_p->m_x.col(j) - tmpmu(k),2) % m_weightTMP) / sum(m_weightTMP));
-        tmploglike+= sum(dlogGaussianter(data_p->m_continuousData_p->m_x.col(j), data_p->m_continuousData_p->m_notNA.col(j), tmpmu(k),  tmpsd(k)) % m_weightTMP);
-      }
-      cout << tmploglike << " " << m_loglikenondis(repere) << " " << 2*(g-1)*m_penalty<<endl;
-      cout << trans(tmpmu) << endl << trans(tmpsd) <<endl <<endl;
-      repere++;
-    }*/
+    cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl ;
+    cout <<  trans((* omegaCurrent_p)) <<  endl;
+    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[2] << endl;
+    cout  << trans(backupmodel) <<endl ;
+    cout << backupparam.m_paramCategorical.m_alpha[2] << endl;
   } 
 }
 
@@ -287,27 +266,24 @@ void XEMPen::Mstep(){
     for (int j=0; j< data_p->m_categoricalData_p->m_ncols; j++){
       Mat<double> tmpalpha = zeros<mat>(g, data_p->m_categoricalData_p->m_nmodalities(j));
       double tmploglike=0;
-      for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) tmpalpha.col(h) = trans(trans(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) *tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+      for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++)       tmpalpha.col(h) = trans(sum(tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h])));
       for (int k=0; k<g; k++){  
+        double coeff=sum(tmpalpha.row(k));
         tmpalpha.row(k) = tmpalpha.row(k)/sum(tmpalpha.row(k));
-        Col<double> probavari=ones<vec>(data_p->m_nrows);
-        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h]) = probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h])*log(tmpalpha(k,h));
-        tmploglike+= sum(probavari);
-        //m_weightTMP = tmplogproba.col(k) % data_p->m_categoricalData_p->m_notNA.col(j);
-        //tmploglike+= sum(probavari% m_weightTMP);
+        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) tmploglike+=log(tmpalpha(k,h)) * tmpalpha(k,h) * coeff;
       }
+      if (tmploglike!=tmploglike) degeneracy=1;
       if (tmploglike > (m_loglikenondis(repere) + data_p->m_categoricalData_p->m_dl(j)*(g-1)*m_penalty)){
         (*omegaCurrent_p)(repere)=1;
         (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j)*g;
         paramCurrent_p->m_paramCategorical.m_alpha[j] = tmpalpha;
       }else{
         (*omegaCurrent_p)(repere)=0;
-        (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j);   
-        
+        (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j);           
         for (int k=0; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = trans(alphanondisc[j]);
-      } 
-    }
+      }
     repere++;
+    }
   }  
 }
 
