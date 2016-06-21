@@ -87,10 +87,10 @@ XEMPen::XEMPen(const S4 * reference_p, const double pen){
       alphanondisc[j] = alphanondisc[j]/ sum(alphanondisc[j]);
       m_loglikenondis(repere)=0;
       for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) m_loglikenondis(repere) = m_loglikenondis(repere)  + (data_p->m_categoricalData_p->m_whotakewhat[j][h].n_rows)*log(alphanondisc[j](h));
-      m_loglikenondis(repere) = m_loglikenondis(repere);
       repere++;
     }
   }
+  
 }
 
 void XEMPen::Run(){
@@ -215,7 +215,6 @@ void XEMPen::ComputeTmpLogProba(){
       for (int k=0; k<g; k++) tmplogproba.col(k) += dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), paramCurrent_p->m_paramInteger.m_lambda(k,j));
       repere++;
     } 
-    //cout << tmplogproba << endl;
   }
   if  (data_p->m_withCategorical){
     for (int j=0; j<data_p->m_categoricalData_p->m_ncols; j++){
@@ -288,23 +287,24 @@ void XEMPen::Mstep(){
     for (int j=0; j< data_p->m_categoricalData_p->m_ncols; j++){
       Mat<double> tmpalpha = zeros<mat>(g, data_p->m_categoricalData_p->m_nmodalities(j));
       double tmploglike=0;
-      for (int k=0; k<g; k++){
-        for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) tmpalpha.col(h) = trans(trans(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) *tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+      for (int h=0; h< data_p->m_categoricalData_p->m_nmodalities(j); h++) tmpalpha.col(h) = trans(trans(data_p->m_categoricalData_p->m_w(data_p->m_categoricalData_p->m_whotakewhat[j][h])) *tmplogproba.rows(data_p->m_categoricalData_p->m_whotakewhat[j][h]));
+      for (int k=0; k<g; k++){  
         tmpalpha.row(k) = tmpalpha.row(k)/sum(tmpalpha.row(k));
         Col<double> probavari=ones<vec>(data_p->m_nrows);
-        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h]) = probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h])*log(paramCurrent_p->m_paramCategorical.m_alpha[j](k,h));
-        tmploglike+= sum(probavari% m_weightTMP);
-        m_weightTMP = tmplogproba.col(k) % data_p->m_integerData_p->m_notNA.col(j);
-        tmploglike+= sum(probavari% m_weightTMP);
+        for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h]) = probavari(data_p->m_categoricalData_p->m_whotakewhat[j][h])*log(tmpalpha(k,h));
+        tmploglike+= sum(probavari);
+        //m_weightTMP = tmplogproba.col(k) % data_p->m_categoricalData_p->m_notNA.col(j);
+        //tmploglike+= sum(probavari% m_weightTMP);
       }
       if (tmploglike > (m_loglikenondis(repere) + data_p->m_categoricalData_p->m_dl(j)*(g-1)*m_penalty)){
         (*omegaCurrent_p)(repere)=1;
-        (*nbparamCurrent_p)(repere)=g;
+        (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j)*g;
         paramCurrent_p->m_paramCategorical.m_alpha[j] = tmpalpha;
       }else{
         (*omegaCurrent_p)(repere)=0;
-        (*nbparamCurrent_p)(repere)=1;   
-        for (int k=0; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = trans(lambdanondisc);
+        (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j);   
+        
+        for (int k=0; k<g; k++) paramCurrent_p->m_paramCategorical.m_alpha[j].row(k) = trans(alphanondisc[j]);
       } 
     }
     repere++;
