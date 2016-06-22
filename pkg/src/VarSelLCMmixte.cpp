@@ -13,6 +13,7 @@ S4  OptimizeMICL(S4 reference, StringVector name){
     DataContinuous * data_p = new DataContinuous(as<S4>(reference.slot("data")));
     AlgorithmContinuous *algo_p = new AlgorithmContinuous(data_p, reference_p);
     algo_p->Run(reference_p);
+    //cout << "selection ok" << endl;
     XEMContinuous *xem_p  = new XEMContinuous(data_p, reference_p);
     xem_p->Run(); 
     xem_p->Output(reference_p);
