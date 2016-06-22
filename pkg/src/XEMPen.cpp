@@ -272,8 +272,8 @@ void XEMPen::Mstep(){
         tmpalpha.row(k) = tmpalpha.row(k)/sum(tmpalpha.row(k));
         for (int h=0; h<data_p->m_categoricalData_p->m_nmodalities(j); h++) tmploglike+=log(tmpalpha(k,h)) * tmpalpha(k,h) * coeff;
       }
-      if (tmploglike!=tmploglike) degeneracy=1;
-      if (tmploglike > (m_loglikenondis(repere) + data_p->m_categoricalData_p->m_dl(j)*(g-1)*m_penalty)){
+      //if (tmploglike!=tmploglike) degeneracy=1;
+      if ((tmploglike!=tmploglike) || (tmploglike > (m_loglikenondis(repere) + data_p->m_categoricalData_p->m_dl(j)*(g-1)*m_penalty))){
         (*omegaCurrent_p)(repere)=1;
         (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j)*g;
         paramCurrent_p->m_paramCategorical.m_alpha[j] = tmpalpha;
