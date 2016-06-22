@@ -113,6 +113,7 @@ void XEMPen::Run(){
   uword  index;
   double indicebest = (loglikepen).max(index);
   SwitchCurrent(index);
+  indicebest = ComputeLoglikepen();
   indices = sort_index(loglikepen);  
 }
 
