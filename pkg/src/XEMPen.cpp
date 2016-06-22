@@ -113,6 +113,7 @@ void XEMPen::Run(){
   uword  index;
   double indicebest = (loglikepen).max(index);
   SwitchCurrent(index);
+  // important pour obtenir la bonne partition a la sortie
   indicebest = ComputeLoglikepen();
   indices = sort_index(loglikepen);  
 }
