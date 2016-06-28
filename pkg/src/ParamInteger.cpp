@@ -24,7 +24,7 @@ ParamInteger::ParamInteger(const DataInteger * data,  const colvec & omega, cons
     for (int k=0; k<g; k++){
       for (int j=0; j<m_lambda.n_cols; j++){
         if (data->m_notNA(who(k),location(j)) == 1)
-        m_lambda(k,j) = data->m_x(who(k),location(j));
+        m_lambda(k,j) = data->m_x(who(k),location(j))+0.1;
       }
     }
   }

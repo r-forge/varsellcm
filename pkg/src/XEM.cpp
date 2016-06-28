@@ -43,6 +43,7 @@ void XEM::Run(){
         SwitchParamCurrent(ini);
         OneEM();
         loglikeSmall(ini) = ComputeLogLike();
+        if (loglikeSmall(ini)!=loglikeSmall(ini)) loglikeSmall(ini)=-999999999999;
       }
       // On conserve les meilleurs initialisations
       uvec indices = sort_index(loglikeSmall);

@@ -176,9 +176,9 @@ void XEMPen::OneEM(){
      int repere=0;
     cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl ;
     cout <<  trans((* omegaCurrent_p)) <<  endl;
-    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[2] << endl;
+    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[1] << endl;
     cout  << trans(backupmodel) <<endl ;
-    cout << backupparam.m_paramCategorical.m_alpha[2] << endl;
+    cout << backupparam.m_paramCategorical.m_alpha[1] << endl;
   } 
 }
 
@@ -251,7 +251,8 @@ void XEMPen::Mstep(){
         tmplambda(k) = sum(data_p->m_integerData_p->m_x.col(j) % m_weightTMP ) / sum(m_weightTMP);
         tmploglike+= sum(dlogPoissonter(data_p->m_integerData_p->m_x.col(j), data_p->m_integerData_p->m_notNA.col(j), tmplambda(k)) % m_weightTMP);
       }
-      if (tmploglike > (m_loglikenondis(repere) + (g-1)*m_penalty)){
+      if  (tmploglike!=tmploglike)  {degeneracy=1;}
+      if  ((tmploglike!=tmploglike) || (tmploglike > (m_loglikenondis(repere) + (g-1)*m_penalty))){
         (*omegaCurrent_p)(repere)=1;
         (*nbparamCurrent_p)(repere)=g;
         paramCurrent_p->m_paramInteger.m_lambda.col(j) = tmplambda;
@@ -279,6 +280,7 @@ void XEMPen::Mstep(){
         (*omegaCurrent_p)(repere)=1;
         (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j)*g;
         paramCurrent_p->m_paramCategorical.m_alpha[j] = tmpalpha;
+        for (int k=0; k<g; k++){if (any(tmpalpha.row(k)==1)) degeneracy=1;}
       }else{
         (*omegaCurrent_p)(repere)=0;
         (*nbparamCurrent_p)(repere)=data_p->m_categoricalData_p->m_dl(j);           
