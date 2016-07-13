@@ -176,9 +176,9 @@ void XEMPen::OneEM(){
      int repere=0;
     cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl ;
     cout <<  trans((* omegaCurrent_p)) <<  endl;
-    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[1] << endl;
+    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[10] << endl;
     cout  << trans(backupmodel) <<endl ;
-    cout << backupparam.m_paramCategorical.m_alpha[1] << endl;
+    cout << backupparam.m_paramCategorical.m_alpha[10] << endl;
   } 
 }
 
