@@ -14,4 +14,3 @@
   getSlots("VSLCMparamInteger")
 
 }
-

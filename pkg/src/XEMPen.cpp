@@ -174,11 +174,6 @@ void XEMPen::OneEM(){
   // Une verif
   if ((degeneracy==0)&&(prec>(loglikepen+tolKeep))){
      int repere=0;
-    cout << "pb EM " << prec << " " << loglikepen << " "<< (loglikepen-prec)<< " " << it << endl ;
-    cout <<  trans((* omegaCurrent_p)) <<  endl;
-    cout << (* paramCurrent_p).m_paramCategorical.m_alpha[10] << endl;
-    cout  << trans(backupmodel) <<endl ;
-    cout << backupparam.m_paramCategorical.m_alpha[10] << endl;
   } 
 }
 

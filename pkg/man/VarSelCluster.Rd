@@ -46,4 +46,3 @@ res.LCM <- VarSelCluster(x, 2)
 summary(res.LCM)
 }
 }
-

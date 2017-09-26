@@ -1,3 +1,5 @@
+
+
 plotCateg <- function(data, model, param){
   
   results <- matrix(0,model@g,data@d)

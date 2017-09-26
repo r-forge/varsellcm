@@ -4,9 +4,21 @@
 \name{summary}
 \alias{summary}
 \alias{summary,VSLCMresultsContinuous-method}
+\alias{summary,VSLCMresultsInteger-method}
+\alias{summary}
+\alias{summary,VSLCMresultsCategorical-method}
+\alias{summary}
+\alias{summary,VSLCMresultsMixed-method}
+\alias{summary}
 \title{Summary function.}
 \usage{
 \S4method{summary}{VSLCMresultsContinuous}(object)
+
+\S4method{summary}{VSLCMresultsInteger}(object)
+
+\S4method{summary}{VSLCMresultsCategorical}(object)
+
+\S4method{summary}{VSLCMresultsMixed}(object)
 }
 \arguments{
 \item{object}{instance of  \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}..}
@@ -14,4 +26,3 @@
 \description{
 This function gives the summary of an instance of \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}.
 }
-

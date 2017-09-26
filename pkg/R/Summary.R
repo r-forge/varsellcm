@@ -12,18 +12,9 @@
 #' @rdname summary-methods
 #' @docType methods
 #' @exportMethod summary
-#' 
-#' 
-NULL
-
+## Surcharge pour VSLCMresultsContinuous
 #' @rdname summary-methods
 #' @aliases summary summary,VSLCMresultsContinuous-method
-#' @aliases summary summary,VSLCMresultsInteger-method
-#' @aliases summary summary,VSLCMresultsCategorical-method
-#' @aliases summary summary,VSLCMresultsMixed-method
-#'
-#'
-## Surcharge pour VSLCMresultsContinuous
 setMethod(
   f="summary",
   signature = c("VSLCMresultsContinuous"),
@@ -67,6 +58,8 @@ setMethod(
 
 
 ## Surcharge pour VSLCMresultsInteger
+#' @rdname summary-methods
+#' @aliases summary summary,VSLCMresultsInteger-method
 setMethod(
   f="summary",
   signature = c("VSLCMresultsInteger"),
@@ -110,6 +103,8 @@ setMethod(
 )
 
 ## Surcharge pour VSLCMresultsCategorical
+#' @rdname summary-methods
+#' @aliases summary summary,VSLCMresultsCategorical-method
 setMethod(
   f="summary",
   signature = c("VSLCMresultsCategorical"),
@@ -148,6 +143,8 @@ setMethod(
 )
 
 ## Surcharge pour VSLCMresultsMixed
+#' @rdname summary-methods
+#' @aliases summary summary,VSLCMresultsMixed-method
 setMethod(
   f="summary",
   signature = c("VSLCMresultsMixed"),

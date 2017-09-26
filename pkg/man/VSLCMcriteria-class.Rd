@@ -20,4 +20,3 @@
   getSlots("VSLCMcriteria")
 
 }
-

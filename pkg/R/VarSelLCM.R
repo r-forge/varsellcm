@@ -14,11 +14,9 @@
 
 ##' }
 ##'
-##' The main functions to use are \link{VarSelCluster} and \link{VarSelImputation.}
+##' The main function to use is \link{VarSelCluster}. 
 ##' 
 ##' Function \link{VarSelCluster} carries out the model selection by maximizing the MICL criterion, then it performs the maximum likelihood estimation of the selected model via an EM algorithm.
-##' 
-##' Function \link{VarSelImputation} performs the imputation of missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
 ##' 
 ##' Tool methods \link{summary}, \link{print} and \link{plot} are available for facilitating the interpretation.
 ##' 
@@ -31,7 +29,8 @@
 ##' @import Rcpp
 ##' @import methods
 ##' @importFrom mgcv uniquecombs
-##' @importFrom stats runif
+##' @importFrom graphics barplot mtext par
+##' @importFrom stats dnorm dpois integrate sd runif 
 ##' @useDynLib VarSelLCM
 ##'
 ##' @author

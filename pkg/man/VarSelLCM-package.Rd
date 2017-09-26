@@ -2,8 +2,8 @@
 % Please edit documentation in R/VarSelLCM.R
 \docType{package}
 \name{VarSelLCM-package}
-\alias{VarSelLCM}
 \alias{VarSelLCM-package}
+\alias{VarSelLCM}
 \title{Variable Selection in model-based clustering managed by the Latent Class Model for analysis mixed-type data with missing values.}
 \description{
 The package uses a finite mixture model for analyzing mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model. This package also performs the imputation of missing values.
@@ -19,11 +19,9 @@ The package uses a finite mixture model for analyzing mixed-type data (data with
   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
 }
 
-The main functions to use are \link{VarSelCluster} and \link{VarSelImputation.}
+The main function to use is \link{VarSelCluster}.
 
 Function \link{VarSelCluster} carries out the model selection by maximizing the MICL criterion, then it performs the maximum likelihood estimation of the selected model via an EM algorithm.
-
-Function \link{VarSelImputation} performs the imputation of missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
 
 Tool methods \link{summary}, \link{print} and \link{plot} are available for facilitating the interpretation.
 }
@@ -61,11 +59,10 @@ plot(res_with)
 }
 
 }
-\author{
-Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
-}
 \references{
 M. Marbac and M. Sedki (2015). Variable selection for model-based clustering using the integrated completed-data likelihood. Preprint.
 }
+\author{
+Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
+}
 \keyword{package}
-

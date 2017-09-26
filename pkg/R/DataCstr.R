@@ -1,16 +1,31 @@
 ########################################################################################################################
 ## Declaration et construction des classes S4 relatives aux donnees
 ########################################################################################################################
-
-
 ########################################################################################################################
 ## La classe S4 VSLCMdataContinuous est relatives a des donnees continues. Elle possede 5 slots:
+########################################################################################################################
 ## n: nombre d'observations
 ## d: nombre de variables
 ## data: matrix ou les colonnes sont numeric et correspondent aux donees
 ## notNA: matrix of logical valant 1 si la realisation est observee et 0 sinon
 ## priors: valeur des priors pour chaque variable (en ligne)
-########################################################################################################################
+##' Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class
+##'
+##'  
+##' \describe{
+##'   \item{n}{nombre d'observations.}
+##'   \item{d}{ nombre de variables.}
+##'   \item{data}{matrix ou les colonnes sont numeric et correspondent aux donees.}
+##'   \item{notNA}{matrix of logical valant 1 si la realisation est observee et 0 sinon.}
+##'   \item{priors}{valeur des priors pour chaque variable (en ligne).}
+##' }
+##'
+##' @examples
+##'   getSlots("VSLCMdataContinuous")
+##'
+##' @name VSLCMdataContinuous-class
+##' @rdname VSLCMdataContinous-class
+##' @exportClass VSLCMdataContinuous
 setClass(
   Class = "VSLCMdataContinuous", 
   representation = representation(
@@ -28,17 +43,32 @@ setClass(
     priors=matrix()
   )
 )
-
-
-
 ########################################################################################################################
-## La classe S4 VSLCMdataInteger est relatives a des donnees entieres Elle possede 5 slots:
-## n: nombre d observations
+########################################################################################################################
+## La classe S4 VSLCMdataInteger est relatives a des donnees entieres. Elle possede 5 slots:
+########################################################################################################################
+## n: nombre d'observations
 ## d: nombre de variables
 ## data: matrix ou les colonnes sont numeric et correspondent aux donees
 ## notNA: matrix of logical valant 1 si la realisation est observee et 0 sinon
 ## priors: valeur des priors pour chaque variable (en ligne)
-########################################################################################################################
+##' Constructor of [\code{\linkS4class{VSLCMdataInteger}}] class
+##'
+##'  
+##' \describe{
+##'   \item{n}{nombre d'observations.}
+##'   \item{d}{ nombre de variables.}
+##'   \item{data}{matrix ou les colonnes sont numeric et correspondent aux donees.}
+##'   \item{notNA}{matrix of logical valant 1 si la realisation est observee et 0 sinon.}
+##'   \item{priors}{valeur des priors pour chaque variable (en ligne).}
+##' }
+##'
+##' @examples
+##'   getSlots("VSLCMdataInteger")
+##'
+##' @name VSLCMdataInteger-class
+##' @rdname VSLCMdataInteger-class
+##' @exportClass VSLCMdataInteger
 setClass(
   Class = "VSLCMdataInteger", 
   representation = representation(
@@ -56,17 +86,32 @@ setClass(
     priors=matrix()
   )
 )
-
-
 ########################################################################################################################
 ## La classe S4 VSLCMdataCategorical est relatives a des donnees categorielles. Elle possede 6 slots:
-## n: nombre d observations
-## d: nombre de variables
-## data: matrix ou les facteurs orginiaux ont ete converti en numeric
-## shortdata: matrix contenant les profils uniques
-## weightdata: poids de chaque profil
-## modalitynames: list contenant les noms de modalites pour chaque variable
 ########################################################################################################################
+## n: nombre d'observations
+## d: nombre de variables
+## data: matrix ou les colonnes sont numeric et correspondent aux donees
+## notNA: matrix of logical valant 1 si la realisation est observee et 0 sinon
+## priors: valeur des priors pour chaque variable (en ligne)
+##' Constructor of [\code{\linkS4class{VSLCMdataCategorical}}] class
+##'
+##'  
+##' \describe{
+##'   \item{n}{nombre d'observations.}
+##'   \item{d}{ nombre de variables.}
+##'   \item{data}{matrix ou les facteurs orginiaux ont ete converti en numeric.}
+##'   \item{shortdata}{matrix contenant les profils uniques.}
+##'   \item{weightdata}{poids de chaque profil.}
+##'   \item{modalitynames}{list contenant les noms de modalites pour chaque variable.}
+##' }
+##'
+##' @examples
+##'   getSlots("VSLCMdataCategorical")
+##'
+##' @name VSLCMdataCategorical-class
+##' @rdname VSLCMdataCategorical-class
+##' @exportClass VSLCMdataCategorical
 setClass(
   Class = "VSLCMdataCategorical", 
   representation = representation(
@@ -91,6 +136,37 @@ setClass(
 ########################################################################################################################
 
 ########################################################################################################################
+########################################################################################################################
+## La classe S4 VSLCdataMixed est relatives a des donnees mixtes. Elle possede 9 slots:
+########################################################################################################################
+## n : le nombre d'observations
+## d : le nombre de variables 
+## withContinuous : boolien qui indique si variables continues ou pas
+## withInteger : boolien qui indique si variables entieres ou pas
+## withCategorica : boolien qui indique si variables categorielles ou pas 
+## dataContinuous : objet de la calsse VSLCMdataContinuous pour la partie continue des donnees
+## dataInteger : objet de la classe VSLCMdataInteger pour la partie entiere des donnees
+## dataCategorical : objet de la classe VSLCMdataCategorical pour la partie categorielle des donnees
+## var.names : caracteres contenant les noms des variables 
+##' Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
+##' \describe{
+##' \item{n}{le nombre d'observations.}
+##' \item{d}{le nombre de variables.} 
+##' \item{withContinuous}{boolien qui indique si variables continues ou pas.}
+##' \item{withInteger}{boolien qui indique si variables entieres ou pas.}
+##' \item{withCategorica}{boolien qui indique si variables categorielles ou pas.} 
+##' \item{dataContinuous}{objet de la calsse VSLCMdataContinuous pour la partie continue des donnees.}
+##' \item{dataInteger}{objet de la classe VSLCMdataInteger pour la partie entiere des donnees.}
+##' \item{dataCategorical}{objet de la classe VSLCMdataCategorical pour la partie categorielle des donnees.}
+##' \item{var.names}{caracteres contenant les noms des variables.} 
+##' }
+##'
+##' @examples
+##'   getSlots("VSLCMdataMixed")
+##'
+##' @name VSLCMdataMixed-class
+##' @rdname VSLCMdataMixed-class
+##' @exportClass VSLCMdataMixed
 setClass(
   Class = "VSLCMdataMixed", 
   representation = representation(

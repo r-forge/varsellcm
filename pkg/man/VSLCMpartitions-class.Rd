@@ -15,4 +15,3 @@
   getSlots("VSLCMpartitions")
 
 }
-

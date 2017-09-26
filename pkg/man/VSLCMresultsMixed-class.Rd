@@ -18,4 +18,3 @@
   getSlots("VSLCMresultsMixed")
 
 }
-

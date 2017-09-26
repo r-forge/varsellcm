@@ -27,7 +27,6 @@
 ##' @name VSLCMcriteria-class
 ##' @rdname VSLCMcriteria-class
 ##' @exportClass VSLCMcriteria
-##'
 setClass(Class = "VSLCMcriteria", 
          representation = representation(loglikelihood="numeric", AIC="numeric", BIC="numeric", ICL="numeric", MICL="numeric", nbparam="numeric", cvrate="numeric", degeneracyrate="numeric"), 
          prototype = prototype(loglikelihood=numeric(), AIC=numeric(), BIC=numeric(), ICL=numeric(), MICL=numeric(), nbparam=numeric(), cvrate=numeric(), degeneracyrate=numeric() )
@@ -55,7 +54,6 @@ InitCriteria <- function()
 ##' @name VSLCMpartitions-class
 ##' @rdname VSLCMpartitions-class
 ##' @exportClass VSLCMpartitions
-##'
 setClass(
   Class = "VSLCMpartitions", 
   representation = representation(zMAP="numeric", zOPT="numeric", tik="matrix"), 
@@ -158,7 +156,6 @@ setClass(
 ##' @name VSLCMparamContinuous-class
 ##' @rdname VSLCMparamContinuous-class
 ##' @exportClass VSLCMparamContinuous
-##'
 setClass(
   Class = "VSLCMparamContinuous", 
   representation = representation(pi="numeric", mu="matrix", sd="matrix"), 
@@ -183,7 +180,6 @@ setClass(
 ##' @name VSLCMparamInteger-class
 ##' @rdname VSLCMparamInteger-class
 ##' @exportClass VSLCMparamInteger
-##'
 setClass(
   Class = "VSLCMparamInteger", 
   representation = representation(pi="numeric", lambda="matrix"), 
@@ -208,7 +204,6 @@ setClass(
 ##' @name VSLCMparamCategorical-class
 ##' @rdname VSLCMparamCategorical-class
 ##' @exportClass VSLCMparamCategorical
-##'
 setClass(
   Class = "VSLCMparamCategorical", 
   representation = representation(pi="numeric", alpha="list"), 
@@ -236,7 +231,6 @@ setClass(
 ##' @name VSLCMparamMixed-class
 ##' @rdname VSLCMparamMixed-class
 ##' @exportClass VSLCMparamMixed
-##'
 setClass(
   Class = "VSLCMparamMixed", 
   representation = representation(pi="numeric", paramContinuous="VSLCMparamContinuous", paramInteger="VSLCMparamInteger", paramCategorical="VSLCMparamCategorical"), 
@@ -265,7 +259,6 @@ setClass(
 ##' @name VSLCMresultsContinuous-class
 ##' @rdname VSLCMresultsContinuous-class
 ##' @exportClass VSLCMresultsContinuous
-##'
 setClass(
   Class = "VSLCMresultsContinuous", 
   representation = representation(data="VSLCMdataContinuous", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
@@ -297,7 +290,6 @@ setClass(
 ##' @name VSLCMresultsInteger-class
 ##' @rdname VSLCMresultsInteger-class
 ##' @exportClass VSLCMresultsInteger
-##'
 setClass(
   Class = "VSLCMresultsInteger", 
   representation = representation(data="VSLCMdataInteger", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
@@ -328,7 +320,6 @@ setClass(
 ##' @name VSLCMresultsCategorical-class
 ##' @rdname VSLCMresultsCategorical-class
 ##' @exportClass VSLCMresultsCategorical
-##'
 setClass(
   Class = "VSLCMresultsCategorical", 
   representation = representation(data="VSLCMdataCategorical", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
@@ -360,7 +351,6 @@ setClass(
 ##' @name VSLCMresultsMixed-class
 ##' @rdname VSLCMresultsMixed-class
 ##' @exportClass VSLCMresultsMixed
-##'
 setClass(
   Class = "VSLCMresultsMixed", 
   representation = representation(data="VSLCMdataMixed", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
