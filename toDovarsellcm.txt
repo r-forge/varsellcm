@@ -1,6 +1,6 @@
 Chgt dans le package (court terme, version 2.2):
-- doc de VSLCMdataMixed-class est en français.
-- réference à mettre à jour.
+- doc de VSLCMdataMixed-class est en français. OK
+- réference à mettre à jour. OK
 - vignette par l'aide du package (cf mclust).
 - ordre des variables dans les sorties (c'est en fonction du type de variable)?
 - calculer le pouvoir discriminant des variables et avoir la sortie de manière automatique.
@@ -8,12 +8,13 @@ Chgt dans le package (court terme, version 2.2):
 - plot fonction, pour avoir les distributions marginales (cf mclust) (plotly ou ggplot2).
 - imputation par l'espérance conditionnelle (il y a un fichier R dans le package, mais pas d'accès à la fonction).
 - option diagnostic pour les graphiques (comparaison entre la loi théorique et la loi empirique de manière marginale, comme dans Mclust).
-- organisation de l'aide comme mclsut (sommaire par ordre alphabetique) et ajout des nouveautés.
+- organisation de l'aide comme mclust (sommaire par ordre alphabetique) et ajout des nouveautés.
 - voir si on peut éviter les messages de warnings à l'installation, car ça ne fait pas sérieux.
 - print fonction, qui peut afficher les variables les plus discriminantes (voir le print de sparcl).
 - citation fonction, à mettre à jour pour citer à minima le stat and computing ainsi que le arxiv de JoC (il est à jour sur Arxiv?).
 - participer aux rencontres R.
 - contacter les 3/4 personnes qui nous avaient écrites pour de l'aide sur le package pour avoir le ressenti (il y a peut être des choses simples à faire pour rentre l'utilisation du package plus intuitive).
+- relire bien toute la doc
 
 A ajouter (moyen terme):
 - version rshiny du machin?
