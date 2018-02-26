@@ -3,20 +3,8 @@
 \docType{class}
 \name{VSLCMdataMixed-class}
 \alias{VSLCMdataMixed-class}
-\title{Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
-\describe{
-  \item{n}{number of observations}
-  \item{d}{number of variables}
-\item{withContinuous}{logical indicating if some variables are continuous}
-\item{withInteger}{logical indicating if some variables are integer}
-\item{withCategorica}{logical indicating if some variables are categorical} 
-\item{dataContinuous}{instance of VSLCMdataContinuous containing the continuous data}
-\item{dataInteger}{instance of VSLCMdataContinuous containing the integer data}
-\item{dataCategorical}{instance of VSLCMdataContinuous containing the categorical data}
-\item{var.names}{labels of the variables} 
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class}
 \description{
-Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
 \describe{
   \item{n}{number of observations}
   \item{d}{number of variables}

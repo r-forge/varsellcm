@@ -12,8 +12,8 @@ The package uses a finite mixture model for analyzing mixed-type data (data with
 \tabular{ll}{
   Package: \tab VarSelLCM\cr 
   Type: \tab Package\cr 
-  Version: \tab 2.0.0\cr
-  Date: \tab 2016-04-18\cr 
+  Version: \tab 2.0.2\cr
+  Date: \tab 2017-02-26\cr 
   License: \tab GPL-2\cr 
   LazyLoad: \tab yes\cr
   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
@@ -60,7 +60,9 @@ plot(res_with)
 
 }
 \references{
-M. Marbac and M. Sedki (2015). Variable selection for model-based clustering using the integrated completed-data likelihood. Preprint.
+Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049–1063.
+
+Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 }
 \author{
 Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>

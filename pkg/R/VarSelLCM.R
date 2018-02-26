@@ -6,12 +6,11 @@
 ##' \tabular{ll}{
 ##'   Package: \tab VarSelLCM\cr 
 ##'   Type: \tab Package\cr 
-##'   Version: \tab 2.0.0\cr
-##'   Date: \tab 2016-04-18\cr 
+##'   Version: \tab 2.0.2\cr
+##'   Date: \tab 2017-02-26\cr 
 ##'   License: \tab GPL-2\cr 
 ##'   LazyLoad: \tab yes\cr
 ##'   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
-
 ##' }
 ##'
 ##' The main function to use is \link{VarSelCluster}. 
@@ -36,7 +35,9 @@
 ##' @author
 ##' Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 ##'
-##' @references M. Marbac and M. Sedki (2015). Variable selection for model-based clustering using the integrated completed-data likelihood. Preprint.
+##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049–1063.
+##' 
+##' Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 ##' 
 ##' @examples
 ##' \dontrun{
@@ -75,20 +76,25 @@ NULL
 
 
 ###################################################################################
-##' This function performs the variable selection and the maximum likelihood estimation of the Latent Class Model
+##' Variable selection and clustering.
 ##'
-##' @param x data.frame. Rows correspond to observations and columns correspond to variables. Continuous variables must be "numeric", count variables must be "integer" and categorical variables must be "factor".
-##' @param g numeric. It defines number of components.
-##' @param vbleSelec logical. It indicates if a variable selection is done (TRUE: yes, FALSE: no; default is 1).
-##' @param crit.varsel character. It defines the information criterion used for the variable selection ("AIC", "BIC" or "MICL"; only used if vbleSelec=1; default is "BIC").
-##' @param initModel numeric. It gives the number of initializations of the alternated algorithm maximizing the MICL criterion (only used if crit.varsel="MICL"; default is 50)
-##' @param nbcores numeric.  It defines the numerber of cores used by the alogrithm (default is 1).
-##' @param discrim numeric. It indicates if each variable is discrimiative (1) or irrelevant (0) (only used if vbleSelec=0; default is rep(1,ncol(x))).
-##' @param nbSmall numeric. It indicates  the number of SmallEM algorithms performed for the ML inference (default is 250).
-##' @param iterSmall numeric. It indicates  the number of iterations for each SmallEM algorithm (default is 20).
-##' @param nbKeep numeric. It indicates the number of chains used for the final EM algorithm (default is 50).
-##' @param iterKeep numeric. It indicates the maximal number of iterations for each EM algorithm (default is 1000).
-##' @param tolKeep numeric. It indicates the maximal gap between two successive iterations of EM algorithm which stops the algorithm (default is 0.001).
+##' @description  
+##' This function performs the model selection and the maximum likelihood estimation of the Latent Class Model.
+##' It can be used for clustering only (i.e., all the variables are assumed to be discriminative). You must specify the data to analyse (arg. x), the number of clusters (arg. g) and the option vbleSelec must be FALSE.
+##' This function can be used for variable selection in clustering. You must specify the data to analyse (arg. x), the number of clusters (arg. g) and the option vbleSelec must be TRUE. Variable selection can be done with BIC, MICL or AIC.
+##'
+##' @param x data.frame. Rows correspond to observations and columns correspond to variables. Continuous variables must be "numeric", count variables must be "integer" and categorical variables must be "factor"
+##' @param g numeric. It defines number of components
+##' @param vbleSelec logical. It indicates if a variable selection is done
+##' @param crit.varsel character. It defines the information criterion used for the variable selection ("AIC", "BIC" or "MICL"; only used if vbleSelec=1)
+##' @param initModel numeric. It gives the number of initializations of the alternated algorithm maximizing the MICL criterion (only used if crit.varsel="MICL")
+##' @param nbcores numeric.  It defines the numerber of cores used by the alogrithm
+##' @param discrim numeric. It indicates if each variable is discrimiative (1) or irrelevant (0) (only used if vbleSelec=0)
+##' @param nbSmall numeric. It indicates  the number of SmallEM algorithms performed for the ML inference
+##' @param iterSmall numeric. It indicates  the number of iterations for each SmallEM algorithm
+##' @param nbKeep numeric. It indicates the number of chains used for the final EM algorithm
+##' @param iterKeep numeric. It indicates the maximal number of iterations for each EM algorithm
+##' @param tolKeep numeric. It indicates the maximal gap between two successive iterations of EM algorithm which stops the algorithm
 ##' 
 ##'  
 ##' @return Returns an instance of \linkS4class{VSLCMresultsMixed}.

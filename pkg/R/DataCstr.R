@@ -125,6 +125,7 @@ setClass(
 ## VSLCdataMixed: class of mixed data set
 ########################################################################################################################
 ##' Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
+##' 
 ##' \describe{
 ##'   \item{n}{number of observations}
 ##'   \item{d}{number of variables}
