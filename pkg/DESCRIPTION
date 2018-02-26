@@ -2,7 +2,7 @@ Package: VarSelLCM
 Type: Package
 Title: Variable Selection for Model-Based Clustering of Continuous, Count,
     Categorical or Mixed-Type Data Set with Missing Values
-Version: 2.0
+Version: 2.1.1
 Date: 2017-09-22
 Author: Matthieu Marbac and Mohammed Sedki
 Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
