@@ -1,0 +1,30 @@
+Chgt dans le package (court terme, version 2.2):
+- doc de VSLCMdataMixed-class est en français.
+- réference à mettre à jour.
+- vignette par l'aide du package (cf mclust).
+- ordre des variables dans les sorties (c'est en fonction du type de variable)?
+- calculer le pouvoir discriminant des variables et avoir la sortie de manière automatique.
+- hist fonction, peut être trier les variables par pouvoir discriminant et avoir leur nom avec la souris (plotly ou ggplot2).
+- plot fonction, pour avoir les distributions marginales (cf mclust) (plotly ou ggplot2).
+- imputation par l'espérance conditionnelle (il y a un fichier R dans le package, mais pas d'accès à la fonction).
+- option diagnostic pour les graphiques (comparaison entre la loi théorique et la loi empirique de manière marginale, comme dans Mclust).
+- organisation de l'aide comme mclsut (sommaire par ordre alphabetique) et ajout des nouveautés.
+- voir si on peut éviter les messages de warnings à l'installation, car ça ne fait pas sérieux.
+- print fonction, qui peut afficher les variables les plus discriminantes (voir le print de sparcl).
+- citation fonction, à mettre à jour pour citer à minima le stat and computing ainsi que le arxiv de JoC (il est à jour sur Arxiv?).
+- participer aux rencontres R.
+- contacter les 3/4 personnes qui nous avaient écrites pour de l'aide sur le package pour avoir le ressenti (il y a peut être des choses simples à faire pour rentre l'utilisation du package plus intuitive).
+
+A ajouter (moyen terme):
+- version rshiny du machin?
+- site web à mettre à jour.
+- rshiny demo sur le site web.
+- inclure la dépendance à notre package dans le package de visualisation développé chez modal.
+- avoir une page web perso, qui propose un lien explicite sur notre package.
+- inclure une partie d'utilisation du package des nos différents cours/TP de classif.
+
+A ajouter (long terme, version 3.0):
+- inclure les multi classes de Vincent.
+- travail avec Christophe et Vincent?
+- diffusion pour sortir sur google sur une recherche de type "R package clustering": papier R journal qui présente toutes les fonctionnalités du package (ou note bioinfo, peut être faire une note bioinfo après publi papier etienne)?
+- version python.
