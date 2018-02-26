@@ -5,28 +5,28 @@
 \alias{VSLCMdataMixed-class}
 \title{Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
 \describe{
-\item{n}{le nombre d'observations.}
-\item{d}{le nombre de variables.} 
-\item{withContinuous}{boolien qui indique si variables continues ou pas.}
-\item{withInteger}{boolien qui indique si variables entieres ou pas.}
-\item{withCategorica}{boolien qui indique si variables categorielles ou pas.} 
-\item{dataContinuous}{objet de la calsse VSLCMdataContinuous pour la partie continue des donnees.}
-\item{dataInteger}{objet de la classe VSLCMdataInteger pour la partie entiere des donnees.}
-\item{dataCategorical}{objet de la classe VSLCMdataCategorical pour la partie categorielle des donnees.}
-\item{var.names}{caracteres contenant les noms des variables.} 
+  \item{n}{number of observations}
+  \item{d}{number of variables}
+\item{withContinuous}{logical indicating if some variables are continuous}
+\item{withInteger}{logical indicating if some variables are integer}
+\item{withCategorica}{logical indicating if some variables are categorical} 
+\item{dataContinuous}{instance of VSLCMdataContinuous containing the continuous data}
+\item{dataInteger}{instance of VSLCMdataContinuous containing the integer data}
+\item{dataCategorical}{instance of VSLCMdataContinuous containing the categorical data}
+\item{var.names}{labels of the variables} 
 }}
 \description{
 Constructor of [\code{\linkS4class{VSLCMdataMixed}}] class
 \describe{
-\item{n}{le nombre d'observations.}
-\item{d}{le nombre de variables.} 
-\item{withContinuous}{boolien qui indique si variables continues ou pas.}
-\item{withInteger}{boolien qui indique si variables entieres ou pas.}
-\item{withCategorica}{boolien qui indique si variables categorielles ou pas.} 
-\item{dataContinuous}{objet de la calsse VSLCMdataContinuous pour la partie continue des donnees.}
-\item{dataInteger}{objet de la classe VSLCMdataInteger pour la partie entiere des donnees.}
-\item{dataCategorical}{objet de la classe VSLCMdataCategorical pour la partie categorielle des donnees.}
-\item{var.names}{caracteres contenant les noms des variables.} 
+  \item{n}{number of observations}
+  \item{d}{number of variables}
+\item{withContinuous}{logical indicating if some variables are continuous}
+\item{withInteger}{logical indicating if some variables are integer}
+\item{withCategorica}{logical indicating if some variables are categorical} 
+\item{dataContinuous}{instance of VSLCMdataContinuous containing the continuous data}
+\item{dataInteger}{instance of VSLCMdataContinuous containing the integer data}
+\item{dataCategorical}{instance of VSLCMdataContinuous containing the categorical data}
+\item{var.names}{labels of the variables} 
 }
 }
 \examples{

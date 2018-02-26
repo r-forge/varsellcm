@@ -6,12 +6,12 @@
 \title{Constructor of [\code{\linkS4class{VSLCMdataCategorical}}] class}
 \description{
 \describe{
-  \item{n}{nombre d'observations.}
-  \item{d}{ nombre de variables.}
-  \item{data}{matrix ou les facteurs orginiaux ont ete converti en numeric.}
-  \item{shortdata}{matrix contenant les profils uniques.}
-  \item{weightdata}{poids de chaque profil.}
-  \item{modalitynames}{list contenant les noms de modalites pour chaque variable.}
+  \item{n}{number of observations}
+  \item{d}{number of variables}
+  \item{data}{matrix of observations (one row = one observation)}
+  \item{shortdata}{matrix of unique profils}
+  \item{weightdata}{weights of profils}
+  \item{modalitynames}{names of levels}
 }
 }
 \examples{

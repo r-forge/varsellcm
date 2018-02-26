@@ -6,11 +6,11 @@
 \title{Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class}
 \description{
 \describe{
-  \item{n}{nombre d'observations.}
-  \item{d}{ nombre de variables.}
-  \item{data}{matrix ou les colonnes sont numeric et correspondent aux donees.}
-  \item{notNA}{matrix of logical valant 1 si la realisation est observee et 0 sinon.}
-  \item{priors}{valeur des priors pour chaque variable (en ligne).}
+  \item{n}{number of observations}
+  \item{d}{number of variables}
+  \item{data}{matrix of observations (one row = one observation)}
+  \item{notNA}{matrix of logical (1:observed, 0:unobserved)}
+  \item{priors}{hyper-parameters of the prior distributions}
 }
 }
 \examples{
