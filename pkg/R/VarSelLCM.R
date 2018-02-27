@@ -128,7 +128,7 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
   out <- DesignOutput(reference)
   out <- new("VSLCMresults", data=convertdata(out@data), criteria=out@criteria, partitions=out@partitions,
                   model=out@model, strategy=out@strategy, param=convertparam(out@param))
-  out@criteria@discrim <- pvdiscrim(out)
+  out@criteria@discrim <- sort(pvdiscrim(out), decreasing = TRUE)
   return(out)
 }
 

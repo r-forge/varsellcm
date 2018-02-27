@@ -50,7 +50,7 @@ pvdiscrim <- function(obj){
     who <- which(names(obj@model@omega) %in% colnames(obj@data@dataCategorical@shortdata))
     for (loc in 1:obj@data@dataCategorical@d){
       repere <- repere + 1
-      names(out)[repere] <- colnames(obj@data@dataInteger@data)[loc]
+      names(out)[repere] <- colnames(obj@data@dataCategorical@data)[loc]
       eff <- table(obj@data@dataCategorical@data[,loc])
       out[repere] <-  -IntegreOneVariableCategorical(eff)
       

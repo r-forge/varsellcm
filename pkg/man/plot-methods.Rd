@@ -4,13 +4,21 @@
 \name{plot}
 \alias{plot}
 \alias{plot,VSLCMresults-method}
+\alias{plot}
+\alias{plot,VSLCMresults-method}
 \title{This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.}
 \usage{
 \S4method{plot}{VSLCMresults,character}(x, y, type)
+
+\S4method{plot}{VSLCMresults,ANY}(x, type)
 }
 \arguments{
 \item{object}{instance of  \code{\linkS4class{VSLCMresults}}.}
+
+\item{object}{instance of  \code{\linkS4class{VSLCMresults}}.}
 }
 \description{
+This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
+
 This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 }

@@ -1,17 +1,17 @@
 rm(list=ls())
-require(Rmixmod)
-data("birds")
-for (j in 1:ncol(birds)) birds[,j] <- as.factor(as.character(birds[,j]))
-obj2=VarSelCluster(birds, 2, F)
-obj@criteria@discrim
-plot(obj, colnames(birds)[1])
-
-rm(list=ls())
-data("iris")
-obj=VarSelCluster(iris[,1:4], 2, F)
-obj@criteria@discrim
-plot(reference, colnames(iris)[1], "cdf")
-
-for (j in 1:4) iris[,j] <- as.integer(iris[,j]*10)
-obj=VarSelCluster(iris[,1:4], 2, F)
-plot(reference, colnames(iris)[1], "boxplot")
+# On charge les données
+data("heart")
+# Clustering en 2 classes
+obj=VarSelCluster(heart[,-13], 2)
+# Diagramme en cercle pour le pouvoir discriminant
+plot(obj, type="pie")
+# Diagramme en barre pour le pouvoir discriminant
+plot(obj, type="bar")
+# Une variable entiere
+plot(obj, y="Age", type="boxplot")
+plot(obj, y="Age", type="cdf")
+# Une variable continue
+plot(obj, y="RestBloodPressure", type="boxplot")
+plot(obj, y="RestBloodPressure", type="cdf")
+# Une variable categorielle
+plot(obj, y="Sex")
