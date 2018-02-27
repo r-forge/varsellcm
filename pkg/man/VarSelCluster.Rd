@@ -34,7 +34,7 @@ VarSelCluster(x, g, vbleSelec = TRUE, crit.varsel = "BIC", initModel = 50,
 \item{tolKeep}{numeric. It indicates the maximal gap between two successive iterations of EM algorithm which stops the algorithm}
 }
 \value{
-Returns an instance of \linkS4class{VSLCMresultsMixed}.
+Returns an instance of \linkS4class{VSLCMresults}.
 }
 \description{
 This function performs the model selection and the maximum likelihood estimation of the Latent Class Model.
@@ -49,7 +49,7 @@ summary(res.LCM)
 }
 }
 \references{
-Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049–1063.
+Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
 
 Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 }

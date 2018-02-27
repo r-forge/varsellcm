@@ -29,34 +29,32 @@ varsellcm.plot.boxplot <- function(df, y){
 }
 
 
-#' @rdname plot-methods
-#' @aliases plot plot, VSLCMresultsContinuous-method
-setMethod(
-  f="plot",
-  signature = c("VSLCMresultsContinuous", "character"),
-  definition = function(x, y, type){
-    loc2 <- which(rownames(x@param@mu)==y)
-    if (length(loc2)!=1)
-      stop("y must be the name of a variable in the analyzed data")
-    if (type=="cdf")
-      varsellcm.plot.cont.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
-                              y, 
-                              list(x@param@pi, x@param@mu[loc2,], x@param@sd[loc2,]))
-    
-    else if (type=="boxplot") 
-      varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-                                        class=as.factor(x@partitions@zMAP)),
-                             y)
-    
-    else
-      stop("type must be cdf or boxplot")
-  }
-)
+# setMethod(
+#   f="plot",
+#   signature = c("VSLCMresultsContinuous", "character"),
+#   definition = function(x, y, type){
+#     loc2 <- which(rownames(x@param@mu)==y)
+#     if (length(loc2)!=1)
+#       stop("y must be the name of a variable in the analyzed data")
+#     if (type=="cdf")
+#       varsellcm.plot.cont.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
+#                               y, 
+#                               list(x@param@pi, x@param@mu[loc2,], x@param@sd[loc2,]))
+#     
+#     else if (type=="boxplot") 
+#       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
+#                                         class=as.factor(x@partitions@zMAP)),
+#                              y)
+#     
+#     else
+#       stop("type must be cdf or boxplot")
+#   }
+# )
 
 cdfmixturePoiss <- function(u, pi, lam){
   out <- u * 0
   for (k in 1:length(pi)) 
-    out <- out + pnorm(u, lam[k])*pi[k]
+    out <- out + ppois(u, lam[k])*pi[k]
   out
 }
 
@@ -73,29 +71,27 @@ varsellcm.plot.inte.cdf <- function(df, y, param){
 }
 
 
-#' @rdname plot-methods
-#' @aliases plot plot, VSLCMresultsInteger-method
-setMethod(
-  f="plot",
-  signature = c("VSLCMresultsInteger", "character"),
-  definition = function(x, y, type){
-    loc2 <- which(rownames(x@param@lambda)==y)
-    if (length(loc2)!=1)
-      stop("y must be the name of a variable in the analyzed data")
-    if (type=="cdf")
-      varsellcm.plot.inte.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
-                              y, 
-                              list(x@param@pi, x@param@lambda[loc2,]))
-    
-    else if (type=="boxplot") 
-      varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-                                        class=as.factor(x@partitions@zMAP)),
-                             y)
-    
-    else
-      stop("type must be cdf or boxplot")
-  }
-)
+# setMethod(
+#   f="plot",
+#   signature = c("VSLCMresultsInteger", "character"),
+#   definition = function(x, y, type){
+#     loc2 <- which(rownames(x@param@lambda)==y)
+#     if (length(loc2)!=1)
+#       stop("y must be the name of a variable in the analyzed data")
+#     if (type=="cdf")
+#       varsellcm.plot.inte.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
+#                               y, 
+#                               list(x@param@pi, x@param@lambda[loc2,]))
+#     
+#     else if (type=="boxplot") 
+#       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
+#                                         class=as.factor(x@partitions@zMAP)),
+#                              y)
+#     
+#     else
+#       stop("type must be cdf or boxplot")
+#   }
+# )
 
 
 varsellcm.plot.cate  <- function(tmp, y){
@@ -115,32 +111,27 @@ varsellcm.plot.cate  <- function(tmp, y){
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
   print(graph)
 }
+# setMethod(
+#   f="plot",
+#   signature = c("VSLCMresultsCategorical", "character"),
+#   definition = function(x, y)varsellcm.plot.cate(x@param@alpha[[y]], y)
+# )
+
+
 #' 
-#' This function draws information about an instance of \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}.
+#' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
-#' @param object instance of  \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}..
+#' @param object instance of  \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @name plot
 #' @rdname plot-methods
 #' @docType methods
 #' @exportMethod plot
-## Surcharge pour VSLCMresultsCategorical
 #' @rdname plot-methods
-#' @aliases plot plot,VSLCMresultsCategorical-method
+#' @aliases plot plot,VSLCMresults-method
 setMethod(
   f="plot",
-  signature = c("VSLCMresultsCategorical", "character"),
-  definition = function(x, y)varsellcm.plot.cate(x@param@alpha[[y]], y)
-)
-
-
-
-## Surcharge pour VSLCMresultsMixed
-#' @rdname plot-methods
-#' @aliases plot plot,VSLCMresultsMixed-method
-setMethod(
-  f="plot",
-  signature = c("VSLCMresultsMixed", "character"),
+  signature = c("VSLCMresults", "character"),
   definition = function(x, y, type){
     vu <- FALSE
     if (x@data@withContinuous){
@@ -187,11 +178,7 @@ setMethod(
         vu <- TRUE
       }
     }
-    
     if (!vu) stop("y must be the name of a variable in the analyzed data")
-    
-    
-    
   }
 )
 

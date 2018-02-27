@@ -52,7 +52,7 @@ VarSelImputation <- function(obj, ind){
     output <- ImputInte(obj@data, obj@partitions@tik, obj@param)[ind,]
   else if (class(obj)=="VSLCMresultsCategorical")
     output <- ImputCate(obj@data, obj@partitions@tik, obj@param)[ind,]
-  else if (class(obj)=="VSLCMresultsMixed"){
+  else if (class(obj)=="VSLCMresults"){
     output <- matrix(NA, length(ind), obj@data@d)
     colnames(output) <- names(obj@model@omega)
     output <- as.data.frame(output)

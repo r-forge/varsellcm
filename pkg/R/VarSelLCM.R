@@ -7,7 +7,7 @@
 ##'   Package: \tab VarSelLCM\cr 
 ##'   Type: \tab Package\cr 
 ##'   Version: \tab 2.0.2\cr
-##'   Date: \tab 2017-02-26\cr 
+##'   Date: \tab 2018-02-27\cr 
 ##'   License: \tab GPL-2\cr 
 ##'   LazyLoad: \tab yes\cr
 ##'   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
@@ -30,13 +30,13 @@
 ##' @import ggplot2
 ##' @importFrom mgcv uniquecombs
 ##' @importFrom graphics barplot mtext par
-##' @importFrom stats dnorm dpois integrate sd runif 
+##' @importFrom stats dnorm dpois integrate sd runif pnorm ppois
 ##' @useDynLib VarSelLCM
 ##'
 ##' @author
 ##' Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 ##'
-##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049–1063.
+##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
 ##' 
 ##' Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 ##' 
@@ -97,9 +97,9 @@ NULL
 ##' @param iterKeep numeric. It indicates the maximal number of iterations for each EM algorithm
 ##' @param tolKeep numeric. It indicates the maximal gap between two successive iterations of EM algorithm which stops the algorithm
 ##' 
-##' @return Returns an instance of \linkS4class{VSLCMresultsMixed}.
+##' @return Returns an instance of \linkS4class{VSLCMresults}.
 ##' 
-##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049–1063.
+##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
 ##' 
 ##' Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 ##' 
@@ -125,7 +125,10 @@ VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,
       reference@strategy@vbleSelec <- vbleSelec
     }    
   }
-  return(DesignOutput(reference))
+  out <- DesignOutput(reference)
+  out <- new("VSLCMresults", data=convertdata(out@data), criteria=out@criteria, partitions=out@partitions,
+                  model=out@model, strategy=out@strategy, param=convertparam(out@param))
+  return(out)
 }
 
 ParallelCriterion <- function(reference, nb.cpus){
@@ -209,8 +212,8 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
     reference <- new("VSLCMresultsInteger", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else if (class(data) == "VSLCMdataCategorical")
     reference <- new("VSLCMresultsCategorical", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
-  else if (class(data) == "VSLCMdataMixed")
-    reference <- new("VSLCMresultsMixed", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
+  else if (class(data) == "VSLCMdata")
+    reference <- new("VSLCMresults", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else
     stop("Problem in the data!")      
   return(reference)
@@ -261,7 +264,7 @@ setMethod( f = "MICL",
 )
 ## Pour les variables mixed
 setMethod( f = "MICL", 
-           signature(x="data.frame", obj="VSLCMresultsMixed"), 
+           signature(x="data.frame", obj="VSLCMresults"), 
            definition = function(x, obj){
              obj@strategy@crit.varsel <- TRUE
              obj@data  <- VSLCMdata(x)
@@ -316,7 +319,7 @@ setMethod( f = "VarSelModelMLE",
 )
 ## Pour les variables mixed
 setMethod( f = "VarSelModelMLE", 
-           signature(obj="VSLCMresultsMixed",it="numeric"), 
+           signature(obj="VSLCMresults",it="numeric"), 
            definition = function(obj, it){
              if ((obj@strategy@vbleSelec==FALSE)||(obj@strategy@crit.varsel=="MICL")){
                reference <- OptimizeMICL(obj, "Mixed")
