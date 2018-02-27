@@ -18,13 +18,12 @@ Description: Variable Selection for model-based clustering managed by the Latent
     imputation of missing values by taking the expectation of the missing values 
     conditionally on the model, its parameters and on the observed variables.
 License: GPL (>= 2)
-Imports: methods, Rcpp (>= 0.11.1), parallel, mgcv
+Imports: methods, Rcpp (>= 0.11.1), parallel, mgcv, ggplot2
 URL: http://varsellcm.r-forge.r-project.org/
 LinkingTo: Rcpp, RcppArmadillo
 ByteCompile: true
 LazyLoad: yes
-Collate: 'CheckInputs.R' 'DataCstr.R' 'VSLCMGrlClasses.R' 'ICLexact.R'
-        'DesignOutput.R' 'Summary.R' 'Print.R' 'VarSelLCM.R'
+Collate: 'CheckInputs.R' 'DataCstr.R' 'VSLCMGrlClasses.R' 'ICLexact.R' 'DesignOutput.R' 'Summary.R' 'Print.R' 'VarSelLCM.R'
         'RcppExports.R' 'Plot.R' 'Imputation.R' 'withoutmixture.R'
 Packaged: 2017-10-16 09:57:10 UTC; sedki
 RoxygenNote: 6.0.1
