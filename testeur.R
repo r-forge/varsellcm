@@ -2,16 +2,16 @@ rm(list=ls())
 # On charge les données
 data("heart")
 # Clustering en 2 classes
-obj=VarSelCluster(heart[,-13], 2)
+truc=VarSelCluster(heart[,-13], 2)
 # Diagramme en cercle pour le pouvoir discriminant
-plot(obj, type="pie")
+plot(truc, type="pie")
 # Diagramme en barre pour le pouvoir discriminant
-plot(obj, type="bar")
+plot(truc, type="bar")
 # Une variable entiere
-plot(obj, y="Age", type="boxplot")
-plot(obj, y="Age", type="cdf")
+plot(truc, y="Age", type="boxplot")
+plot(truc, y="Age", type="cdf")
 # Une variable continue
-plot(obj, y="RestBloodPressure", type="boxplot")
-plot(obj, y="RestBloodPressure", type="cdf")
+plot(truc, y="RestBloodPressure", type="boxplot")
+plot(truc, y="RestBloodPressure", type="cdf")
 # Une variable categorielle
-plot(obj, y="Sex")
+plot(truc, y="Sex")

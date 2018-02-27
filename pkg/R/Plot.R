@@ -6,7 +6,7 @@ cdfmixtureGauss <- function(u, pi, mu, sd){
 }
 
 varsellcm.plot.cont.cdf <- function(df, y, param){
-  graphic <- ggplot(df, aes(x=x)) +   
+  graphic <- ggplot(df, aes(x=df$x)) +   
     stat_ecdf(geom = "step", aes(colour="Empirical"), size=1) +
     stat_function(fun = cdfmixtureGauss, args = param, aes(colour = "Theoretical"), size=1) +
     scale_colour_manual("CDF", values = c("black", "dodgerblue3")) +
@@ -18,7 +18,7 @@ varsellcm.plot.cont.cdf <- function(df, y, param){
 }
 
 varsellcm.plot.boxplot <- function(df, y){
-  graphic <- ggplot(df, aes(x=class, y=x, fill=class)) + 
+  graphic <- ggplot(df, aes(x=class, y=df$x, fill=class)) + 
     geom_boxplot() +   
     guides(fill=FALSE) +
     coord_flip() +
@@ -28,29 +28,6 @@ varsellcm.plot.boxplot <- function(df, y){
   print(graphic)
 }
 
-
-# setMethod(
-#   f="plot",
-#   signature = c("VSLCMresultsContinuous", "character"),
-#   definition = function(x, y, type){
-#     loc2 <- which(rownames(x@param@mu)==y)
-#     if (length(loc2)!=1)
-#       stop("y must be the name of a variable in the analyzed data")
-#     if (type=="cdf")
-#       varsellcm.plot.cont.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
-#                               y, 
-#                               list(x@param@pi, x@param@mu[loc2,], x@param@sd[loc2,]))
-#     
-#     else if (type=="boxplot") 
-#       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-#                                         class=as.factor(x@partitions@zMAP)),
-#                              y)
-#     
-#     else
-#       stop("type must be cdf or boxplot")
-#   }
-# )
-
 cdfmixturePoiss <- function(u, pi, lam){
   out <- u * 0
   for (k in 1:length(pi)) 
@@ -59,7 +36,7 @@ cdfmixturePoiss <- function(u, pi, lam){
 }
 
 varsellcm.plot.inte.cdf <- function(df, y, param){
-  graphic <- ggplot(df, aes(x=x)) +   
+  graphic <- ggplot(df, aes(x=df$x)) +   
     stat_ecdf(geom = "step", aes(colour="Empirical"), size=1) +
     stat_function(fun = cdfmixturePoiss, args = param, aes(colour = "Theoretical"), size=1) +
     scale_colour_manual("CDF", values = c("black", "dodgerblue3")) +
@@ -70,55 +47,26 @@ varsellcm.plot.inte.cdf <- function(df, y, param){
   print(graphic)
 }
 
-
-# setMethod(
-#   f="plot",
-#   signature = c("VSLCMresultsInteger", "character"),
-#   definition = function(x, y, type){
-#     loc2 <- which(rownames(x@param@lambda)==y)
-#     if (length(loc2)!=1)
-#       stop("y must be the name of a variable in the analyzed data")
-#     if (type=="cdf")
-#       varsellcm.plot.inte.cdf(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)]),
-#                               y, 
-#                               list(x@param@pi, x@param@lambda[loc2,]))
-#     
-#     else if (type=="boxplot") 
-#       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-#                                         class=as.factor(x@partitions@zMAP)),
-#                              y)
-#     
-#     else
-#       stop("type must be cdf or boxplot")
-#   }
-# )
-
-
 varsellcm.plot.cate  <- function(tmp, y){
   
   df <- data.frame(class=as.factor(rep(1:nrow(tmp), ncol(tmp))),
                    levels=rep(colnames(tmp), each=nrow(tmp)),
-                   probs=round(as.numeric(tmp), 2))
+                   probabilties=round(as.numeric(tmp), 2))
   
   
   
-  graph <- ggplot(data=df, aes(x=levels, y=probs, fill=class)) +
+  graph <- ggplot(data=df, aes(x=levels, y=df$probabilties, fill=class)) +
     geom_bar(stat="identity", position=position_dodge())+
-    geom_text(aes(label=probs), vjust=1.6, color="black",  position = position_dodge(0.9), size=3.5)+
+    geom_text(aes(label=df$probabilties), vjust=1.6, color="black",  position = position_dodge(0.9), size=3.5)+
     scale_fill_brewer(palette="Paired")+
+    scale_y_continuous(name="probability")+
     theme_minimal() +
     ggtitle(paste("Distribution per class of", y)) +  
     theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
   print(graph)
 }
-# setMethod(
-#   f="plot",
-#   signature = c("VSLCMresultsCategorical", "character"),
-#   definition = function(x, y)varsellcm.plot.cate(x@param@alpha[[y]], y)
-# )
 
-
-#' 
+ 
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of  \code{\linkS4class{VSLCMresults}}.
@@ -184,8 +132,6 @@ setMethod(f="plot",
   }
 ) 
 
-
-
 #' 
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
@@ -201,20 +147,21 @@ setMethod(
   f="plot",
   signature = c("VSLCMresults"),
   definition = function(x, type){
-    print("la")
-    df <- data.frame(discrim.power=obj@criteria@discrim, variables=as.factor(names(obj@criteria@discrim)), rg=1:obj@data@d)
+    df <- data.frame(discrim.power=x@criteria@discrim, variables=as.factor(names(x@criteria@discrim)), rg=1:x@data@d)
     df <- df[which(df$discrim.power>0),]
     if (type=="pie"){
-      pie<- ggplot(df, aes(x="", y=discrim.power, fill=variables))+
+      pie<- ggplot(df, aes(x="", y=df$discrim.power, fill=df$variables))+
+        scale_y_continuous(name="discriminative power") +
         geom_bar(width = 1, stat = "identity") +
         coord_polar("y", start=0)  + 
         ggtitle(paste("Discriminative power")) +  
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(pie)
     }else if (type=="bar"){
-      bar <- ggplot(data=df, aes(x=rg, y=discrim.power, fill=variables)) +
+      bar <- ggplot(data=df, aes(x=df$rg, y=df$discrim.power, fill=df$variables)) +
+        scale_y_continuous(name="discriminative power") +
         geom_bar(stat="identity", position=position_dodge())+
-        geom_text(aes(label=round(discrim.power,2)), vjust=-0.1, color="black",
+        geom_text(aes(label=round(df$discrim.power,2)), vjust=-0.1, color="black",
                   position = position_dodge(0.9), size=3.5)+
         scale_x_discrete(name="Variables")+
         scale_fill_brewer(palette="Paired")+
@@ -227,4 +174,3 @@ setMethod(
     }
   }
 )
-
