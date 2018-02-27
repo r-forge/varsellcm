@@ -21,7 +21,7 @@
 
 \S4method{plot}{VSLCMresultsInteger,character}(x, y, type)
 
-\S4method{plot}{VSLCMresultsCategorical,ANY}(x)
+\S4method{plot}{VSLCMresultsCategorical,character}(x, y)
 
 \S4method{plot}{VSLCMresultsMixed,character}(x, y, type)
 }

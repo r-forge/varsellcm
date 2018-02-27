@@ -45,8 +45,8 @@ setMethod(
     
     else if (type=="boxplot") 
       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-                                             class=as.factor(x@partitions@zMAP)),
-                                  y)
+                                        class=as.factor(x@partitions@zMAP)),
+                             y)
     
     else
       stop("type must be cdf or boxplot")
@@ -89,8 +89,8 @@ setMethod(
     
     else if (type=="boxplot") 
       varsellcm.plot.boxplot(data.frame(x = x@data@data[, which(colnames(x@data@data)==y)], 
-                                             class=as.factor(x@partitions@zMAP)),
-                                  y)
+                                        class=as.factor(x@partitions@zMAP)),
+                             y)
     
     else
       stop("type must be cdf or boxplot")
@@ -98,23 +98,22 @@ setMethod(
 )
 
 
-plotCateg <- function(data, model, param){
+varsellcm.plot.cate  <- function(tmp, y){
   
-  results <- matrix(0,model@g,data@d)
-  for (j in 1:data@d){
-    for (k in 1:model@g){
-      alpha <- 0
-      for (k2 in (c(1:model@g)[-k]))
-        alpha <- alpha + (param@pi[k2]* param@alpha[[j]][k2,])/sum(param@pi[-k])
-      
-      results[k,j] <- round(sum((param@alpha[[j]][k,]-alpha)**2),4)
-    }
-  }
+  df <- data.frame(class=as.factor(rep(1:nrow(tmp), ncol(tmp))),
+                   levels=rep(colnames(tmp), each=nrow(tmp)),
+                   probs=round(as.numeric(tmp), 2))
   
-  for (j in  which(model@omega==1)){
-    mp<-barplot(matrix(results[,j], ncol = 1), beside = TRUE, axisnames = FALSE, main=(colnames(data@shortdata))[j],  ylab="Discriminative measure", ylim=c(0,max(c(results,1))), cex.main=0.8)
-    mtext(1, at = mp, text = paste("C",1:model@g), line = 0, cex = 0.5)
-  }
+  
+  
+  graph <- ggplot(data=df, aes(x=levels, y=probs, fill=class)) +
+    geom_bar(stat="identity", position=position_dodge())+
+    geom_text(aes(label=probs), vjust=1.6, color="black",  position = position_dodge(0.9), size=3.5)+
+    scale_fill_brewer(palette="Paired")+
+    theme_minimal() +
+    ggtitle(paste("Distribution per class of", y)) +  
+    theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+  print(graph)
 }
 #' 
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresultsContinuous}}, \code{\linkS4class{VSLCMresultsInteger}}, \code{\linkS4class{VSLCMresultsCategorical}} or \code{\linkS4class{VSLCMresultsMixed}}.
@@ -130,26 +129,8 @@ plotCateg <- function(data, model, param){
 #' @aliases plot plot,VSLCMresultsCategorical-method
 setMethod(
   f="plot",
-  signature = c("VSLCMresultsCategorical"),
-  definition = function(x){
-    op <- par(no.readonly = TRUE)
-    if (any(x@model@omega==1) && (x@model@g>1)){
-      nvar <- sum(x@model@omega)
-      # split the layout
-      if( nvar < 4 & nvar > 1){
-        par( mfrow = c( 1, nvar ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  )
-      }else if ( nvar >= 4 ){
-        nrow<-round(sqrt(nvar))
-        ncol <- ceiling(nvar/nrow)
-        par( mfrow = c( nrow, ncol ), mar=c(2,4,2,2), cex.axis = 0.6, cex.lab = 0.6, cex.main = 0.7  ) 
-      }
-      plotCateg(x@data, x@model, x@param)
-    }
-    else
-      cat("No plot is available since none variable is discriminative!")
-    par(op)
-  }
-  
+  signature = c("VSLCMresultsCategorical", "character"),
+  definition = function(x, y)varsellcm.plot.cate(x@param@alpha[[y]], y)
 )
 
 
@@ -173,8 +154,8 @@ setMethod(
                                   list(x@param@pi, x@param@paramContinuous@mu[loc2,], x@param@paramContinuous@sd[loc2,]))
         else if (type=="boxplot") 
           varsellcm.plot.boxplot(data.frame(x = x@data@dataContinuous@data[, which(rownames(x@param@paramContinuous@mu)==y)], 
-                                                 class=as.factor(x@partitions@zMAP)),
-                                      y)
+                                            class=as.factor(x@partitions@zMAP)),
+                                 y)
         else
           stop("type must be cdf or boxplot")
         vu <- TRUE
@@ -194,6 +175,15 @@ setMethod(
                                  y)
         else
           stop("type must be cdf or boxplot")
+        vu <- TRUE
+      }
+    }else if (x@data@withCategorical){
+      if (y %in% names(x@param@paramCategorical@alpha)){
+        loc2 <- which(names(x@param@paramCategorical@alpha) ==y)
+        ifelse (length(loc2)==1,
+                varsellcm.plot.cate(x@param@paramCategorical@alpha[[loc2]], y),
+                stop("y must be the name of a variable in the analyzed data"))
+        
         vu <- TRUE
       }
     }
