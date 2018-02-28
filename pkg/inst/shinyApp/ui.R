@@ -1,0 +1,19 @@
+shinyUI(fluidPage(
+  
+  sidebarPanel(
+   h3("Discrimintative power"),
+   radioButtons("typeDiscrim", "Graph", c("Bar-chart" = "bar", "Pie" = "pie")),
+   sliderInput("numDiscrim", "Number of the most discriminative variables:", min =1, max = sum(resVSLC@model@omega), value = sum(resVSLC@model@omega)),
+   h3("Univariate Analysis"),
+   selectizeInput("vble", "Name of the variable", resVSLC@data@var.names, selected = NULL, multiple = FALSE),
+   radioButtons("typevble", "Type", c("CDF" = "cdf", "Boxplot" = "boxplot"))
+  ),
+  mainPanel(
+    tabsetPanel(type = "tabs",
+                tabPanel("Summary", verbatimTextOutput("summary")),
+                tabPanel("Discriminative power", plotOutput("plot1"), tableOutput("table1")),
+                tabPanel("Univariate Analysis", plotOutput("plot2")),
+                tabPanel("Classification Analysis", plotOutput("plot3"))
+    )   
+  )
+))

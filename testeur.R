@@ -15,3 +15,5 @@ plot(truc, y="RestBloodPressure", type="boxplot")
 plot(truc, y="RestBloodPressure", type="cdf")
 # Une variable categorielle
 plot(truc, y="Sex")
+
+VarSelShiny(truc)

@@ -146,9 +146,14 @@ setMethod(f="plot",
 setMethod(
   f="plot",
   signature = c("VSLCMresults"),
-  definition = function(x, type){
+  definition = function(x, type, ylim=c(1, x@data@d)){
     df <- data.frame(discrim.power=x@criteria@discrim, variables=as.factor(names(x@criteria@discrim)), rg=1:x@data@d)
     df <- df[which(df$discrim.power>0),]
+    df <- df[order(df$discrim.power, decreasing = T),]
+    ylim <- as.integer(sort(ylim))
+    ylim[2] <- min(ylim[2], nrow(df))
+    ylim[1] <- min(max(ylim[1], 0), ylim[2])
+    df <- df[ylim[1]:ylim[2], , drop=F]
     if (type=="pie"){
       pie<- ggplot(df, aes(x="", y=df$discrim.power, fill=df$variables))+
         scale_y_continuous(name="discriminative power") +
@@ -169,8 +174,12 @@ setMethod(
         ggtitle(paste("Discriminative power")) +  
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(bar)
+    }else if (type=="probs"){
+      tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max))
+      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification")
+      print(tikplot)
     }else{
-      stop("type must be specified and equal to pie or bar")
+      stop("type must be specified and equal to pie or bar or probs")
     }
   }
 )

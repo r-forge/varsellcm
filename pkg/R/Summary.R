@@ -39,20 +39,14 @@ setMethod(
     }
     cat("\n")
     
-    cat("Model:\n   Number of components:", object@model@g, "\n   Number of relevant variables for the clustering:",sum(object@model@omega)," (", 100*sum(object@model@omega)/length(object@model@omega),"% ) \n")
-    if (object@strategy@vbleSelec){
-      cat("   The variable selection has been performed according to the", object@strategy@crit.varsel, " criterion \n")
-    }else{
-      cat("   No variable selection has been performed \n")
-    }
-    if (sum(object@model@omega)>0){
-      if (length(length(object@model@names.relevant))>6){
-        cat("   Names of the first six relevant variables for the clustering: ")        
-      }else{
-        cat("   Names of the relevant variables for the clustering: ") 
-      }
-      cat(object@model@names.relevant[1:min(6,length(object@model@names.relevant))], "\n\n")
-    }     
+    cat("Model:\n   Number of components:", object@model@g, "\n")
+    cat("   Model selection has been performed according to the", object@strategy@crit.varsel, " criterion \n")
+    
+    if (object@strategy@vbleSelec) cat("   Variable selection has been performed,", sum(object@model@omega)," (", round(100*sum(object@model@omega)/length(object@model@omega), 2),"% ) of the variables are relevant for clustering \n   \n")
+    
+     
+    
+
     if ((length(object@criteria@degeneracyrate)==1)&&(object@criteria@degeneracyrate != 1)){
       cat("Information Criteria:\n")
       cat("   loglike:", object@criteria@loglikelihood,"\n")    

@@ -28,6 +28,7 @@
 ##' @import Rcpp
 ##' @import methods
 ##' @import ggplot2
+##' @import shiny
 ##' @importFrom mgcv uniquecombs
 ##' @importFrom graphics barplot mtext par
 ##' @importFrom stats dnorm dpois integrate sd runif pnorm ppois

@@ -10,7 +10,7 @@
 \usage{
 \S4method{plot}{VSLCMresults,character}(x, y, type)
 
-\S4method{plot}{VSLCMresults,ANY}(x, type)
+\S4method{plot}{VSLCMresults,ANY}(x, type, ylim = c(1, x@data@d))
 }
 \arguments{
 \item{object}{instance of  \code{\linkS4class{VSLCMresults}}.}
