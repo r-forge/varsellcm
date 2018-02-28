@@ -76,6 +76,22 @@
 ##' 
 NULL
 
+##' Statlog (Heart) Data Set
+##' 
+##'  This dataset is a heart disease database similar to a database already present in the repository (Heart Disease databases) but in a slightly different form. It arises from http://archive.ics.uci.edu/ml/datasets/statlog+(heart)
+##'  
+##'  
+##' 
+##'
+##' 
+##' @references Website:http://archive.ics.uci.edu/ml/datasets/statlog+(heart)
+##' @name heart
+##' @docType data
+##' @keywords datasets
+##' 
+##' @examples
+##'   data(heart)
+NULL
 
 ###################################################################################
 ##' Variable selection and clustering.

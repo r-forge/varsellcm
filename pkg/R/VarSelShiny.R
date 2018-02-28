@@ -1,11 +1,20 @@
 ###################################################################################
-##' @param X 
+###################################################################################
+##' Shiny app for analyzing results from VarSelCluster
+##'
+##' @description  
+##' Shiny app for analyzing results from VarSelCluster
+##' 
+##' @param X an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster}.
+##' 
 ##' @examples
-##' \dontrun{
-##' data(iris)
-##' res.LCM <- VarSelCluster(x, 2)
-##' summary(res.LCM)
-##' }
+##' # Data loading
+##' data("heart")
+##' # Clustering en 2 classes
+##' results <- VarSelCluster(heart[,-13], 2)
+##' # Opening Shiny application to easily see the results
+##' VarSelShiny(results)
+##' 
 ##' @export
 ##'
 ##'
