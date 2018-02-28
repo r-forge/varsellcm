@@ -39,7 +39,7 @@
 ##' @author
 ##' Matthieu Marbac and Mohammed Sedki Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 ##'
-##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
+##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
 ##' 
 ##' Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 ##' 
@@ -138,7 +138,7 @@ VarSelCluster.singleg <- function(x, g, vbleSelec, crit.varsel, initModel,  nbco
 ##' 
 ##' @return Returns an instance of \linkS4class{VSLCMresults}.
 ##' 
-##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Variable selection for model-based clustering using the integrated complete-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
+##' @references Marbac, M. and Sedki, M. (2017). Variable selection for model-based clustering using the integrated completed-data likelihood. Statistics and Computing, 27 (4), 1049-1063.
 ##' 
 ##' Marbac, M. and Patin, E. and Sedki, M. (2018). Variable selection for mixed data clustering: Application in human population genomics. Arxiv 1703.02293.
 ##' 
