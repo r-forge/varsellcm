@@ -69,14 +69,17 @@ varsellcm.plot.cate  <- function(tmp, y){
  
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
-#' @param object instance of  \code{\linkS4class{VSLCMresults}}.
+#' @param x instance of  \code{\linkS4class{VSLCMresults}}.
+#' @param y character. Must be the name of a variable in the analyzed data
+#' @param ... Additional argument list that might not ever be used.
 #' 
 #' @name plot
 #' @rdname plot-methods
 #' @docType methods
 #' @exportMethod plot
 #' @rdname plot-methods
-#' @aliases plot plot,VSLCMresults-method
+#' @aliases plot plot,VSLCMresults,character,ANY-method
+#' 
 setMethod(f="plot",
   signature = c("VSLCMresults", "character"),
   definition = function(x, y, type){
@@ -135,14 +138,15 @@ setMethod(f="plot",
 #' 
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
-#' @param object instance of  \code{\linkS4class{VSLCMresults}}.
+#' @param x instance of  \code{\linkS4class{VSLCMresults}}.
+#' @param ... Additional argument list that might not ever be used.
 #' 
 #' @name plot
 #' @rdname plot-methods
 #' @docType methods
 #' @exportMethod plot
 #' @rdname plot-methods
-#' @aliases plot plot,VSLCMresults-method
+#' @aliases plot plot,VSLCMresults,ANY-method
 setMethod(
   f="plot",
   signature = c("VSLCMresults"),
@@ -182,7 +186,7 @@ setMethod(
       print(tikplot)
     }else if (type=="probs-class"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(x@partitions@zMAP))
-      tikplot <-    ggplot(tmp, aes(x=probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +  
+      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +  
         ggtitle(paste("Probabilities of misclassification")) + 
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)

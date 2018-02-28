@@ -13,11 +13,13 @@ VarSelShiny(X)
 Shiny app for analyzing results from VarSelCluster
 }
 \examples{
+\dontrun{
 # Data loading
 data("heart")
 # Clustering en 2 classes
 results <- VarSelCluster(heart[,-13], 2)
 # Opening Shiny application to easily see the results
 VarSelShiny(results)
+}
 
 }

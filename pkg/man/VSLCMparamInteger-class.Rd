@@ -3,10 +3,7 @@
 \docType{class}
 \name{VSLCMparamInteger-class}
 \alias{VSLCMparamInteger-class}
-\title{\describe{
-  \item{pi}{numeric. Proportions of the mixture components.}
-  \item{lambda}{matrix. Mean for each component (column) and each variable (row).}
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMparamInteger}}] class}
 \description{
 \describe{
   \item{pi}{numeric. Proportions of the mixture components.}

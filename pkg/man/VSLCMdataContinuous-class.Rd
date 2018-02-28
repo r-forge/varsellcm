@@ -3,13 +3,7 @@
 \docType{class}
 \name{VSLCMdataContinuous-class}
 \alias{VSLCMdataContinuous-class}
-\title{\describe{
-  \item{n}{number of observations}
-  \item{d}{number of variables}
-  \item{data}{matrix of observations (one row = one observation)}
-  \item{notNA}{matrix of logical (1:observed, 0:unobserved)}
-  \item{priors}{hyper-parameters of the prior distributions}
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class}
 \description{
 \describe{
   \item{n}{number of observations}

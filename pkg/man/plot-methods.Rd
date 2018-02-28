@@ -3,9 +3,9 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,VSLCMresults-method}
+\alias{plot,VSLCMresults,character,ANY-method}
 \alias{plot}
-\alias{plot,VSLCMresults-method}
+\alias{plot,VSLCMresults,ANY-method}
 \title{This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.}
 \usage{
 \S4method{plot}{VSLCMresults,character}(x, y, type)
@@ -13,9 +13,15 @@
 \S4method{plot}{VSLCMresults,ANY}(x, type, ylim = c(1, x@data@d))
 }
 \arguments{
-\item{object}{instance of  \code{\linkS4class{VSLCMresults}}.}
+\item{x}{instance of  \code{\linkS4class{VSLCMresults}}.}
 
-\item{object}{instance of  \code{\linkS4class{VSLCMresults}}.}
+\item{y}{character. Must be the name of a variable in the analyzed data}
+
+\item{...}{Additional argument list that might not ever be used.}
+
+\item{x}{instance of  \code{\linkS4class{VSLCMresults}}.}
+
+\item{...}{Additional argument list that might not ever be used.}
 }
 \description{
 This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.

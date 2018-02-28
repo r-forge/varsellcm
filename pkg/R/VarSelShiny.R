@@ -8,12 +8,14 @@
 ##' @param X an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster}.
 ##' 
 ##' @examples
+##' \dontrun{
 ##' # Data loading
 ##' data("heart")
 ##' # Clustering en 2 classes
 ##' results <- VarSelCluster(heart[,-13], 2)
 ##' # Opening Shiny application to easily see the results
 ##' VarSelShiny(results)
+##' }
 ##' 
 ##' @export
 ##'

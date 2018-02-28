@@ -3,14 +3,7 @@
 \docType{class}
 \name{VSLCMdataCategorical-class}
 \alias{VSLCMdataCategorical-class}
-\title{\describe{
-  \item{n}{number of observations}
-  \item{d}{number of variables}
-  \item{data}{matrix of observations (one row = one observation)}
-  \item{shortdata}{matrix of unique profils}
-  \item{weightdata}{weights of profils}
-  \item{modalitynames}{names of levels}
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMdataCategorical}}] class}
 \description{
 \describe{
   \item{n}{number of observations}

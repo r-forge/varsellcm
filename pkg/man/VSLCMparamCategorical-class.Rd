@@ -3,10 +3,7 @@
 \docType{class}
 \name{VSLCMparamCategorical-class}
 \alias{VSLCMparamCategorical-class}
-\title{\describe{
-  \item{pi}{numeric. Proportions of the mixture components.}
-  \item{alpha}{list. Parameters of the multinomial distributions.}
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMparamCategorical}}] class}
 \description{
 \describe{
   \item{pi}{numeric. Proportions of the mixture components.}

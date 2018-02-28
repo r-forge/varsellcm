@@ -1,7 +1,8 @@
 
 ########################################################################################################################## S4 classes for the data################################################################################################################################################################################################################################################## S4 VSLCMdataContinuous: class for continuous data sets#######################################################################################################################Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class
 
-
+#' Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class
+#' 
 #' \describe{
 #'   \item{n}{number of observations}
 #'   \item{d}{number of variables}
@@ -35,7 +36,8 @@ setClass(
     priors=matrix()
   )
 )
-
+#' Constructor of [\code{\linkS4class{VSLCMdataInteger}}] class
+#' 
 #' \describe{
 #'   \item{n}{number of observations}
 #'   \item{d}{number of variables}
@@ -44,7 +46,7 @@ setClass(
 #'   \item{priors}{hyper-parameters of the prior distributions}
 #' }
 #'  @examples
-#'   getSlots("VSLCMdata")
+#'   getSlots("VSLCMdataInteger")
 #' 
 #' @name VSLCMdataInteger-class
 #' @rdname VSLCMdataInteger-class
@@ -67,6 +69,8 @@ setClass(
     priors=matrix()
   )
 )
+#' Constructor of [\code{\linkS4class{VSLCMdataCategorical}}] class
+#' 
 #' \describe{
 #'   \item{n}{number of observations}
 #'   \item{d}{number of variables}

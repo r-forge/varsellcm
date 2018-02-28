@@ -3,15 +3,7 @@
 \docType{class}
 \name{VSLCMdataInteger-class}
 \alias{VSLCMdataInteger-class}
-\title{\describe{
-  \item{n}{number of observations}
-  \item{d}{number of variables}
-  \item{data}{matrix of observations (one row = one observation)}
-  \item{notNA}{matrix of logical (1:observed, 0:unobserved)}
-  \item{priors}{hyper-parameters of the prior distributions}
-}
- @examples
-  getSlots("VSLCMdata")}
+\title{Constructor of [\code{\linkS4class{VSLCMdataInteger}}] class}
 \description{
 \describe{
   \item{n}{number of observations}
@@ -21,5 +13,5 @@
   \item{priors}{hyper-parameters of the prior distributions}
 }
  @examples
-  getSlots("VSLCMdata")
+  getSlots("VSLCMdataInteger")
 }

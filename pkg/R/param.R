@@ -1,3 +1,5 @@
+#' Constructor of [\code{\linkS4class{VSLCMparamContinuous}}] class
+#' 
 #' \describe{
 #'   \item{pi}{numeric. Proportions of the mixture components.}
 #'   \item{mu}{matrix. Mean for each component (column) and each variable (row).}
@@ -14,6 +16,8 @@ setClass(
   representation = representation(pi="numeric", mu="matrix", sd="matrix"), 
   prototype = prototype(pi=numeric(), mu=matrix(), sd=matrix())
 )
+##' Constructor of [\code{\linkS4class{VSLCMparamInteger}}] class
+##' 
 #' 
 #' \describe{
 #'   \item{pi}{numeric. Proportions of the mixture components.}
@@ -30,7 +34,8 @@ setClass(
   representation = representation(pi="numeric", lambda="matrix"), 
   prototype = prototype(pi=numeric(), lambda=matrix())
 )
-
+##' Constructor of [\code{\linkS4class{VSLCMparamCategorical}}] class
+##' 
 #' \describe{
 #'   \item{pi}{numeric. Proportions of the mixture components.}
 #'   \item{alpha}{list. Parameters of the multinomial distributions.}

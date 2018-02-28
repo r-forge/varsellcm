@@ -1,4 +1,6 @@
-#' \describe{
+#' Constructor of [\code{\linkS4class{VSLCMresultsContinuous}}] class
+#' 
+#'  \describe{
 #'   \item{data}{\linkS4class{VSLCMdataContinuous}. Results relied to the data.}
 #'   \item{criteria}{\linkS4class{VSLCMcriteria}. Results relied to the information criteria.}
 #'   \item{partitions}{\linkS4class{VSLCMpartitions}. Results relied to the partitions.}
@@ -20,6 +22,7 @@ setClass(
                         model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamContinuous"))
 )
 
+#' Constructor of [\code{\linkS4class{VSLCMresultsInteger}}] class
 #' 
 #' \describe{
 #'   \item{data}{\linkS4class{VSLCMdataInteger}. Results relied to the data.}
@@ -43,7 +46,9 @@ setClass(
                         model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamInteger"))
 )
 
-#' \describe{
+#' Constructor of [\code{\linkS4class{VSLCMresultsCategorical}}] class
+#' 
+#'  \describe{
 #'   \item{data}{\linkS4class{VSLCMdataCategorical}. Results relied to the data.}
 #'   \item{criteria}{\linkS4class{VSLCMcriteria}. Results relied to the information criteria.}
 #'   \item{partitions}{\linkS4class{VSLCMpartitions}. Results relied to the partitions.}

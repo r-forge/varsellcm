@@ -3,11 +3,7 @@
 \docType{class}
 \name{VSLCMparamContinuous-class}
 \alias{VSLCMparamContinuous-class}
-\title{\describe{
-  \item{pi}{numeric. Proportions of the mixture components.}
-  \item{mu}{matrix. Mean for each component (column) and each variable (row).}
-  \item{sd}{matrix. Standard deviation for each component (column) and each variable (row).}
-}}
+\title{Constructor of [\code{\linkS4class{VSLCMparamContinuous}}] class}
 \description{
 \describe{
   \item{pi}{numeric. Proportions of the mixture components.}
