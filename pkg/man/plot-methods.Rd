@@ -3,28 +3,24 @@
 \docType{methods}
 \name{plot}
 \alias{plot}
-\alias{plot,VSLCMresults,character,ANY-method}
+\alias{plot,VSLCMresults,character-method}
 \alias{plot}
 \alias{plot,VSLCMresults,ANY-method}
 \title{This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.}
 \usage{
-\S4method{plot}{VSLCMresults,character}(x, y, type)
-
-\S4method{plot}{VSLCMresults,ANY}(x, type, ylim = c(1, x@data@d))
+\S4method{plot}{VSLCMresults,character}(x, y, type, ylim = NULL)
 }
 \arguments{
 \item{x}{instance of  \code{\linkS4class{VSLCMresults}}.}
 
-\item{y}{character. Must be the name of a variable in the analyzed data}
+\item{y}{character. The name of the variable we are interested in. Otherwise, graphic about general results is ploted.}
 
-\item{...}{Additional argument list that might not ever be used.}
+\item{type}{character. Can be cdf or boxplot to plot the distribution of the variable we are interested in. Otherwise, must be pie or bar to obtain information about the discriminative power of the variables and must be probs-overall or probs-class to obtain information about the misclassification probabilities.}
 
-\item{x}{instance of  \code{\linkS4class{VSLCMresults}}.}
+\item{ylim}{numeric. Define the range of the most discriminative variables to considered (only use if type="pie" or type="bar")}
 
 \item{...}{Additional argument list that might not ever be used.}
 }
 \description{
-This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
-
 This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 }

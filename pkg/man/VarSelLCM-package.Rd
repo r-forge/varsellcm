@@ -4,9 +4,9 @@
 \name{VarSelLCM-package}
 \alias{VarSelLCM-package}
 \alias{VarSelLCM}
-\title{Variable Selection in model-based clustering managed by the Latent Class Model for analysis mixed-type data with missing values.}
+\title{Variable Selection for Model-Based Clustering of Mixed-Type Data Set with Missing Values}
 \description{
-The package uses a finite mixture model for analyzing mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between classes. The one-dimensional marginals of the components follow standard distributions for facilitating both the model interpretation and the model selection. The variable selection is led by an alternated optimization procedure for maximizing the MICL criterion. The maximum likelihood inference is done by an EM algorithm for the selected model. This package also performs the imputation of missing values.
+Model-based clustering with variable selection and estimation of the number of clusters. Data to analyze can be continuous, categorical, integer or mixed. Moreover, missing values can occur and do not necessitate any pre-processing. Shiny application permits an easy interpretation of the results.
 }
 \details{
 \tabular{ll}{
@@ -21,9 +21,11 @@ The package uses a finite mixture model for analyzing mixed-type data (data with
 
 The main function to use is \link{VarSelCluster}.
 
-Function \link{VarSelCluster} carries out the model selection by maximizing the MICL criterion, then it performs the maximum likelihood estimation of the selected model via an EM algorithm.
+Function \link{VarSelCluster} carries out the model selection (according to AIC, BIC or MICL) ande maximum likelihood estimation.
 
-Tool methods \link{summary}, \link{print} and \link{plot} are available for facilitating the interpretation.
+Function \link{VarSelShiny} runs a shiny application which permits an easy interpretation of the clustering results.
+
+Tool methods \link{summary}, \link{print} and \link{plot} are also available for facilitating the interpretation.
 }
 \examples{
 \dontrun{

@@ -70,19 +70,23 @@ varsellcm.plot.cate  <- function(tmp, y){
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param x instance of  \code{\linkS4class{VSLCMresults}}.
-#' @param y character. Must be the name of a variable in the analyzed data
+#' @param y character. The name of the variable we are interested in. Otherwise, graphic about general results is ploted. 
+#' @param type character. Can be cdf or boxplot to plot the distribution of the variable we are interested in. Otherwise, must be pie or bar to obtain information about the discriminative power of the variables and must be probs-overall or probs-class to obtain information about the misclassification probabilities. 
+#' @param ylim numeric. Define the range of the most discriminative variables to considered (only use if type="pie" or type="bar")
 #' @param ... Additional argument list that might not ever be used.
 #' 
 #' @name plot
 #' @rdname plot-methods
 #' @docType methods
 #' @exportMethod plot
+NULL
 #' @rdname plot-methods
+#' @aliases plot plot,VSLCMresults,ANY-method
 #' @aliases plot plot,VSLCMresults,character,ANY-method
 #' 
 setMethod(f="plot",
   signature = c("VSLCMresults", "character"),
-  definition = function(x, y, type){
+  definition = function(x, y, type,ylim=NULL){
     vu <- FALSE
     if (x@data@withContinuous){
       if (y %in% rownames(x@param@paramContinuous@mu)){
@@ -135,18 +139,8 @@ setMethod(f="plot",
   }
 )
 
-#'
-#' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
-#'
-#' @param x instance of  \code{\linkS4class{VSLCMresults}}.
-#' @param ... Additional argument list that might not ever be used.
-#'
-#' @name plot
-#' @rdname plot-methods
-#' @docType methods
-#' @exportMethod plot
-#' @rdname plot-methods
-#' @aliases plot plot,VSLCMresults,ANY-method
+
+
 setMethod(
   f="plot",
   signature = c("VSLCMresults"),
