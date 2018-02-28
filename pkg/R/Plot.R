@@ -174,12 +174,20 @@ setMethod(
         ggtitle(paste("Discriminative power")) +  
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(bar)
-    }else if (type=="probs"){
+    }else if (type=="probs-overall"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max))
-      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification")
+      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification") +  
+        ggtitle(paste("Probabilities of misclassification")) + 
+        theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+      print(tikplot)
+    }else if (type=="probs-class"){
+      tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(x@partitions@zMAP))
+      tikplot <-    ggplot(tmp, aes(x=probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +  
+        ggtitle(paste("Probabilities of misclassification")) + 
+        theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
     }else{
-      stop("type must be specified and equal to pie or bar or probs")
+      stop("type must be specified and equal to pie or bar or probs-overall or class")
     }
   }
 )

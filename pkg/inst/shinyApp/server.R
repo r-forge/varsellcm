@@ -18,5 +18,5 @@ shinyServer(function(input, output) {
 
   output$plot2 <- renderPlot( plot(truc, y=input$vble, type=input$typevble)) 
   
-  output$plot3 <- renderPlot(plot(x=truc, type="probs"))
+  output$plot3 <- renderPlot(plot(x=truc, type=input$probs))
 })
