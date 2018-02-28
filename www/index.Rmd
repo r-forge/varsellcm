@@ -1,6 +1,8 @@
 ---
 title: '**VarSelLCM**'
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 
@@ -10,300 +12,63 @@ output: html_document
   
 * *Authors*: **Matthieu Marbac** and **Mohammed Sedki**.
 * *License*: [GPL-2](http://www.gnu.org/licenses/gpl-2.0.html).
-* *Download VarSelLCM 2.0 (beta version for mixed-type data)*: [link](https://r-forge.r-project.org/R/?group_id=2011).  
-*  *Download VarSelLCM 1.2 (stable version for continuous data)*: [link](http://cran.r-project.org/web/packages/VarSelLCM/).
-* *Reference*: [Variable selection for model-based clustering using the integrated complete-data likelihood](http://arxiv.org/abs/1501.06314), Marbac, M. and Sedki, M., 2015, preprint.
+* *Download VarSelLCM 2.0.1 (beta version for mixed-type data)*: [link](http://cran.r-project.org/web/packages/VarSelLCM/).  
 
-<a id="top"></a>
-**Site map:**  
+**References:** 
 
-* <a href="#intro">Introduction</a>.
-* <a href="#tutorial">Tutorial (overview of the VarSelLCM functions)</a>.
-* <a href="#simul">Variable selection and data imputation (simulation)</a>.
-* <a href="#heart">Cluster analysis of a mixed-type data set</a>.
-* <a href="#golub">Cluster analysis of a challenging continuous data set</a>.
+* Marbac, M. and Sedki, M. (2017), [Variable selection for model-based clustering using the integrated complete-data likelihood](https://link.springer.com/article/10.1007/s11222-016-9670-1), Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.
+* Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Arxiv 1703.02293.
 
-All the experiments are used with VarSelLCM 2.0
-<a id="intro"></a>
+**Introduction:**  
+*VarSelLCM* permits model selection (number of component and variable selection) for clustering.
 
-### Introduction
-*VarSelLCM* carries out the variable selection for model-based clustering performed with the Latent Class Model. This model analyzes mixed-type data (data with continuous and/or count and/or categorical variables) with missing values (missing at random) by assuming independence between the observed variables conditionally on components. The one-dimensional marginals of the components follow standard distributions for facilitating both model interpretation and model selection.
+It can analyze continuous, categorical, integer and mixed-data. Moreover, data with missing values can be analyze without any pre-processing.
 
-The variable selection is led by an alternated optimization procedure for maximizing the MICL (Maximum Integrated Complete-data Likelihood) criterion. The maximum likelihood inference is done by an EM algorithm for the selected model.  More technical details [here](http://arxiv.org/abs/1501.06314)
+A Shiny application is implemented to easily interpret the clustering results.
 
-This package also proposes an imputation method for the missing values by taking the expectation of the missing values conditionally on the model, its parameters and on the observed variables.
+Imputation function is implemented. Thus, *VarSelLCM* can be used as an imputation approach based on mixture model.
 
 Tool functions (*summary, print* and *plot*) facilitate the result interpretation.
 
-* <a href="#top">Go to the top</a>
 
 
-<a id="tutorial"></a>
 
-###  Overview of the VarSelLCM functions
+**Overview of the VarSelLCM functions**
 
-This section performs the whole analysis of the *Thyroid* data set . It uses all the functions implemented in the package *VarSelLCM* and can be used as a tutorial. 
+This section performs the whole analysis of the *Heart* data set . It uses all the functions implemented in the package *VarSelLCM* and can be used as a tutorial. 
 
-First, the cluster analysis is performed with three clusters by doing a variable selection, then a model summary is given. Second, the imputation of missing values is performed by using the model parameters. Finally, the cluster interpretation can be done based on the graphical and numerical presentations of the parameters.
+Clustering is performed with two clusters by doing a variable selection. Model selection is done with BIC.
 
 **Loadings**
 
 ```{r, comment=""}
 library(VarSelLCM)
-# data loading (last column indicates the true class membership)
-data(thyroid)
-```
-
-**Clustering with variable selection**
-
-```{r, comment=""}
-# Cluster analysis with variable selection with parallel computing (8 cores) and 40 initializations
-# The last two input arguments are optional
-res <- VarSelCluster(thyroid[,-ncol(thyroid)], 3, nbcores = 8, initModel = 40)
-
-```
-
-**Model Summary**
-
-```{r, comment=""}
-# Summary of the selected model (4 variables are relevant and 1 variable is irrelevant)
-summary(res)
-```
-
-**Imputation of missing values by using the model parameters**  
-  Function *VarSelImputation()* performs the imputation on
-individuals having missing values by taking the expectation of the
-missing variables conditionally on the model, its estimates and the
-observed variables, as follows
-$$
-  \forall j \notin \mathcal{O}_i, x_{ij}=\mathbb{E}\left[x_{ij} \mid m, \hat{\theta}, x_{i\mathcal{O}_i}\right],
-$$
-  where $x_{i\mathcal{O}_i}=(x_{ij}; j\in\mathcal{O}_i)$. 
-```{r, comment=""}
-# Imputation of missing values by using the model parameters
-# (print only for indivudals 8, 9 and 10)
-ximput <- VarSelImputation(res)
-print(thyroid[8:10,-ncol(thyroid)])
-print(ximput[8:10,])
-```
-
-**Details about the estimates**
-
-The model defines three clusters. The majority cluster ($\pi_1 =0.70$) groups the individuals taking intermediate values for the continuous variables. The other two clusters are composed with the individuals taking more extreme values for the continuous variables. Cluster~2 is mainly explained by variable \emph{TSH\_value} while Cluster 3 is mainly explained by variable \emph{Thyroidstimulating}. Finally, note that the count variable is not relevant for the clustering.
-
-```{r, comment=""}
-# Print the parameters
-print(res)
-```
-**Discriminative power of the relevant variables**  
-The method *plot()* illustrates the discriminative power of each variable by class.  The discriminative power of continuous variable $j$ in component $k$ is given by 
-$$\int_{R}\Big[p(x_j ;\alpha_{kj}, m) - \sum_{\ell \neq k} \dfrac{\pi_\ell}{1-\pi_k} p(x_j ; \alpha_{\ell j}, m) \Big]^2 dx_J. $$
-  The same quantity is used for categorical and counting variable
-replacing integral by sum.
-
-```{r fig.width=7, fig.height=7}
-# Plot of the parameters
-par(cex.lab =  0.6, cex.axis = 0.6)
-plot(res)
-```
-
-
-* <a href="#top">Go to the top</a>
-
-
-<a id="simul"></a>
-
-### Variable selection and data imputation (simulation)
-
-This section illustrates, on simulated data, the benefit of the variable selection for the data imputation.
-Indeed, variable selection provides a better parameter accuracy by reducing the variance of the estimates. Thus, the imputation of the missing values is more efficient than the imputation provided by the model considering that all the variables are relevant.
-
-Data are drawn from a tri-component mixture model assuming conditional independence and equal proportions. The first two variables are relevant under component $k$, the first variable follows a Gaussian distribution $\mathcal{N}(\mu_k,1)$ while the second variable follows a Poisson distribution $\mathcal{P}(\lambda_k)$, with
-$$
-\mu_1=-16,\; \mu_2=4, \; \mu_3=0, \; \lambda_1=2,\; \lambda_2=16 \text{ and } \lambda_3=4.
-$$
-
-We add $\frac{d-2}{2}$ noisy variables following a standard Gaussian distribution $\mathcal{N}(0,1)$ and $\frac{d-2}{2}$ noisy variables following a Poisson distribution $\mathcal{P}(2)$. Finally, we uniformly add a rate of missing values equal to 0.2. For different values of $d$ (4, 8, 12 and 16), 50 samples are generated.
-
-Figure presents the boxplot of the ratio between the quadratic error for the imputation provided with variable selection and the quadratic error for the imputation provided without variable selection. Since the mean of this ratio is smaller than one, we conclude that variable selection provides a better imputation. Moreover, its benefit is larger when many irrelevant variables are observed.
-
-**Definition of the generating function**
-
-The first two variables (one continuous and one count) are relevant.  
-*nodiscrim* couples of irrelevant variables are added (one continuous and one count).
-For each variable, a rate of *rho* of missing values is uniformly sampled
-
-```{r, comment=""}
-generator <- function(n=100, rho=0.2, nodiscrim=3){
-  z <- sample(1:3, n, replace=TRUE)
-  x <- data.frame(V1=rnorm(n) + (z==2)*4 - 16*(z==1), 
-                  V2=as.integer(rpois(n, 2) + (z==2)*rpois(n, 16) + (z==3)*rpois(n, 4)))
-  for (j in 1:nodiscrim) x <- cbind(x, rnorm(n), rpois(n,2))
-  colnames(x) <- paste("V",1:ncol(x),sep="")
-  xmiss <- x
-  for (j in 1:ncol(x)) xmiss[sample(1:n, rho*n),j] <- NA 
-  return(list(allx=x, z=z, xmiss=xmiss))
-}
-```
-
-**Data sets sampling**
-
-Four situations are studied (4, 8, 12, 16 irrelevant variables). For each of them, 50 samples are generated.
-```{r, comment=""}
-set.seed(123)
-error <- matrix(NA, 200, 3)
-colnames(error) <- c("irrelevant",  "imput with", "imput without")
-ech <- list()
-for (it in 1:200) ech[[it]] <- generator(nodiscrim= 2 + ((it-1)%/%50)*2)
-```
-
-**Variable selection increases the imputation accuracy**
-
-The rate between the quadratic error obtained with variable selection and the quadratic error obtained without variable selection decreases when the number of irrelevant variable increases. So, variable selection provides a better imputation, especially when many variable is irrelevant. Indeed, its estimates have a smaller variance than the estimates of the model assuming that all the variables are relevant.
-
-```{r, comment="", fig.width=7, fig.height=7}
-for (it in 1:length(ech)){
-  res_without <- VarSelCluster(ech[[it]]$xmiss, 3, vbleSelec = FALSE)
-  res_with <- VarSelCluster(ech[[it]]$xmiss, 3, nbcores = 8)
-  ximput_with <- VarSelImputation(res_with)
-  ximput_without <- VarSelImputation(res_without)
-  error[it,] <- c(ncol(ech[[it]]$xmiss) - 2,
-                  sum((ech[[it]]$allx-ximput_with)**2),
-                  sum((ech[[it]]$allx-ximput_without)**2))
-}
-
-# Boxplot of the rate between the quadratic error obtained with variable selection and the quadratic error obtained without variable selection (the smaller, the best)
-par(cex.lab =  0.6, cex.axis = 0.6)
-boxplot(error[,2]/error[,3]~as.factor(error[,1]-2), 
-        ylab="Rate between the Quadratic Errors", 
-        xlab="Number of Irrelevant Variables")
-abline(h=1, lty=2)
-```
-
-
-* <a href="#top">Go to the top</a>
-
-<a id="heart"></a>
-
-### Cluster analysis of a mixed-type data set
-
-We analyse the \emph{Heart} data set composed with 270 individuals described by three continuous variables, one count variable and eight categorical variables. Individuals are split into two groups, but we hide this partition for the analysis.
-
-Variable selection is performed for different numbers of components (from one to four). The MICL criterion detects the ``true'' number of clusters (\emph{i.e.} two). It claims that eight variables are relevant to the clustering ($67\%$). Thus, the model interpretation is facilitated since the two clusters can be interpreted by focusing on this subset of variables.
-
-We now compare the benefits of the variable selection for the partitioning accuracy.
-Without performing variable selection, 70 individuals are misclassified (according to the true partition), while only 57 individuals are misclassified if the variable selection is performed. Thus, variable selection increases the partitioning accuracy.
-
-
-**Loadings**
-
-```{r, comment=""}
-# data loading (last column indicates the true class membership)
-data(heart)
-summary(heart)
-```
-
-**Search of the number of components**
-
-```{r, comment=""}
-# Variable selection according to the MICL criterion for a fix number of components (from one to four)
-criteria <- matrix(NA, 4, 3)
-colnames(criteria) <- c("BIC", "ICL", "MICL")
-rownames(criteria) <- paste(1:4, "components", sep="")
-for (k in 1:4){
-  tmp <- VarSelCluster(heart[, -ncol(heart)], k, nbcores = 8, initModel = k*50)
-  criteria[k,] <- c(tmp@criteria@BIC, tmp@criteria@ICL, tmp@criteria@MICL)
-}
-# Print the values of the information criteria
-print(criteria)
-
-# The three criteria detect the "true" number of components (i.e. two)
-apply(criteria, 2, which.max)
-```
-
-
-**Model summary**
-```{r, comment=""}
-# Computation of the model with two components with variable selection
-res_with <- VarSelCluster(heart[, -ncol(heart)], 2, nbcores = 8)
-
-# Summary of the model with variable selection
-summary(res_with)
-```
-
-**Variable selection increases the partitioning accuracy**
-
-```{r, comment=""}
-# Confusion matrices: variable selection decreases the misclassification error rate
-
-# Computation of the model with two components without variable selection
-res_without <- VarSelCluster(heart[, -ncol(heart)], 2, vbleSelec = FALSE)
-
-# Matrix obtained without variable selection (misclassification: 70 individuals)
-print(table(heart[,ncol(heart)], res_without@partitions@zMAP))
-
-# Matrix obtained without variable selection (misclassification: 57 individuals)
-print(table(heart[,ncol(heart)], res_with@partitions@zMAP))
-```
-* <a href="#top">Go to the top</a>
-
-
-<a id="golub"></a>
-
-### Cluster analysis of a challenging continuous data set
-
-We analyse the \emph{Golub} data set  composed with 38 individuals described by 3051 continuous variables. Individuals are split into two groups, but we hide this partition for the analysis.
-
-Variable selection is performed for different numbers of components (from one to four). The MICL criterion detects the ``true'' number of clusters (\emph{i.e.} two). It claims that 553 variables are relevant to the clustering ($18\%$). Thus, the model interpretation is facilitated since the two clusters can be interpreted by focusing on this subset of variables.
-
-Moreover, the variable selection is not too much time consuming. Indeed, for two components, 200 initializations of the algorithm performing the variables selection and the maximum likelihood inference for the selected model requires 40 seconds on an $8$ Intel Xeon 3.40GHZ CPU machine.
-
-
-```{r, comment=""}
-# data loading (last column indicates the true class membership)
-data(golub)
-```
-
-
-**Search of the number of components**
-
-```{r, comment=""}
-# Variable selection according to the MICL criterion for a fix number of components (from one to four)
-criteria <- matrix(NA, 4, 3)
-colnames(criteria) <- c("BIC", "ICL", "MICL")
-rownames(criteria) <- paste(1:4,"components", sep="")
-for (k in 1:4){
-  tmp <- VarSelCluster(golub[,-ncol(golub)], k, nbcores = 8)
-  criteria[k,] <- c(tmp@criteria@BIC, tmp@criteria@ICL, tmp@criteria@MICL)
-}
-
-# Print the values of the information criteria
-print(criteria)
-
-# MICL detects the "true" number of components (i.e. two)
-apply(criteria, 2, which.max)
-```
-
-**Analysis of the best model**
-```{r, comment=""}
-# Cluster analysis with variable selection (with parallelisation on four cores)
-T1 <- proc.time()
-res_with <- VarSelCluster(golub[,-ncol(golub)], 2, nbcores = 8, initModel = 200)
-T2 <- proc.time()
-
 ```
 
 
 ```{r, comment=""}
-# Summary of the model with variable selection
-summary(res_with)
-
-# Computing time in seconds for the variable selection and the parameter inference of the best model with two components
-print((T2-T1)[3])
-
+# Data loading
+data("heart")
+# Add a missing value (just to show that it works!)
+heart[1,1] <- NA
+# Clustering with variable selection and a number of cluster betwee 1 and 4
+# Model selection is BIC (to use MICL, the option must be specified)
+out <- VarSelCluster(heart[,-13], 1:4)
+# Summary of the best model
+summary(out)
+# Discriminative power of the variables (here, the most discriminative variable is MaxHeartRate)
+plot(out, type="bar")
+# Boxplot for continuous (or interger) variable
+plot(out, y="MaxHeartRate", type="boxplot")
+# Empirical and theoretical distributions (to check that clustering is pertinent)
+plot(out, y="MaxHeartRate", type="cdf")
+# Summary of categorical variable
+plot(out, y="Sex")
+# Summary of the probabilities of missclassification
+plot(out, type="probs-class")
 ```
 
-
-
-* <a href="#top">Go to the top</a>
-
+```{r, eval=FALSE, comment="", include=TRUE}
+# Start the shiny application
+ VarSelShiny(out)
+```

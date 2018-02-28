@@ -1,10 +1,12 @@
 rm(list=ls())
+require(VarSelLCM)
 # On charge les données
 data("heart")
 # Clustering en 2 classes
 heart[1,1] <- NA
 truc=VarSelCluster(heart[,-13], 2)
-summary(truc)
+out <- VarSelCluster(heart[,-13], 1:4)
+summary(out)
 # Diagramme en cercle pour le pouvoir discriminant
 plot(truc, type="pie")
 # Diagramme en barre pour le pouvoir discriminant

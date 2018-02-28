@@ -93,6 +93,26 @@ NULL
 ##'   data(heart)
 NULL
 
+VarSelCluster.singleg <- function(x, g, vbleSelec, crit.varsel, initModel,  nbcores, discrim, nbSmall, iterSmall,  nbKeep, iterKeep, tolKeep){
+  reference <- BuildS4Reference(x, g, initModel, vbleSelec, crit.varsel, TRUE, nbcores, discrim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
+  if (g==1){
+    reference <- withoutmixture(reference)
+  }else{
+    # Estimation du modele et/ou des parametres
+    if (reference@strategy@parallel == FALSE)
+      reference <- VarSelModelMLE(reference, 0)
+    else{
+      reference <- ParallelCriterion(reference, min(reference@strategy@initModel, nbcores))
+      reference@strategy@vbleSelec <- vbleSelec
+    }    
+  }
+  out <- DesignOutput(reference)
+  out <- new("VSLCMresults", data=convertdata(out@data), criteria=out@criteria, partitions=out@partitions,
+             model=out@model, strategy=out@strategy, param=convertparam(out@param))
+  out@criteria@discrim <- sort(pvdiscrim(out), decreasing = TRUE)
+  return(out)
+}
+
 ###################################################################################
 ##' Variable selection and clustering.
 ##'
@@ -102,7 +122,7 @@ NULL
 ##' This function can be used for variable selection in clustering. You must specify the data to analyse (arg. x), the number of clusters (arg. g) and the option vbleSelec must be TRUE. Variable selection can be done with BIC, MICL or AIC.
 ##'
 ##' @param x data.frame. Rows correspond to observations and columns correspond to variables. Continuous variables must be "numeric", count variables must be "integer" and categorical variables must be "factor"
-##' @param g numeric. It defines number of components
+##' @param gvals numeric. It defines number of components to consider.
 ##' @param vbleSelec logical. It indicates if a variable selection is done
 ##' @param crit.varsel character. It defines the information criterion used for the variable selection ("AIC", "BIC" or "MICL"; only used if vbleSelec=1)
 ##' @param initModel numeric. It gives the number of initializations of the alternated algorithm maximizing the MICL criterion (only used if crit.varsel="MICL")
@@ -129,24 +149,11 @@ NULL
 ##' @export
 ##'
 ##'
-VarSelCluster <- function(x, g, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,  nbcores=1, discrim=rep(1,ncol(x)), nbSmall=250, iterSmall=20,  nbKeep=50, iterKeep=1000, tolKeep=10**(-6)){
-  reference <- BuildS4Reference(x, g, initModel, vbleSelec, crit.varsel, TRUE, nbcores, discrim, nbSmall, iterSmall, nbKeep, iterKeep, tolKeep)
-  if (g==1){
-    reference <- withoutmixture(reference)
-  }else{
-    # Estimation du modele et/ou des parametres
-    if (reference@strategy@parallel == FALSE)
-      reference <- VarSelModelMLE(reference, 0)
-    else{
-      reference <- ParallelCriterion(reference, min(reference@strategy@initModel, nbcores))
-      reference@strategy@vbleSelec <- vbleSelec
-    }    
-  }
-  out <- DesignOutput(reference)
-  out <- new("VSLCMresults", data=convertdata(out@data), criteria=out@criteria, partitions=out@partitions,
-                  model=out@model, strategy=out@strategy, param=convertparam(out@param))
-  out@criteria@discrim <- sort(pvdiscrim(out), decreasing = TRUE)
-  return(out)
+VarSelCluster <- function(x, gvals, vbleSelec=TRUE, crit.varsel="BIC", initModel=50,  nbcores=1, discrim=rep(1,ncol(x)), nbSmall=250, iterSmall=20,  nbKeep=50, iterKeep=1000, tolKeep=10**(-6)){
+  out <- list()
+  for (g in 1:length(gvals))
+    out[[g]] <- VarSelCluster.singleg(x, gvals[g], vbleSelec, crit.varsel, initModel,  nbcores, discrim, nbSmall, iterSmall,  nbKeep, iterKeep, tolKeep)
+  out[[which.max(sapply(out, function(u) u@criteria@BIC))]]
 }
 
 ParallelCriterion <- function(reference, nb.cpus){
