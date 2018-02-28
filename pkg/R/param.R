@@ -1,4 +1,4 @@
-#' Constructor of [\code{\linkS4class{VSLCMparamContinuous}}] class
+#' Constructor of \code{\linkS4class{VSLCMparamContinuous}} class
 #' 
 #' \describe{
 #'   \item{pi}{numeric. Proportions of the mixture components.}
@@ -16,7 +16,7 @@ setClass(
   representation = representation(pi="numeric", mu="matrix", sd="matrix"), 
   prototype = prototype(pi=numeric(), mu=matrix(), sd=matrix())
 )
-##' Constructor of [\code{\linkS4class{VSLCMparamInteger}}] class
+##' Constructor of \code{\linkS4class{VSLCMparamInteger}} class
 ##' 
 #' 
 #' \describe{
@@ -34,7 +34,7 @@ setClass(
   representation = representation(pi="numeric", lambda="matrix"), 
   prototype = prototype(pi=numeric(), lambda=matrix())
 )
-##' Constructor of [\code{\linkS4class{VSLCMparamCategorical}}] class
+##' Constructor of \code{\linkS4class{VSLCMparamCategorical}} class
 ##' 
 #' \describe{
 #'   \item{pi}{numeric. Proportions of the mixture components.}
@@ -55,7 +55,7 @@ setClass(
 ## Classe S4 VSLCMparamMixed contenant les parametres continus et categoriels
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMparam}}] class
+##' Constructor of \code{\linkS4class{VSLCMparam}} class
 ##'
 ##'  
 ##' \describe{

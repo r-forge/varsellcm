@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMmodel-class}
 \alias{VSLCMmodel-class}
-\title{Constructor of [\code{\linkS4class{VSLCMmodel}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMmodel}} class}
 \description{
 \describe{
   \item{g}{numeric. Number of components.}

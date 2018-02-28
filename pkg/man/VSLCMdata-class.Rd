@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMdata-class}
 \alias{VSLCMdata-class}
-\title{Constructor of [\code{\linkS4class{VSLCMdata}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMdata}} class}
 \description{
 \describe{
   \item{n}{number of observations}

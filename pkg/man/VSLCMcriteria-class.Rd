@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMcriteria-class}
 \alias{VSLCMcriteria-class}
-\title{Constructor of [\code{\linkS4class{VSLCMcriteria}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMcriteria}} class}
 \description{
 \describe{
   \item{loglikelihood}{numeric. Log-likelihood}

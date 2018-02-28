@@ -8,7 +8,7 @@
 ## Classe S4 VSLCMcriteria contenant la logvraisemblance (loglikelihood), la valeur des criteres BIC, ICL et MICL
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMcriteria}}] class
+##' Constructor of \code{\linkS4class{VSLCMcriteria}} class
 ##'
 ##'  
 ##' \describe{
@@ -41,7 +41,7 @@ InitCriteria <- function()
 ## Classe S4 VSLCMpartitions contenant la partition MAP (zMAP), la partition zstar (zOPT) et la partition floue (tik)
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMpartitions}}] class
+##' Constructor of \code{\linkS4class{VSLCMpartitions}} class
 ##'
 ##'  
 ##' \describe{
@@ -66,7 +66,7 @@ setClass(
 ## Classe S4 VSLCMstrategy contenant les parametres de reglages detailles dans VarSELLCMmixte.R
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMstrategy}}] class
+##' Constructor of \code{\linkS4class{VSLCMstrategy}} class
 ##'
 ##'  
 ##' \describe{
@@ -116,7 +116,7 @@ VSLCMstrategy <- function(initModel, nbcores, vbleSelec, crit.varsel, paramEstim
 ## Classe S4 VSLCMmodel contenant le nombre de classes (g) et le role des variables (omega)
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMmodel}}] class
+##' Constructor of \code{\linkS4class{VSLCMmodel}} class
 ##'
 ##'  
 ##' \describe{

@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMstrategy-class}
 \alias{VSLCMstrategy-class}
-\title{Constructor of [\code{\linkS4class{VSLCMstrategy}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMstrategy}} class}
 \description{
 \describe{
   \item{initModel}{numeric. Number of initialisations for the model selection algorithm.}

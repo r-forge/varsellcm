@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMresults-class}
 \alias{VSLCMresults-class}
-\title{Constructor of [\code{\linkS4class{VSLCMresults}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMresults}} class}
 \description{
 \describe{
   \item{data}{\linkS4class{VSLCMdata}. Results relied to the data.}

@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMdataContinuous-class}
 \alias{VSLCMdataContinuous-class}
-\title{Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMdataContinuous}} class}
 \description{
 \describe{
   \item{n}{number of observations}

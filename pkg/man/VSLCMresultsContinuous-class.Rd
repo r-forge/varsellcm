@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMresultsContinuous-class}
 \alias{VSLCMresultsContinuous-class}
-\title{Constructor of [\code{\linkS4class{VSLCMresultsContinuous}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMresultsContinuous}} class}
 \description{
 \describe{
   \item{data}{\linkS4class{VSLCMdataContinuous}. Results relied to the data.}

@@ -1,4 +1,4 @@
-#' Constructor of [\code{\linkS4class{VSLCMresultsContinuous}}] class
+#' Constructor of \code{\linkS4class{VSLCMresultsContinuous}} class
 #' 
 #'  \describe{
 #'   \item{data}{\linkS4class{VSLCMdataContinuous}. Results relied to the data.}
@@ -22,7 +22,7 @@ setClass(
                         model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamContinuous"))
 )
 
-#' Constructor of [\code{\linkS4class{VSLCMresultsInteger}}] class
+#' Constructor of \code{\linkS4class{VSLCMresultsInteger}} class
 #' 
 #' \describe{
 #'   \item{data}{\linkS4class{VSLCMdataInteger}. Results relied to the data.}
@@ -46,7 +46,7 @@ setClass(
                         model=new("VSLCMmodel"), strategy=new("VSLCMstrategy"), param=new("VSLCMparamInteger"))
 )
 
-#' Constructor of [\code{\linkS4class{VSLCMresultsCategorical}}] class
+#' Constructor of \code{\linkS4class{VSLCMresultsCategorical}} class
 #' 
 #'  \describe{
 #'   \item{data}{\linkS4class{VSLCMdataCategorical}. Results relied to the data.}
@@ -77,7 +77,7 @@ setClass(
 ## Classe S4 VSLCMresultsMixed
 ########################################################################################################################
 ###################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMresults}}] class
+##' Constructor of \code{\linkS4class{VSLCMresults}} class
 ##'
 ##'  
 ##' \describe{

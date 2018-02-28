@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMparam-class}
 \alias{VSLCMparam-class}
-\title{Constructor of [\code{\linkS4class{VSLCMparam}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMparam}} class}
 \description{
 \describe{
   \item{pi}{numeric. Proportions of the mixture components.}

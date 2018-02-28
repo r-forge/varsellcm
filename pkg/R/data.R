@@ -1,7 +1,7 @@
 
 ########################################################################################################################## S4 classes for the data################################################################################################################################################################################################################################################## S4 VSLCMdataContinuous: class for continuous data sets#######################################################################################################################Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class
 
-#' Constructor of [\code{\linkS4class{VSLCMdataContinuous}}] class
+#' Constructor of \code{\linkS4class{VSLCMdataContinuous}} class
 #' 
 #' \describe{
 #'   \item{n}{number of observations}
@@ -36,7 +36,7 @@ setClass(
     priors=matrix()
   )
 )
-#' Constructor of [\code{\linkS4class{VSLCMdataInteger}}] class
+#' Constructor of \code{\linkS4class{VSLCMdataInteger}} class
 #' 
 #' \describe{
 #'   \item{n}{number of observations}
@@ -69,7 +69,7 @@ setClass(
     priors=matrix()
   )
 )
-#' Constructor of [\code{\linkS4class{VSLCMdataCategorical}}] class
+#' Constructor of \code{\linkS4class{VSLCMdataCategorical}} class
 #' 
 #' \describe{
 #'   \item{n}{number of observations}
@@ -112,7 +112,7 @@ setClass(
 ########################################################################################################################
 ## VSLCdata: class of  data set
 ########################################################################################################################
-##' Constructor of [\code{\linkS4class{VSLCMdata}}] class
+##' Constructor of \code{\linkS4class{VSLCMdata}} class
 ##' 
 ##' \describe{
 ##'   \item{n}{number of observations}

@@ -3,7 +3,7 @@
 \docType{class}
 \name{VSLCMresultsInteger-class}
 \alias{VSLCMresultsInteger-class}
-\title{Constructor of [\code{\linkS4class{VSLCMresultsInteger}}] class}
+\title{Constructor of \code{\linkS4class{VSLCMresultsInteger}} class}
 \description{
 \describe{
   \item{data}{\linkS4class{VSLCMdataInteger}. Results relied to the data.}

@@ -66,7 +66,7 @@ varsellcm.plot.cate  <- function(tmp, y){
   print(graph)
 }
 
- 
+
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param x instance of  \code{\linkS4class{VSLCMresults}}.
@@ -91,10 +91,10 @@ setMethod(f="plot",
           stop("y must be the name of a variable in the analyzed data")
         if (type=="cdf")
           varsellcm.plot.cont.cdf(data.frame(x = x@data@dataContinuous@data[, which(rownames(x@param@paramContinuous@mu)==y)]),
-                                  y, 
+                                  y,
                                   list(x@param@pi, x@param@paramContinuous@mu[loc2,], x@param@paramContinuous@sd[loc2,]))
-        else if (type=="boxplot") 
-          varsellcm.plot.boxplot(data.frame(x = x@data@dataContinuous@data[, which(rownames(x@param@paramContinuous@mu)==y)], 
+        else if (type=="boxplot")
+          varsellcm.plot.boxplot(data.frame(x = x@data@dataContinuous@data[, which(rownames(x@param@paramContinuous@mu)==y)],
                                             class=as.factor(x@partitions@zMAP)),
                                  y)
         else
@@ -109,10 +109,10 @@ setMethod(f="plot",
           stop("y must be the name of a variable in the analyzed datazzz")
         if (type=="cdf")
           varsellcm.plot.inte.cdf(data.frame(x = x@data@dataInteger@data[, which(rownames(x@param@paramInteger@lambda)==y)]),
-                                  y, 
+                                  y,
                                   list(x@param@pi, x@param@paramInteger@lambda[loc2,]))
-        else if (type=="boxplot") 
-          varsellcm.plot.boxplot(data.frame(x = x@data@dataInteger@data[, which(rownames(x@param@paramInteger@lambda)==y)], 
+        else if (type=="boxplot")
+          varsellcm.plot.boxplot(data.frame(x = x@data@dataInteger@data[, which(rownames(x@param@paramInteger@lambda)==y)],
                                             class=as.factor(x@partitions@zMAP)),
                                  y)
         else
@@ -126,21 +126,21 @@ setMethod(f="plot",
         ifelse (length(loc2)==1,
                 varsellcm.plot.cate(x@param@paramCategorical@alpha[[loc2]], y),
                 stop("y must be the name of a variable in the analyzed data"))
-        
+
         vu <- TRUE
       }
     }
-    if (!vu) 
+    if (!vu)
       stop("y must be the name of a variable in the analyzed data")
   }
-) 
+)
 
-#' 
+#'
 #' This function draws information about an instance of \code{\linkS4class{VSLCMresults}}.
-#' 
+#'
 #' @param x instance of  \code{\linkS4class{VSLCMresults}}.
 #' @param ... Additional argument list that might not ever be used.
-#' 
+#'
 #' @name plot
 #' @rdname plot-methods
 #' @docType methods
@@ -162,8 +162,8 @@ setMethod(
       pie<- ggplot(df, aes(x="", y=df$discrim.power, fill=df$variables))+
         scale_y_continuous(name="discriminative power") +
         geom_bar(width = 1, stat = "identity") +
-        coord_polar("y", start=0)  + 
-        ggtitle(paste("Discriminative power")) +  
+        coord_polar("y", start=0)  +
+        ggtitle(paste("Discriminative power")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(pie)
     }else if (type=="bar"){
@@ -174,20 +174,20 @@ setMethod(
                   position = position_dodge(0.9), size=3.5)+
         scale_x_discrete(name="Variables")+
         scale_fill_brewer(palette="Paired")+
-        theme_minimal()  + 
-        ggtitle(paste("Discriminative power")) +  
+        theme_minimal()  +
+        ggtitle(paste("Discriminative power")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(bar)
     }else if (type=="probs-overall"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max))
-      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification") +  
-        ggtitle(paste("Probabilities of misclassification")) + 
+      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification") +
+        ggtitle(paste("Probabilities of misclassification")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
     }else if (type=="probs-class"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(x@partitions@zMAP))
-      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +  
-        ggtitle(paste("Probabilities of misclassification")) + 
+      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +
+        ggtitle(paste("Probabilities of misclassification")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
     }else{
