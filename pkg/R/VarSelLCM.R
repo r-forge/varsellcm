@@ -35,7 +35,7 @@
 ##' @import shiny
 ##' @importFrom mgcv uniquecombs
 ##' @importFrom graphics barplot mtext par
-##' @importFrom stats dnorm dpois integrate sd runif pnorm ppois
+##' @importFrom stats dnorm dpois integrate sd runif pnorm ppois rnorm rpois
 ##' @useDynLib VarSelLCM
 ##'
 ##' @author
@@ -89,6 +89,23 @@ NULL
 ##'
 ##' 
 ##' @references Website:http://archive.ics.uci.edu/ml/datasets/statlog+(heart)
+##' @name heart
+##' @docType data
+##' @keywords datasets
+##' 
+##' @examples
+##'   data(heart)
+NULL
+
+##' Golub Data Set
+##' 
+##'  This dataset shows how new cases of cancer could be classified by gene expression monitoring (via DNA micro-array) and thereby provided a general approach for identifying new cancer classes and assigning tumors to known classes. These data were used to classify patients with acute myeloid leukemia (AML) and acute lymphoblastic leukemia (ALL).
+##'  Frist column corresponds to the type of cancer. Other columns correspond to gene expressions
+##'  
+##' 
+##' 
+##' 
+##' @references Golub, T. R., Slonim, D. K., Tamayo, P., Huard, C., Gaasenbeek, M., Mesirov, J. P., Coller, H., Loh, M. L., Downing, J. R., Caligiuri, M. A., et al. (1999). Molecular classification of cancer: class discovery and class prediction by gene expression monitoring. science, 286(5439):531–537.
 ##' @name heart
 ##' @docType data
 ##' @keywords datasets

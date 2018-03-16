@@ -9,6 +9,13 @@
 ##' 
 ##' @examples
 ##' \dontrun{
+##' ##' # Data loading
+##' data("heart")
+##' # Clustering en 2 classes
+##' heart[1,1] <- NA
+##' results <- VarSelCluster(heart[,-13], 2)
+##' # Here, it is necessary only if results was provided by an older version of the VarSelLCM
+##' update <- VarSelConvert(results)
 ##' }
 ##' 
 ##' @export

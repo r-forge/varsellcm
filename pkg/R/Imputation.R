@@ -45,7 +45,7 @@ ImputCate <- function(data, tik, param, method){
       if (method=="postmean"){
         output[who, j] <- data@modalitynames[[j]][apply(tik[who,]%*%param@alpha[[j]],1,which.max)]
       }else if (method=="sampling"){
-        
+        z <- sample(1:ncol(tik), 1, prob=tik[who,])
         output[who, j] <- sample(data@modalitynames[[j]], 1, prob=param@alpha[[j]][z,])
       }else{
         stop("argument method must be equal to postmean or sampling")
