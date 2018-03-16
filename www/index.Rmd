@@ -24,38 +24,6 @@ Thus, VarSelLCM can also be used for data imputation via mixture models.
 An R-Shiny application is implemented to easily interpret the clustering results
 
 
-Here, two data sets are analyzed:
-
-* a genomic continuous data set where n=38 observations are described by d=3051 features.
-* a mixed-type data set where n=270 observations are descried by d=12 features.
-
-
-# Continuous data set with more features than observations
-
-This section performs the whole analysis of the *Golub* data set.
-Clustering is performed with variable selection. 
-Model selection is done with MICL because n<<d.
-The number of components is two.
-Do not hesitate to use parallelisation (here only two cores are used).
-```{r, comment=""}
-library(VarSelLCM)
-# Data loading
-data("golub")
-out <- VarSelCluster(x, 2, crit.varsel = "MICL", nbcores = 2)
-```
-
-To get a summary of the selected model.
-```{r, comment=""}
-# Summary of the best model
-summary(out)
-```
-
-To evaluated the quality of the resuling partition, we compare the true partition and its estimator given by the model
-```{r, comment=""}
-# Summary of the best model
-ARI(out@partitions@zMAP, partition)
-```
-
 # Mixed-type data analysis
 
 This section performs the whole analysis of the *Heart* data set. *Warning continuous features must be stored in numeric, integer features must be stored in integer and categorical features must be stored in factor.*
