@@ -3,7 +3,7 @@
 
 #' Constructor of \code{\linkS4class{VSLCMdataContinuous}} class
 #' 
-#' \describe{
+#' \describe{ 
 #'   \item{n}{number of observations}
 #'   \item{d}{number of variables}
 #'   \item{data}{matrix of observations (one row = one observation)}
