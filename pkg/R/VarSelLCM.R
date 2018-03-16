@@ -6,7 +6,7 @@
 ##' \tabular{ll}{
 ##'   Package: \tab VarSelLCM\cr 
 ##'   Type: \tab Package\cr 
-##'   Version: \tab 2.1.1\cr
+##'   Version: \tab 2.1.0\cr
 ##'   Date: \tab 2018-03-14\cr 
 ##'   License: \tab GPL-3\cr  
 ##'   LazyLoad: \tab yes\cr
@@ -18,6 +18,8 @@
 ##' Function \link{VarSelCluster} carries out the model selection (according to AIC, BIC or MICL) ande maximum likelihood estimation.
 ##' 
 ##' Function \link{VarSelShiny} runs a shiny application which permits an easy interpretation of the clustering results.
+##' 
+##' Function \link{VarSelImputation} permits the imputation of missing values by using the model parameters. 
 ##' 
 ##' Tool methods \link{summary}, \link{print} and \link{plot} are also available for facilitating the interpretation.
 ##' 
@@ -246,12 +248,12 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
   return(reference)
 }
 
-ParallelMICL <- function(reference, nb.cpus){
-  if (reference@strategy@crit.varsel == TRUE){
-      }
-  
-  return(reference)
-}
+# ParallelMICL <- function(reference, nb.cpus){
+#   if (reference@strategy@crit.varsel == TRUE){
+#       }
+#   
+#   return(reference)
+# }
 ########################################################################################################################
 ## Fonctions principales du package, les seules accessibles par l'utilisateur sont VarSelCluster,
 ## Imputation (voir Imputation.R) et MICL

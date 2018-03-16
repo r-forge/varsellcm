@@ -110,7 +110,7 @@ setMethod(f="plot",
       if (y %in% rownames(x@param@paramInteger@lambda)){
         loc2 <- which(rownames(x@param@paramInteger@lambda)==y)
         if (length(loc2)!=1)
-          stop("y must be the name of a variable in the analyzed datazzz")
+          stop("y must be the name of a variable in the analyzed data")
         if (type=="cdf")
           varsellcm.plot.inte.cdf(data.frame(x = x@data@dataInteger@data[, which(rownames(x@param@paramInteger@lambda)==y)]),
                                   y,
@@ -174,13 +174,13 @@ setMethod(
       print(bar)
     }else if (type=="probs-overall"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max))
-      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram() + scale_x_continuous("Probability of misclassification") +
+      tikplot <- ggplot(tmp, aes(tmp$probs)) +   geom_histogram(binwidth = 0.05) + scale_x_continuous("Probability of misclassification") +
         ggtitle(paste("Probabilities of misclassification")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
     }else if (type=="probs-class"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(x@partitions@zMAP))
-      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge")+ scale_x_continuous("Probability of misclassification") +
+      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge", binwidth = 0.05)+ scale_x_continuous("Probability of misclassification") +
         ggtitle(paste("Probabilities of misclassification")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)

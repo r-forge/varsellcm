@@ -1,0 +1,17 @@
+citHeader("To cite 'VarSelLCM' R package in publications, please use::")
+
+citEntry(entry = "Article",
+         title = "Variable selection for model-based clustering using the integrated completed-data likelihood.",
+         author = personList(person(given="Matthieu", family="Marbac"),
+                             person(given="Mohammed", family="Sedki")),
+         journal = "Statistics and Computing",
+         year = "2017",
+         volume = "27",
+         number = "4",
+         pages = " 1049-1063",
+         #
+         textVersion =
+           paste("Marbac, M. and Sedki, M. (2017)",
+                 "Variable selection for model-based clustering using the integrated completed-data likelihood",
+                 "Statistics and Computing,", 
+                 "27 (4), pp. 1049-1063"))

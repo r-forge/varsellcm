@@ -2,7 +2,7 @@
 shinyServer(function(input, output) {
   output$summary <- renderPrint(summary(resVSLC))
   
-  output$plot1 <- renderPlot(plot(truc, type=input$typeDiscrim, ylim=c(1, input$numDiscrim)))
+  output$plot1 <- renderPlot(plot(resVSLC, type=input$typeDiscrim, ylim=c(1, input$numDiscrim)))
 
   output$table1 <- renderTable({
     info <- resVSLC@criteria@discrim[which(resVSLC@criteria@discrim>0)]
@@ -16,7 +16,7 @@ shinyServer(function(input, output) {
   }
   )
 
-  output$plot2 <- renderPlot( plot(truc, y=input$vble, type=input$typevble)) 
+  output$plot2 <- renderPlot( plot(resVSLC, y=input$vble, type=input$typevble)) 
   
-  output$plot3 <- renderPlot(plot(x=truc, type=input$probs))
+  output$plot3 <- renderPlot(plot(x=resVSLC, type=input$probs))
 })
