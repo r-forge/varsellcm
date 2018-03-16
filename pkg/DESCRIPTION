@@ -5,7 +5,7 @@ Version: 2.1.0
 Date: 2018-03-14
 Author: Matthieu Marbac and Mohammed Sedki
 Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
-Description: Full model selection (detection of the relevant features and estimation of the number of clusters)for model-based clustering. Data to analyze can be continuous, categorical, integer or mixed. Moreover, missing values can occur and do not necessitate any pre-processing. Shiny application permits an easy interpretation of the results.
+Description: Full model selection (detection of the relevant features and estimation of the number of clusters) for model-based clustering. Data to analyze can be continuous, categorical, integer or mixed. Moreover, missing values can occur and do not necessitate any pre-processing. Shiny application permits an easy interpretation of the results.
 License: GPL (>= 2)
 Imports: methods, Rcpp (>= 0.11.1), parallel, mgcv, ggplot2, shiny
 URL: http://varsellcm.r-forge.r-project.org/

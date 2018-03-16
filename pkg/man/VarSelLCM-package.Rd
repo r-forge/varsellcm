@@ -19,9 +19,7 @@ Model-based clustering with variable selection and estimation of the number of c
   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
 }
 
-The main function to use is \link{VarSelCluster}.
-
-Function \link{VarSelCluster} carries out the model selection (according to AIC, BIC or MICL) ande maximum likelihood estimation.
+The main function to use is \link{VarSelCluster}. Function \link{VarSelCluster} carries out the model selection (according to AIC, BIC or MICL) and maximum likelihood estimation.
 
 Function \link{VarSelShiny} runs a shiny application which permits an easy interpretation of the clustering results.
 
@@ -47,9 +45,11 @@ res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
 # Cluster analysis with variable selection (with parallelisation)
 res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 
-# Confusion matrices: variable selection decreases the misclassification error rate
+# Confusion matrices and ARI: variable selection decreases the misclassification error rate
 print(table(z, res_without@partitions@zMAP))
 print(table(z, res_with@partitions@zMAP))
+ARI(z, res_without@partitions@zMAP)
+ARI(z, res_with@partitions@zMAP)
 
 # Summary of the best model
 summary(res_with)
@@ -57,8 +57,27 @@ summary(res_with)
 # Parameters of the best model
 print(res_with)
 
-# Plot of the best model
-plot(res_with)
+# Opening Shiny application to easily see the results
+VarSelShiny(res_with)
+
+# Discriminative power of the variables (here, the most discriminative variable is MaxHeartRate)
+plot(out, type="bar")
+# Boxplot for continuous (or interger) variable
+plot(out, y="MaxHeartRate", type="boxplot")
+
+# Empirical and theoretical distributions (to check that clustering is pertinent)
+plot(out, y="MaxHeartRate", type="cdf")
+
+# Summary of categorical variable
+plot(out, y="Sex")
+
+# Summary of the probabilities of missclassification
+plot(out, type="probs-class")
+
+# Imputation by posterior mean for the first observation
+not.imputed <- heart[1,-13]
+imputed <- VarSelImputation(out)[1,]
+rbind(not.imputed, imputed)
 
 }
 
