@@ -5,7 +5,7 @@
 \alias{VSLCMdataContinuous-class}
 \title{Constructor of \code{\linkS4class{VSLCMdataContinuous}} class}
 \description{
-\describe{
+\describe{ 
   \item{n}{number of observations}
   \item{d}{number of variables}
   \item{data}{matrix of observations (one row = one observation)}
@@ -15,5 +15,6 @@
 }
 \examples{
   getSlots("VSLCMdataContinuous")
+  
 
 }

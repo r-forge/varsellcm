@@ -22,3 +22,4 @@ Date/Publication: 2017-10-16 10:16:53 UTC
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+BuildVignettes: yes
