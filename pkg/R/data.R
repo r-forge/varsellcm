@@ -12,6 +12,7 @@
 #' }
 #' @examples
 #'   getSlots("VSLCMdataContinuous")
+#'   
 #' 
 #' @name VSLCMdataContinuous-class
 #' @rdname VSLCMdataContinuous-class
