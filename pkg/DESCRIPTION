@@ -2,8 +2,8 @@ Package: VarSelLCM
 Type: Package
 Title: Variable Selection for Model-Based Clustering of Mixed-Type Data
         Set with Missing Values
-Version: 2.1.0
-Date: 2018-03-14
+Version: 2.1.1
+Date: 2018-03-21
 Author: Matthieu Marbac and Mohammed Sedki
 Maintainer: Mohammed Sedki <mohammed.sedki@u-psud.fr>
 Description: Full model selection (detection of the relevant features and estimation of the number of clusters) for model-based clustering (see reference here <doi:10.1007/s11222-016-9670-1>). Data to analyze can be continuous, categorical, integer or mixed. Moreover, missing values can occur and do not necessitate any pre-processing. Shiny application permits an easy interpretation of the results.
