@@ -3,20 +3,20 @@ title: '**VarSelLCM**'
 subtitle: Variable Selection for Model-Based Clustering of Mixed-Type Data Set with
   Missing Values.
 output:
-  html_document: 
-    before_body : doc_prefix.html
   pdf_document: default
-
+  html_document:
+    before_body: doc_prefix.html
 ---
 
 ```{r showChoro1, echo=FALSE}
 htmltools::includeHTML("doc_prefix.html")
 ```
 
+
 **References:** 
 
 * Marbac, M. and Sedki, M. (2017), [Variable selection for model-based clustering using the integrated complete-data likelihood](https://link.springer.com/article/10.1007/s11222-016-9670-1), Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.
-* Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Arxiv 1703.02293.
+* Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, to appear.
 
 # Introduction
 *[VarSelLCM](http://cran.r-project.org/web/packages/VarSelLCM/)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
@@ -27,6 +27,53 @@ values are missing completely at random.
 Thus, VarSelLCM can also be used for data imputation via mixture models. 
 
 An R-Shiny application is implemented to easily interpret the clustering results
+
+
+# Clustering for cytological diagnosis
+
+
+This section performs the whole analysis of the Golub data set.  The first column indicates the type of leukemia. Clustering is made on the other (continuous) features.
+```{r, comment=""}
+library(VarSelLCM)
+# please install the package multtest to get the data
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("multtest")
+data(golub, package = "multtest") 
+
+# one row = one individual
+golub <- t(golub)
+```
+
+Clustering is done with and without variable selection. 
+Here ICL and MICL criteria are used because the number of observations is less than the number of features (thus, BIC is not relevant).
+```{r, comment=""}
+# Please indicate the number of cores you wan to use for parallelisation
+nb.CPU <- 4
+# clustering without variable selection (about than 10/20 sec on 4 CPU)
+res.noselec <- VarSelCluster(golub, 2, crit.varsel = "ICL", 
+                             vbleSelec = FALSE, 
+                             nbcores = nb.CPU)
+
+# clustering with variable selection (about than 10/20 sec on 4 CPU)
+res.selec <- VarSelCluster(golub, 2, crit.varsel = "MICL",
+                           vbleSelec = TRUE, 
+                           nbcores = nb.CPU)
+```
+
+Summary of the results
+```{r, comment=""}
+summary(res.noselec)
+
+summary(res.selec)
+```
+
+Comparison of the estimated partitions with the Adjusted Rand Index
+```{r, comment=""}
+# Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)
+ARI(res.noselec@partitions@zMAP, golub.cl)
+ARI(res.selec@partitions@zMAP, golub.cl)
+```
+
 
 
 # Mixed-type data analysis
