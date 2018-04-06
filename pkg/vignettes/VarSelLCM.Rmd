@@ -14,7 +14,7 @@ vignette: >
 **References:** 
 
 * Marbac, M. and Sedki, M. (2017), [Variable selection for model-based clustering using the integrated complete-data likelihood](https://link.springer.com/article/10.1007/s11222-016-9670-1), Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.
-* Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Arxiv 1703.02293.
+* Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, to appear.
 
 # Introduction
 *[VarSelLCM](http://cran.r-project.org/web/packages/VarSelLCM/)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
@@ -46,9 +46,9 @@ Here ICL and MICL criteria are used because the number of observations is less t
 # Please indicate the number of cores you wan to use for parallelisation
 nb.CPU <- 4
 # clustering without variable selection
-res.noselec <- VarSelCluster(x, 2, crit.varsel = "ICL", vbleSelec = FALSE, nbcores = nb.CPU)
+res.noselec <- VarSelCluster(leukemia[,-1], 2, crit.varsel = "ICL", vbleSelec = FALSE, nbcores = nb.CPU)
 # clustering with variable selection
-res.selec <- VarSelCluster(x, 1:3, crit.varsel = "MICL", vbleSelec = TRUE, nbcores = nb.CPU)
+res.selec <- VarSelCluster(leukemia[,-1], 2, crit.varsel = "MICL", vbleSelec = TRUE, nbcores = nb.CPU)
 ```
 
 Summary of the results
@@ -61,8 +61,8 @@ summary(res.selec)
 Comparison of the estimated partitions with the Adjusted Rand Index
 ```{r, comment=""}
 # Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)
-ARI(res.noselec@partitions@zMAP, partition)
-ARI(res.selec@partitions@zMAP, partition)
+ARI(res.noselec@partitions@zMAP, leukemia[,1])
+ARI(res.selec@partitions@zMAP, leukemia[,1])
 ```
 
 

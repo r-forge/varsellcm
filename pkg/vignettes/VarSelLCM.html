@@ -12,7 +12,7 @@
 
 <meta name="author" content="Variable Selection for Model-Based Clustering of Mixed-Type Data Set with Missing Values" />
 
-<meta name="date" content="2018-03-16" />
+<meta name="date" content="2018-04-05" />
 
 <title>VarSelLCM</title>
 
@@ -70,20 +70,74 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">VarSelLCM</h1>
 <h4 class="author"><em>Variable Selection for Model-Based Clustering of Mixed-Type Data Set with Missing Values</em></h4>
-<h4 class="date"><em>2018-03-16</em></h4>
+<h4 class="date"><em>2018-04-05</em></h4>
 
 
 
 <p><strong>References:</strong></p>
 <ul>
 <li>Marbac, M. and Sedki, M. (2017), <a href="https://link.springer.com/article/10.1007/s11222-016-9670-1">Variable selection for model-based clustering using the integrated complete-data likelihood</a>, Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.</li>
-<li>Marbac, M., Patin, E. and Sedki, M. (2018), <a href="https://arxiv.org/abs/1703.02293">Variable selection for mixed data clustering: Application in human population genomics</a>, Arxiv 1703.02293.</li>
+<li>Marbac, M., Patin, E. and Sedki, M. (2018), <a href="https://arxiv.org/abs/1703.02293">Variable selection for mixed data clustering: Application in human population genomics</a>, Journal of Classification, to appear.</li>
 </ul>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
 <p><em><a href="http://cran.r-project.org/web/packages/VarSelLCM/">VarSelLCM</a></em> permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).</p>
 <p>Data to analyzed can be composed of continuous, integer and/or categorical features. Moreover, missing values are managed, without any pre-processing, by the model used to cluster with the assumption that values are missing completely at random. Thus, VarSelLCM can also be used for data imputation via mixture models.</p>
 <p>An R-Shiny application is implemented to easily interpret the clustering results</p>
+</div>
+<div id="clustering-for-cytological-diagnosis" class="section level1">
+<h1>Clustering for cytological diagnosis</h1>
+</div>
+<div id="data-loading" class="section level1">
+<h1>data loading</h1>
+<p>This section performs the whole analysis of the Golub data set. The first column indicates the type of leukemia. Clustering is made on the other (continuous) features.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(VarSelLCM)
+<span class="co"># please install the package spikeslab to get the data</span>
+<span class="kw">data</span>(leukemia, <span class="dt">package =</span> <span class="st">&quot;spikeslab&quot;</span>) </code></pre></div>
+<p>Clustering is done with and without variable selection. Here ICL and MICL criteria are used because the number of observations is less than the number of features (thus, BIC is not relevant).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Please indicate the number of cores you wan to use for parallelisation</span>
+nb.CPU &lt;-<span class="st"> </span><span class="dv">4</span>
+<span class="co"># clustering without variable selection</span>
+res.noselec &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(leukemia[,-<span class="dv">1</span>], <span class="dv">2</span>, <span class="dt">crit.varsel =</span> <span class="st">&quot;ICL&quot;</span>, <span class="dt">vbleSelec =</span> <span class="ot">FALSE</span>, <span class="dt">nbcores =</span> nb.CPU)
+<span class="co"># clustering with variable selection</span>
+res.selec &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(leukemia[,-<span class="dv">1</span>], <span class="dv">2</span>, <span class="dt">crit.varsel =</span> <span class="st">&quot;MICL&quot;</span>, <span class="dt">vbleSelec =</span> <span class="ot">TRUE</span>, <span class="dt">nbcores =</span> nb.CPU)</code></pre></div>
+<p>Summary of the results</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res.noselec)</code></pre></div>
+<pre><code>Data set:
+   Number of individuals: 72 
+   Number of continuous variables: 3571 
+
+Model:
+   Number of components: 2 
+   Model selection has been performed according to the ICL  criterion 
+Information Criteria:
+   loglike: -155994.2 
+   AIC:     -170279.2 
+   BIC:     -186540.3 
+   ICL:     -211922.4 </code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res.selec)</code></pre></div>
+<pre><code>Data set:
+   Number of individuals: 72 
+   Number of continuous variables: 3571 
+
+Model:
+   Number of components: 2 
+   Model selection has been performed according to the MICL  criterion 
+   Variable selection has been performed, 811  ( 22.71 % ) of the variables are relevant for clustering 
+   
+Information Criteria:
+   loglike: -163837.2 
+   AIC:     -172602.2 
+   BIC:     -182579.6 
+   ICL:     -199602.8 
+   MICL:    -199602.8 
+   Best values has been found  1 times</code></pre>
+<p>Comparison of the estimated partitions with the Adjusted Rand Index</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)</span>
+<span class="kw">ARI</span>(res.noselec@partitions@zMAP, leukemia[,<span class="dv">1</span>])</code></pre></div>
+<pre><code>[1] 0.400524</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ARI</span>(res.selec@partitions@zMAP, leukemia[,<span class="dv">1</span>])</code></pre></div>
+<pre><code>[1] 0.9439995</code></pre>
 </div>
 <div id="mixed-type-data-analysis" class="section level1">
 <h1>Mixed-type data analysis</h1>
