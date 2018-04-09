@@ -27,45 +27,6 @@ Thus, VarSelLCM can also be used for data imputation via mixture models.
 An R-Shiny application is implemented to easily interpret the clustering results
 
 
-# Clustering for cytological diagnosis
-
-
-
-# data loading
-
-This section performs the whole analysis of the Golub data set.  The first column indicates the type of leukemia. Clustering is made on the other (continuous) features.
-```{r, comment=""}
-library(VarSelLCM)
-# please install the package spikeslab to get the data
-data(leukemia, package = "spikeslab") 
-```
-
-Clustering is done with and without variable selection. 
-Here ICL and MICL criteria are used because the number of observations is less than the number of features (thus, BIC is not relevant).
-```{r, comment=""}
-# Please indicate the number of cores you wan to use for parallelisation
-nb.CPU <- 4
-# clustering without variable selection
-res.noselec <- VarSelCluster(leukemia[,-1], 2, crit.varsel = "ICL", vbleSelec = FALSE, nbcores = nb.CPU)
-# clustering with variable selection
-res.selec <- VarSelCluster(leukemia[,-1], 2, crit.varsel = "MICL", vbleSelec = TRUE, nbcores = nb.CPU)
-```
-
-Summary of the results
-```{r, comment=""}
-summary(res.noselec)
-
-summary(res.selec)
-```
-
-Comparison of the estimated partitions with the Adjusted Rand Index
-```{r, comment=""}
-# Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)
-ARI(res.noselec@partitions@zMAP, leukemia[,1])
-ARI(res.selec@partitions@zMAP, leukemia[,1])
-```
-
-
 
 # Mixed-type data analysis
 

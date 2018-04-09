@@ -3,9 +3,9 @@ title: '**VarSelLCM**'
 subtitle: Variable Selection for Model-Based Clustering of Mixed-Type Data Set with
   Missing Values.
 output:
-  pdf_document: default
   html_document:
     before_body: doc_prefix.html
+  pdf_document: default
 ---
 
 ```{r showChoro1, echo=FALSE}

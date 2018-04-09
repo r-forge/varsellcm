@@ -151,57 +151,64 @@ $(document).ready(function () {
 </div>
 <div id="clustering-for-cytological-diagnosis" class="section level1">
 <h1>Clustering for cytological diagnosis</h1>
-</div>
-<div id="data-loading" class="section level1">
-<h1>data loading</h1>
 <p>This section performs the whole analysis of the Golub data set. The first column indicates the type of leukemia. Clustering is made on the other (continuous) features.</p>
 <pre class="r"><code>library(VarSelLCM)
-# please install the package spikeslab to get the data
-data(leukemia, package = &quot;spikeslab&quot;) </code></pre>
+# please install the package multtest to get the data
+# source(&quot;https://bioconductor.org/biocLite.R&quot;)
+# biocLite(&quot;multtest&quot;)
+data(golub, package = &quot;multtest&quot;) 
+
+# one row = one individual
+golub &lt;- t(golub)</code></pre>
 <p>Clustering is done with and without variable selection. Here ICL and MICL criteria are used because the number of observations is less than the number of features (thus, BIC is not relevant).</p>
 <pre class="r"><code># Please indicate the number of cores you wan to use for parallelisation
 nb.CPU &lt;- 4
-# clustering without variable selection
-res.noselec &lt;- VarSelCluster(leukemia[,-1], 2, crit.varsel = &quot;ICL&quot;, initModel = 200, vbleSelec = FALSE, nbcores = nb.CPU)
-# clustering with variable selection
-res.selec &lt;- VarSelCluster(leukemia[,-1], 2, crit.varsel = &quot;MICL&quot;, initModel = 200, vbleSelec = TRUE, nbcores = nb.CPU)</code></pre>
+# clustering without variable selection (about than 10/20 sec on 4 CPU)
+res.noselec &lt;- VarSelCluster(golub, 2, crit.varsel = &quot;ICL&quot;, 
+                             vbleSelec = FALSE, 
+                             nbcores = nb.CPU)
+
+# clustering with variable selection (about than 10/20 sec on 4 CPU)
+res.selec &lt;- VarSelCluster(golub, 2, crit.varsel = &quot;MICL&quot;,
+                           vbleSelec = TRUE, 
+                           nbcores = nb.CPU)</code></pre>
 <p>Summary of the results</p>
 <pre class="r"><code>summary(res.noselec)</code></pre>
 <pre><code>Data set:
-   Number of individuals: 72 
-   Number of continuous variables: 3571 
+   Number of individuals: 38 
+   Number of continuous variables: 3051 
 
 Model:
    Number of components: 2 
    Model selection has been performed according to the ICL  criterion 
 Information Criteria:
-   loglike: -155839.5 
-   AIC:     -170124.5 
-   BIC:     -186385.6 
-   ICL:     -211813 </code></pre>
+   loglike: -71047.52 
+   AIC:     -83252.52 
+   BIC:     -93245.89 
+   ICL:     -114089.7 </code></pre>
 <pre class="r"><code>summary(res.selec)</code></pre>
 <pre><code>Data set:
-   Number of individuals: 72 
-   Number of continuous variables: 3571 
+   Number of individuals: 38 
+   Number of continuous variables: 3051 
 
 Model:
    Number of components: 2 
    Model selection has been performed according to the MICL  criterion 
-   Variable selection has been performed, 811  ( 22.71 % ) of the variables are relevant for clustering 
+   Variable selection has been performed, 553  ( 18.13 % ) of the variables are relevant for clustering 
    
 Information Criteria:
-   loglike: -163837.2 
-   AIC:     -172602.2 
-   BIC:     -182579.6 
-   ICL:     -199602.8 
-   MICL:    -199602.8 
-   Best values has been found  12 times</code></pre>
+   loglike: -77235.87 
+   AIC:     -84444.87 
+   BIC:     -90347.55 
+   ICL:     -103858.8 
+   MICL:    -103858.8 
+   Best values has been found  5 times</code></pre>
 <p>Comparison of the estimated partitions with the Adjusted Rand Index</p>
 <pre class="r"><code># Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)
-ARI(res.noselec@partitions@zMAP, leukemia[,1])</code></pre>
-<pre><code>[1] 0.1866901</code></pre>
-<pre class="r"><code>ARI(res.selec@partitions@zMAP, leukemia[,1])</code></pre>
-<pre><code>[1] 0.9439995</code></pre>
+ARI(res.noselec@partitions@zMAP, golub.cl)</code></pre>
+<pre><code>[1] 0.6992238</code></pre>
+<pre class="r"><code>ARI(res.selec@partitions@zMAP, golub.cl)</code></pre>
+<pre><code>[1] 0.7927409</code></pre>
 </div>
 <div id="mixed-type-data-analysis" class="section level1">
 <h1>Mixed-type data analysis</h1>
