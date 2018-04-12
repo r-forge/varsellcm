@@ -17,7 +17,7 @@ vignette: >
 * Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, to appear.
 
 # Introduction
-*[VarSelLCM](http://cran.r-project.org/web/packages/VarSelLCM/)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
+*[VarSelLCM](https://CRAN.R-project.org/package=VarSelLCM)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
 
 Data to analyzed can be composed of continuous, integer and/or categorical features. Moreover, missing
 values are managed, without any pre-processing, by the model used to cluster with the assumption that

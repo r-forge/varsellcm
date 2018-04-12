@@ -12,7 +12,7 @@
 
 <meta name="author" content="Variable Selection for Model-Based Clustering of Mixed-Type Data Set with Missing Values" />
 
-<meta name="date" content="2018-04-05" />
+<meta name="date" content="2018-04-12" />
 
 <title>VarSelLCM</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">VarSelLCM</h1>
 <h4 class="author"><em>Variable Selection for Model-Based Clustering of Mixed-Type Data Set with Missing Values</em></h4>
-<h4 class="date"><em>2018-04-05</em></h4>
+<h4 class="date"><em>2018-04-12</em></h4>
 
 
 
@@ -81,63 +81,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ul>
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p><em><a href="http://cran.r-project.org/web/packages/VarSelLCM/">VarSelLCM</a></em> permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).</p>
+<p><em><a href="https://CRAN.R-project.org/package=VarSelLCM">VarSelLCM</a></em> permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).</p>
 <p>Data to analyzed can be composed of continuous, integer and/or categorical features. Moreover, missing values are managed, without any pre-processing, by the model used to cluster with the assumption that values are missing completely at random. Thus, VarSelLCM can also be used for data imputation via mixture models.</p>
 <p>An R-Shiny application is implemented to easily interpret the clustering results</p>
-</div>
-<div id="clustering-for-cytological-diagnosis" class="section level1">
-<h1>Clustering for cytological diagnosis</h1>
-</div>
-<div id="data-loading" class="section level1">
-<h1>data loading</h1>
-<p>This section performs the whole analysis of the Golub data set. The first column indicates the type of leukemia. Clustering is made on the other (continuous) features.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(VarSelLCM)
-<span class="co"># please install the package spikeslab to get the data</span>
-<span class="kw">data</span>(leukemia, <span class="dt">package =</span> <span class="st">&quot;spikeslab&quot;</span>) </code></pre></div>
-<p>Clustering is done with and without variable selection. Here ICL and MICL criteria are used because the number of observations is less than the number of features (thus, BIC is not relevant).</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Please indicate the number of cores you wan to use for parallelisation</span>
-nb.CPU &lt;-<span class="st"> </span><span class="dv">4</span>
-<span class="co"># clustering without variable selection</span>
-res.noselec &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(leukemia[,-<span class="dv">1</span>], <span class="dv">2</span>, <span class="dt">crit.varsel =</span> <span class="st">&quot;ICL&quot;</span>, <span class="dt">vbleSelec =</span> <span class="ot">FALSE</span>, <span class="dt">nbcores =</span> nb.CPU)
-<span class="co"># clustering with variable selection</span>
-res.selec &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(leukemia[,-<span class="dv">1</span>], <span class="dv">2</span>, <span class="dt">crit.varsel =</span> <span class="st">&quot;MICL&quot;</span>, <span class="dt">vbleSelec =</span> <span class="ot">TRUE</span>, <span class="dt">nbcores =</span> nb.CPU)</code></pre></div>
-<p>Summary of the results</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res.noselec)</code></pre></div>
-<pre><code>Data set:
-   Number of individuals: 72 
-   Number of continuous variables: 3571 
-
-Model:
-   Number of components: 2 
-   Model selection has been performed according to the ICL  criterion 
-Information Criteria:
-   loglike: -155994.2 
-   AIC:     -170279.2 
-   BIC:     -186540.3 
-   ICL:     -211922.4 </code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(res.selec)</code></pre></div>
-<pre><code>Data set:
-   Number of individuals: 72 
-   Number of continuous variables: 3571 
-
-Model:
-   Number of components: 2 
-   Model selection has been performed according to the MICL  criterion 
-   Variable selection has been performed, 811  ( 22.71 % ) of the variables are relevant for clustering 
-   
-Information Criteria:
-   loglike: -163837.2 
-   AIC:     -172602.2 
-   BIC:     -182579.6 
-   ICL:     -199602.8 
-   MICL:    -199602.8 
-   Best values has been found  1 times</code></pre>
-<p>Comparison of the estimated partitions with the Adjusted Rand Index</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Comparison of the Adjusted Rand Index (variable selection increases the partition accuracy)</span>
-<span class="kw">ARI</span>(res.noselec@partitions@zMAP, leukemia[,<span class="dv">1</span>])</code></pre></div>
-<pre><code>[1] 0.400524</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ARI</span>(res.selec@partitions@zMAP, leukemia[,<span class="dv">1</span>])</code></pre></div>
-<pre><code>[1] 0.9439995</code></pre>
 </div>
 <div id="mixed-type-data-analysis" class="section level1">
 <h1>Mixed-type data analysis</h1>
@@ -172,7 +118,7 @@ Information Criteria:
 heart[<span class="dv">1</span>,<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="ot">NA</span>
 <span class="co"># Clustering with variable selection and a number of cluster betwee 1 and 4</span>
 <span class="co"># Model selection is BIC (to use MICL, the option must be specified)</span>
-out &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(heart[,-<span class="dv">13</span>], <span class="dv">1</span>:<span class="dv">4</span>, <span class="dt">nbcores =</span> <span class="dv">2</span>)</code></pre></div>
+out &lt;-<span class="st"> </span><span class="kw">VarSelCluster</span>(heart[,<span class="op">-</span><span class="dv">13</span>], <span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dt">nbcores =</span> <span class="dv">2</span>)</code></pre></div>
 <p>Now, all the results can be analyzed by the Shiny application…</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Start the shiny application</span>
  <span class="kw">VarSelShiny</span>(out)</code></pre></div>
@@ -219,7 +165,7 @@ Information Criteria:
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>Missing values can be imputed.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Imputation by posterior mean for the first observation</span>
-not.imputed &lt;-<span class="st"> </span>heart[<span class="dv">1</span>,-<span class="dv">13</span>]
+not.imputed &lt;-<span class="st"> </span>heart[<span class="dv">1</span>,<span class="op">-</span><span class="dv">13</span>]
 imputed &lt;-<span class="st"> </span><span class="kw">VarSelImputation</span>(out)[<span class="dv">1</span>,]
 <span class="kw">rbind</span>(not.imputed, imputed)</code></pre></div>
 <pre><code>       Age Sex ChestPainType RestBloodPressure SerumCholestoral
