@@ -86,7 +86,7 @@ NULL
 #' 
 setMethod(f="plot",
   signature = c("VSLCMresults", "character"),
-  definition = function(x, y, type,ylim=NULL){
+  definition = function(x, y, type="boxplot", ylim=NULL){
     vu <- FALSE
     if (x@data@withContinuous){
       if (y %in% rownames(x@param@paramContinuous@mu)){
@@ -144,7 +144,7 @@ setMethod(f="plot",
 setMethod(
   f="plot",
   signature = c("VSLCMresults"),
-  definition = function(x, type, ylim=c(1, x@data@d)){
+  definition = function(x, type="bar", ylim=c(1, x@data@d)){
     df <- data.frame(discrim.power=x@criteria@discrim, variables=as.factor(names(x@criteria@discrim)), rg=1:x@data@d)
     df <- df[which(df$discrim.power>0),]
     df <- df[order(df$discrim.power, decreasing = T),]
