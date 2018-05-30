@@ -12,8 +12,8 @@ Model-based clustering with variable selection and estimation of the number of c
 \tabular{ll}{
   Package: \tab VarSelLCM\cr 
   Type: \tab Package\cr 
-  Version: \tab 2.1.1\cr
-  Date: \tab 2018-04-06\cr 
+  Version: \tab 2.1.2\cr
+  Date: \tab 2018-06-04\cr 
   License: \tab GPL-3\cr  
   LazyLoad: \tab yes\cr
   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr

@@ -83,6 +83,7 @@ ImputCate <- function(data, tik, param, method){
 ##'
 VarSelImputation <- function(obj, method="postmean"){
   output <- NULL
+  check.results(obj)
   if (class(obj)=="VSLCMresults"){
     output <- matrix(NA, obj@data@n, obj@data@d)
     colnames(output) <- names(obj@model@omega)
@@ -100,9 +101,7 @@ VarSelImputation <- function(obj, method="postmean"){
       output[,c(col: (col+obj@data@dataCategorical@d-1))] <- ImputCate(obj@data@dataCategorical, obj@partitions@tik, obj@param@paramCategorical, method)
       col <- col + obj@data@dataCategorical@d
     }
-  } else
-    stop("obj doesn't arise from function VarSelCluster")
-  
+  } 
   or <- 1:obj@data@d
   for (j in 1:obj@data@d){
     or[j] <- which(colnames(output)==obj@data@var.names[j])
