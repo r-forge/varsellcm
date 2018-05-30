@@ -17,7 +17,7 @@ plot(truc)
 # Diagramme en barre pour le pouvoir discriminant
 plot(truc, type="bar")
 
-plot(truc, type="prob-class")
+plot(truc, type="probs-class")
 # Une variable entiere
 plot(truc, y="Age")
 plot(truc, y="Age", type="cdf")

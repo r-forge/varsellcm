@@ -179,8 +179,8 @@ setMethod(
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
     }else if (type=="probs-class"){
-      tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(x@partitions@zMAP))
-      tikplot <-    ggplot(tmp, aes(x=tmp$probs, fill=class)) +   geom_histogram(position="dodge", binwidth = 0.05)+ scale_x_continuous("Probability of misclassification") +
+      tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max), class=as.factor(paste("class",x@partitions@zMAP, sep="-")))
+      tikplot <-    ggplot(tmp, aes(x=tmp$probs)) +  facet_grid(class ~ .) + geom_histogram(position="dodge", binwidth = 0.05)+ scale_x_continuous("Probability of misclassification") +
         ggtitle(paste("Probabilities of misclassification")) +
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(tikplot)
