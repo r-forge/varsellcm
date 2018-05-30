@@ -41,9 +41,9 @@ setGeneric ( name= "predict",  def = function(object, newdata, type="probability
 #' @rdname predict-methods
 #' @docType methods
 #' @exportMethod predict
-#' @aliases predict predict,VSLCMresults data.frame character
+#' @aliases predict predict,VSLCMresults-method
 setMethod(f="predict",
-          signature = c("VSLCMresults", "data.frame", "character"),
+          signature = c("VSLCMresults"),
           definition = function(object, newdata, type="probability"){
             if (!(type %in% c("probability", "partition")))
               stop("type must be probability or partition")

@@ -3,13 +3,10 @@
 \docType{methods}
 \name{predict}
 \alias{predict}
-\alias{predict,VSLCMresults}
-\alias{data.frame}
-\alias{character}
+\alias{predict,VSLCMresults-method}
 \title{Predict method for mixture model fits}
 \usage{
-\S4method{predict}{VSLCMresults,data.frame,character}(object, newdata,
-  type = "probability")
+\S4method{predict}{VSLCMresults}(object, newdata, type = "probability")
 }
 \arguments{
 \item{object}{instance of \code{\linkS4class{VSLCMresults}}.}
