@@ -1,6 +1,4 @@
-check.results <- function(obj){
-  if (class(obj)!="VSLCMresults") stop("Results must be an instance of VSLCMresults returned by the function VarSelCluster of R package VarSelLCM")
-}
+
 
 ########################################################################################################################
 ## BIC extractor
