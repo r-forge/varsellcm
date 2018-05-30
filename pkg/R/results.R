@@ -13,7 +13,6 @@
 #' 
 #' @name VSLCMresultsContinuous-class
 #' @rdname VSLCMresultsContinuous-class
-#' @exportClass VSLCMresultsContinuous
 setClass(
   Class = "VSLCMresultsContinuous", 
   representation = representation(data="VSLCMdataContinuous", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
@@ -37,7 +36,6 @@ setClass(
 #' 
 #' @name VSLCMresultsInteger-class
 #' @rdname VSLCMresultsInteger-class
-#' @exportClass VSLCMresultsInteger
 setClass(
   Class = "VSLCMresultsInteger", 
   representation = representation(data="VSLCMdataInteger", criteria="VSLCMcriteria", partitions="VSLCMpartitions",
@@ -61,7 +59,6 @@ setClass(
 #' 
 #' @name VSLCMresultsCategorical-class
 #' @rdname VSLCMresultsCategorical-class
-#' @exportClass VSLCMresultsCategorical
 setClass(
   Class = "VSLCMresultsCategorical", 
   representation = representation(data="VSLCMdataCategorical", criteria="VSLCMcriteria", partitions="VSLCMpartitions",

@@ -15,7 +15,7 @@
 #' @docType methods
 #' @exportMethod BIC
 #' @aliases BIC BIC,VSLCMresults-method
-#' @references Schwarz, G. (1978). Estimating the dimension of a model. Annals of Statistics, 6(2), 461–464.
+#' @references Schwarz, G. (1978). Estimating the dimension of a model. Annals of Statistics, 6(2), 461-464.
 
 setMethod(f="BIC",
           signature = c("VSLCMresults"),
@@ -36,7 +36,7 @@ setMethod(f="BIC",
 #' @docType methods
 #' @exportMethod AIC
 #' @aliases AIC AIC,VSLCMresults-method
-#' @references Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716–723.
+#' @references Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716-723.
 
 setMethod(f="AIC",
           signature = c("VSLCMresults"),
@@ -78,7 +78,7 @@ MICL <- function(object){
 ##' 
 ##' @param object \code{\linkS4class{VSLCMresults}}
 ##' 
-##' @references Biernacki, C., Celeux, G., and Govaert, G. (2000). Assessing a mixture model for clustering with the integrated completed likelihood. IEEE transactions on pattern analysis and machine intelligence, 22(7), 719–725.
+##' @references Biernacki, C., Celeux, G., and Govaert, G. (2000). Assessing a mixture model for clustering with the integrated completed likelihood. IEEE transactions on pattern analysis and machine intelligence, 22(7), 719-725.
 ##' 
 ##' 
 ##' @examples
@@ -98,7 +98,7 @@ ICL <- function(object){
 }
 
 ########################################################################################################################
-## fitted
+## fitted 
 ########################################################################################################################
 #'
 #' Extract the estimated partition
@@ -106,6 +106,8 @@ ICL <- function(object){
 #' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
+#' @param type the type of prediction: probability of classification (probability) or the partition (partition)
+#'
 #' 
 #' @name fitted
 #' @rdname fitted-methods
@@ -115,27 +117,12 @@ ICL <- function(object){
 
 setMethod(f="fitted",
           signature = c("VSLCMresults"),
-          definition = function(object) object@partitions@zMAP)
-
-########################################################################################################################
-## fitted
-########################################################################################################################
-#'
-#' Extract the estimated partition
-#' 
-#' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
-#' 
-#' @param object instance of \code{\linkS4class{VSLCMresults}}.
-#' 
-#' @name fitted
-#' @rdname fitted-methods
-#' @docType methods
-#' @exportMethod fitted
-#' @aliases fitted fitted,VSLCMresults-method
-
-setMethod(f="fitted",
-          signature = c("VSLCMresults"),
-          definition = function(object) object@partitions@zMAP)
+          definition = function(object, type="partition"){
+            out <- object@partitions@zMAP
+            if (type=="probability") out <- object@partitions@tik
+            out
+          }
+)
 
 ########################################################################################################################
 ## fitted.values
@@ -146,16 +133,23 @@ setMethod(f="fitted",
 #' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
+#' @param type the type of prediction: probability of classification (probability) or the partition (partition)
+#'
 #' 
-#' @name fitted
-#' @rdname fitted-methods
+#' @name fitted.values
+#' @rdname fitted.values-methods
 #' @docType methods
 #' @exportMethod fitted.values
 #' @aliases fitted.values fitted.values,VSLCMresults-method
 
 setMethod(f="fitted.values",
           signature = c("VSLCMresults"),
-          definition = function(object) object@partitions@zMAP)
+          definition = function(object, type="partition"){
+            out <- object@partitions@zMAP
+            if (type=="probability") out <- object@partitions@tik
+            out
+          }
+          )
 
 
 ########################################################################################################################
@@ -167,6 +161,7 @@ setMethod(f="fitted.values",
 #' This function returns an instance of class \code{\linkS4class{VSLCMparam}} which contains the model parameters.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
+#'  
 #' 
 #' @name coef
 #' @rdname coef-methods

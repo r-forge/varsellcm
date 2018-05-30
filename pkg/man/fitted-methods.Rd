@@ -4,30 +4,15 @@
 \name{fitted}
 \alias{fitted}
 \alias{fitted,VSLCMresults-method}
-\alias{fitted}
-\alias{fitted,VSLCMresults-method}
-\alias{fitted}
-\alias{fitted.values}
-\alias{fitted.values,VSLCMresults-method}
 \title{Extract the estimated partition}
 \usage{
-\S4method{fitted}{VSLCMresults}(object)
-
-\S4method{fitted}{VSLCMresults}(object)
-
-\S4method{fitted.values}{VSLCMresults}(object)
+\S4method{fitted}{VSLCMresults}(object, type = "partition")
 }
 \arguments{
 \item{object}{instance of \code{\linkS4class{VSLCMresults}}.}
 
-\item{object}{instance of \code{\linkS4class{VSLCMresults}}.}
-
-\item{object}{instance of \code{\linkS4class{VSLCMresults}}.}
+\item{type}{the type of prediction: probability of classification (probability) or the partition (partition)}
 }
 \description{
-This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
-
-This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
-
 This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 }

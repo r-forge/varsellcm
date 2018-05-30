@@ -328,41 +328,9 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
 ## Fonctions principales du package, les seules accessibles par l'utilisateur sont VarSelCluster,
 ## Imputation (voir Imputation.R) et MICL
 ########################################################################################################################
-setGeneric ( name= "MICL",  def = function(x, obj){ standardGeneric("MICL")})
-## Pour les variables continues
-setMethod( f = "MICL", 
-           signature(x="data.frame", obj="VSLCMresultsContinuous"), 
-           definition = function(x, obj){
-             obj@strategy@crit.varsel <- TRUE
-             obj@data  <- VSLCMdata(x)
-             tmp <- ComputeMICL(obj, "Continuous")
-             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))         
-           }
-)
-## Pour les variables entieres
-setMethod( f = "MICL", 
-           signature(x="data.frame", obj="VSLCMresultsInteger"), 
-           definition = function(x, obj){
-             obj@strategy@crit.varsel <- TRUE
-             # travail sur les donnees manquantes
-             obj@data  <- VSLCMdata(x)
-             tmp <- ComputeMICL(obj, "Integer")
-             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT+1))          
-           }
-)
-## Pour les variables categorielles
-setMethod( f = "MICL", 
-           signature(x="data.frame", obj="VSLCMresultsCategorical"), 
-           definition = function(x, obj){
-             obj@strategy@crit.varsel <- TRUE
-             obj@data  <- VSLCMdata(x)
-             tmp <- ComputeMICL(obj, "Categorical")
-             tmp@partitions@zOPT <-  1 + as.numeric(obj@partitions@zOPT[attr(obj@data@shortdata,"index")])
-             return(list(MICL=tmp@criteria@MICL, zOPT=tmp@partitions@zOPT))       
-           }
-)
+setGeneric ( name= "MICLcomputation",  def = function(x, obj){ standardGeneric("MICLcomputation")})
 ## Pour les variables mixed
-setMethod( f = "MICL", 
+setMethod( f = "MICLcomputation", 
            signature(x="data.frame", obj="VSLCMresults"), 
            definition = function(x, obj){
              obj@strategy@crit.varsel <- TRUE

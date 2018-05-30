@@ -15,5 +15,5 @@
 This function gives the BIC criterion (according to the formula log-likelihood - log(n)*npar/2, where npar represents the number of parameters in the fitted model and n represents the sample size)  for an instance of \code{\linkS4class{VSLCMresults}}.
 }
 \references{
-Schwarz, G. (1978). Estimating the dimension of a model. Annals of Statistics, 6(2), 461–464.
+Schwarz, G. (1978). Estimating the dimension of a model. Annals of Statistics, 6(2), 461-464.
 }

@@ -15,5 +15,5 @@
 This function gives the AIC criterion (according to the formula log-likelihood - npar, where npar represents the number of parameters in the fitted model)  for an instance of \code{\linkS4class{VSLCMresults}}.
 }
 \references{
-Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716–723.
+Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716-723.
 }
