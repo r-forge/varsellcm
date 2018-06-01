@@ -4,7 +4,7 @@
 \alias{VarSelImputation}
 \title{Imputation of missing values}
 \usage{
-VarSelImputation(obj, method = "postmean")
+VarSelImputation(obj, newdata, method = "postmean")
 }
 \arguments{
 \item{obj}{an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster}.}

@@ -161,6 +161,7 @@ setMethod(
         theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
       print(pie)
     }else if (type=="bar"){
+      
       bar <- ggplot(data=df, aes(x=df$rg, y=df$discrim.power, fill=df$variables)) +
         scale_y_continuous(name="discriminative power") +
         geom_bar(stat="identity", position=position_dodge())+
@@ -170,7 +171,7 @@ setMethod(
         scale_fill_brewer(palette="Paired")+
         theme_minimal()  +
         ggtitle(paste("Discriminative power")) +
-        theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))
+        theme(legend.position = "bottom", plot.title = element_text(hjust = 0.5))+ labs(fill=' ') 
       print(bar)
     }else if (type=="probs-overall"){
       tmp <- data.frame(probs=1-apply(x@partitions@tik, 1, max))

@@ -118,6 +118,8 @@ ICL <- function(object){
 setMethod(f="fitted",
           signature = c("VSLCMresults"),
           definition = function(object, type="partition"){
+            if (!(type %in% c("probability", "partition")))
+              stop("type must be probability or partition")
             out <- object@partitions@zMAP
             if (type=="probability") out <- object@partitions@tik
             out
@@ -145,6 +147,8 @@ setMethod(f="fitted",
 setMethod(f="fitted.values",
           signature = c("VSLCMresults"),
           definition = function(object, type="partition"){
+            if (!(type %in% c("probability", "partition")))
+              stop("type must be probability or partition")
             out <- object@partitions@zMAP
             if (type=="probability") out <- object@partitions@tik
             out
