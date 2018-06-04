@@ -66,7 +66,7 @@ setMethod(f="AIC",
 ##'
 MICL <- function(object){
   check.results(object)
-  if (length(object@criteria@MICL)==0) stop("This criterion wasn't computed during the model selection")
+  if (length(object@criteria@MICL)==0) stop("This criterion wasn't computed during model selection")
   object@criteria@MICL
 }
 
@@ -101,8 +101,9 @@ ICL <- function(object){
 ## fitted 
 ########################################################################################################################
 #'
-#' Extract the estimated partition
+#' Extract the partition or the probabilities of classification
 #' 
+#' @description  
 #' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
@@ -130,8 +131,9 @@ setMethod(f="fitted",
 ## fitted.values
 ########################################################################################################################
 #'
-#' Extract the estimated partition
+#' Extract the partition or the probabilities of classification
 #' 
+#' @description  
 #' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
@@ -162,6 +164,7 @@ setMethod(f="fitted.values",
 #'
 #' Extract the parameters
 #' 
+#' @description  
 #' This function returns an instance of class \code{\linkS4class{VSLCMparam}} which contains the model parameters.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
@@ -183,6 +186,7 @@ setMethod(f="coef",
 #'
 #' Extract the parameters
 #' 
+#' @description  
 #' This function returns an instance of class \code{\linkS4class{VSLCMparam}} which contains the model parameters.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.

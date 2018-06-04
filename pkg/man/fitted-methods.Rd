@@ -4,7 +4,7 @@
 \name{fitted}
 \alias{fitted}
 \alias{fitted,VSLCMresults-method}
-\title{Extract the estimated partition}
+\title{Extract the partition or the probabilities of classification}
 \usage{
 \S4method{fitted}{VSLCMresults}(object, type = "partition")
 }

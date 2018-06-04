@@ -7,13 +7,15 @@
 VarSelImputation(obj, newdata, method = "postmean")
 }
 \arguments{
-\item{obj}{an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster}.}
+\item{obj}{an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster} which defines the model used for imputation.}
+
+\item{newdata}{data.frame Dataset containing the missing values to impute.}
 
 \item{method}{character definiting the method of imputation: "postmean" or "sampling"}
 }
 \description{
-Imputation function based on the mixture model. Two methods can be used: missing values can be 
-imputed by their posterior mean (args "postmean") or by a sampling from their full conditionnal
+This function permits imputation of missing values in a dataset by using mixture model.
+Two methods can be used: missing values can be ##' imputed by their posterior mean (args "postmean") or by a sampling from their full conditionnal
 distribution (args "sampling").
 }
 \examples{

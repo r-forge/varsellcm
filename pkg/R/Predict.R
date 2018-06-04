@@ -45,10 +45,12 @@ setGeneric ( name= "predict",  def = function(object, newdata, type="probability
 setMethod(f="predict",
           signature = c("VSLCMresults"),
           definition = function(object, newdata, type="probability"){
+            #### Tests on the input arguments
             if (!(type %in% c("probability", "partition")))
               stop("type must be probability or partition")
             if ((ncol(newdata)!=object@data@d) || any(colnames(newdata) %in% object@data@var.names == FALSE) )
               stop("newdata must be contain the same features that the data used to fit the model")
+            ####
             out <- proba.post(object, newdata)            
             colnames(out) <- paste("class", 1:ncol(out), sep = "-")
             if (type=="partition") out <- apply(out, 1, which.max)

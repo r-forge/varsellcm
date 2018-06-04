@@ -60,11 +60,12 @@ ImputCate <- function(data, tik, param, method){
 ##' Imputation of missing values
 ##'
 ##' @description  
-##' Imputation function based on the mixture model. Two methods can be used: missing values can be 
-##' imputed by their posterior mean (args "postmean") or by a sampling from their full conditionnal
+##' This function permits imputation of missing values in a dataset by using mixture model.
+##' Two methods can be used: missing values can be ##' imputed by their posterior mean (args "postmean") or by a sampling from their full conditionnal
 ##' distribution (args "sampling").
 ##' 
-##' @param obj an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster}.
+##' @param obj an instance of \linkS4class{VSLCMresults} returned by function \link{VarSelCluster} which defines the model used for imputation.
+##' @param newdata data.frame Dataset containing the missing values to impute.
 ##' @param method character definiting the method of imputation: "postmean" or "sampling"
 ##' 
 ##' @examples
@@ -82,9 +83,11 @@ ImputCate <- function(data, tik, param, method){
 ##'
 ##'
 VarSelImputation <- function(obj, newdata, method="postmean"){
+  #### Tests on the input arguments
   check.results(obj)        
   if (!(method %in% c("postmean", "sampling")))
     stop("method must be postmean or sampling")
+  ####
   tik <- predict(obj, newdata)
   
   if (method=="postmean"){
