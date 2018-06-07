@@ -6,7 +6,9 @@
 #'
 #' BIC criterion.
 #' 
-#' This function gives the BIC criterion (according to the formula log-likelihood - log(n)*npar/2, where npar represents the number of parameters in the fitted model and n represents the sample size)  for an instance of \code{\linkS4class{VSLCMresults}}.
+#' This function gives the BIC criterion of an instance of \code{\linkS4class{VSLCMresults}}. 
+#' BIC is computed according to the formula \deqn{BIC=log-likelihood - 0.5*\nu*log(n)} 
+#' where  \eqn{\nu} denotes the number of parameters in the fitted model and \eqn{n} represents the sample size.  
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
 #' 
@@ -16,6 +18,16 @@
 #' @exportMethod BIC
 #' @aliases BIC BIC,VSLCMresults-method
 #' @references Schwarz, G. (1978). Estimating the dimension of a model. Annals of Statistics, 6(2), 461-464.
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection (number of clusters between 1 and 3)
+#' res<- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+#' 
+#' # Get the BIC value
+#' BIC(res)
+
 
 setMethod(f="BIC",
           signature = c("VSLCMresults"),
@@ -27,7 +39,8 @@ setMethod(f="BIC",
 #'
 #' AIC criterion.
 #' 
-#' This function gives the AIC criterion (according to the formula log-likelihood - npar, where npar represents the number of parameters in the fitted model)  for an instance of \code{\linkS4class{VSLCMresults}}.
+#' This function gives the AIC criterion of an instance of \code{\linkS4class{VSLCMresults}}. 
+#' AIC is computed according to the formula\deqn{AIC=log-likelihood - \nu} where  \eqn{\nu} denotes the number of parameters in the fitted model.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
 #' 
@@ -37,13 +50,24 @@ setMethod(f="BIC",
 #' @exportMethod AIC
 #' @aliases AIC AIC,VSLCMresults-method
 #' @references Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716-723.
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection
+#' res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+#' 
+#' # Get the AIC value
+#' AIC(res)
 
 setMethod(f="AIC",
           signature = c("VSLCMresults"),
           definition = function(object) object@criteria@AIC)
 
-###################################################################################
-##' MICL
+########################################################################################################################
+##  MICL extractor
+########################################################################################################################
+##' MICL criterion
 ##'
 ##' @description  
 ##' This function gives the MICL criterion for an instance of \code{\linkS4class{VSLCMresults}}.
@@ -55,10 +79,13 @@ setMethod(f="AIC",
 ##' 
 ##' @examples
 ##' \dontrun{
+##' # Data loading:
 ##' data("heart")
-##' z <- heart[,"Class"]
-##' x <- heart[,-13]
-##' object <- VarSelCluster(x, 2, vbleSelec = TRUE, crit.varsel = "MICL")
+##' 
+##' # Cluster analysis with variable selection
+##' object <- VarSelCluster(heart[,-13], 2, vbleSelec = TRUE, crit.varsel = "MICL")
+##' 
+##' # Get the MICL value
 ##' MICL(object)
 ##' }
 ##' @export
@@ -70,8 +97,10 @@ MICL <- function(object){
   object@criteria@MICL
 }
 
-###################################################################################
-##' ICL
+########################################################################################################################
+##  ICL extractor
+########################################################################################################################
+##' ICL criterion
 ##'
 ##' @description  
 ##' This function gives the ICL criterion for an instance of \code{\linkS4class{VSLCMresults}}.
@@ -82,13 +111,15 @@ MICL <- function(object){
 ##' 
 ##' 
 ##' @examples
-##' \dontrun{
-##' data("heart")
-##' z <- heart[,"Class"]
-##' x <- heart[,-13]
-##' object <- VarSelCluster(x, 2, vbleSelec = FALSE)
-##' ICL(object)
-##' }
+##' # Data loading:
+##' data(heart)
+##' 
+##' # Cluster analysis without variable selection
+##' res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+##' 
+##' # Get the ICL value
+##' ICL(res)
+##' 
 ##' @export
 ##'
 ##'
@@ -104,7 +135,7 @@ ICL <- function(object){
 #' Extract the partition or the probabilities of classification
 #' 
 #' @description  
-#' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
+#' This function returns the probabilities of classification or the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
 #' @param type the type of prediction: probability of classification (probability) or the partition (partition)
@@ -115,6 +146,15 @@ ICL <- function(object){
 #' @docType methods
 #' @exportMethod fitted
 #' @aliases fitted fitted,VSLCMresults-method
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection (number of clusters between 1 and 3)
+#' res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+#' 
+#' # Get the ICL value
+#' fitted(res)
 
 setMethod(f="fitted",
           signature = c("VSLCMresults"),
@@ -134,7 +174,7 @@ setMethod(f="fitted",
 #' Extract the partition or the probabilities of classification
 #' 
 #' @description  
-#' This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
+#' This function returns the probabilities of classification or the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
 #' @param type the type of prediction: probability of classification (probability) or the partition (partition)
@@ -145,6 +185,15 @@ setMethod(f="fitted",
 #' @docType methods
 #' @exportMethod fitted.values
 #' @aliases fitted.values fitted.values,VSLCMresults-method
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection (number of clusters between 1 and 3)
+#' res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+#' 
+#' # Get the ICL value
+#' fitted.values(res)
 
 setMethod(f="fitted.values",
           signature = c("VSLCMresults"),
@@ -175,6 +224,16 @@ setMethod(f="fitted.values",
 #' @docType methods
 #' @exportMethod coef
 #' @aliases coef coef,VSLCMresults-method
+#' 
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection (number of clusters between 1 and 3)
+#' res  <- VarSelCluster(heart[,-13], 1:3, vbleSelec = FALSE)
+#' 
+#' # Get the ICL value
+#' coef(res)
 
 setMethod(f="coef",
           signature = c("VSLCMresults"),
@@ -196,6 +255,15 @@ setMethod(f="coef",
 #' @docType methods
 #' @exportMethod coefficients
 #' @aliases coefficients coefficients,VSLCMresults-method
+#' @examples
+#' # Data loading:
+#' data(heart)
+#' 
+#' # Cluster analysis without variable selection (number of clusters between 1 and 3)
+#' res  <- VarSelCluster(heart[,-13], 1:3, vbleSelec = FALSE)
+#' 
+#' # Get the ICL value
+#' coefficients(res)
 
 setMethod(f="coefficients",
           signature = c("VSLCMresults"),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Extractors.R
 \name{ICL}
 \alias{ICL}
-\title{ICL}
+\title{ICL criterion}
 \usage{
 ICL(object)
 }
@@ -13,13 +13,15 @@ ICL(object)
 This function gives the ICL criterion for an instance of \code{\linkS4class{VSLCMresults}}.
 }
 \examples{
-\dontrun{
-data("heart")
-z <- heart[,"Class"]
-x <- heart[,-13]
-object <- VarSelCluster(x, 2, vbleSelec = FALSE)
-ICL(object)
-}
+# Data loading:
+data(heart)
+
+# Cluster analysis without variable selection
+res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+
+# Get the ICL value
+ICL(res)
+
 }
 \references{
 Biernacki, C., Celeux, G., and Govaert, G. (2000). Assessing a mixture model for clustering with the integrated completed likelihood. IEEE transactions on pattern analysis and machine intelligence, 22(7), 719-725.

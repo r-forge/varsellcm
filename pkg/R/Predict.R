@@ -27,9 +27,9 @@ setGeneric ( name= "predict",  def = function(object, newdata, type="probability
 ## predict
 ########################################################################################################################
 #'
-#' Predict method for mixture model fits
+#' Prediction of the cluster memberships
 #' 
-#' This function performs prediction for new observations by using the mixture model fit with the function \code{\link{VarSelCluster}}.
+#' This function gives the probabilities of classification for new observations by using the mixture model fit with the function \code{\link{VarSelCluster}}.
 #' 
 #' @param object instance of \code{\linkS4class{VSLCMresults}}.
 #' @param newdata data.frame of the observations to classify.

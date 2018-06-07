@@ -12,7 +12,18 @@
 \item{object}{instance of \code{\linkS4class{VSLCMresults}}.}
 }
 \description{
-This function gives the AIC criterion (according to the formula log-likelihood - npar, where npar represents the number of parameters in the fitted model)  for an instance of \code{\linkS4class{VSLCMresults}}.
+This function gives the AIC criterion of an instance of \code{\linkS4class{VSLCMresults}}. 
+AIC is computed according to the formula\deqn{AIC=log-likelihood - \nu} where  \eqn{\nu} denotes the number of parameters in the fitted model.
+}
+\examples{
+# Data loading:
+data(heart)
+
+# Cluster analysis without variable selection
+res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+
+# Get the AIC value
+AIC(res)
 }
 \references{
 Akaike, H. (1974), "A new look at the statistical model identification", IEEE Transactions on Automatic Control, 19 (6): 716-723.

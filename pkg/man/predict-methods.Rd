@@ -4,7 +4,7 @@
 \name{predict}
 \alias{predict}
 \alias{predict,VSLCMresults-method}
-\title{Predict method for mixture model fits}
+\title{Prediction of the cluster memberships}
 \usage{
 \S4method{predict}{VSLCMresults}(object, newdata, type = "probability")
 }
@@ -19,5 +19,5 @@
 Returns a matrix of the probabilities of classification.
 }
 \description{
-This function performs prediction for new observations by using the mixture model fit with the function \code{\link{VarSelCluster}}.
+This function gives the probabilities of classification for new observations by using the mixture model fit with the function \code{\link{VarSelCluster}}.
 }

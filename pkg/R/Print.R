@@ -2,7 +2,7 @@
 ## Surcharge de la fonction print 
 ########################################################################################################################
 #'
-#' Summary function.
+#' Print function.
 #' 
 #' This function gives the print of an instance of  \code{\linkS4class{VSLCMresults}}.
 #' 

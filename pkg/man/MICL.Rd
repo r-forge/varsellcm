@@ -2,7 +2,7 @@
 % Please edit documentation in R/Extractors.R
 \name{MICL}
 \alias{MICL}
-\title{MICL}
+\title{MICL criterion}
 \usage{
 MICL(object)
 }
@@ -14,10 +14,13 @@ This function gives the MICL criterion for an instance of \code{\linkS4class{VSL
 }
 \examples{
 \dontrun{
+# Data loading:
 data("heart")
-z <- heart[,"Class"]
-x <- heart[,-13]
-object <- VarSelCluster(x, 2, vbleSelec = TRUE, crit.varsel = "MICL")
+
+# Cluster analysis with variable selection
+object <- VarSelCluster(heart[,-13], 2, vbleSelec = TRUE, crit.varsel = "MICL")
+
+# Get the MICL value
 MICL(object)
 }
 }

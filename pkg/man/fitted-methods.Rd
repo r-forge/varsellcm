@@ -14,5 +14,15 @@
 \item{type}{the type of prediction: probability of classification (probability) or the partition (partition)}
 }
 \description{
-This function returns the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
+This function returns the probabilities of classification or the partition among the observations of an instance of \code{\linkS4class{VSLCMresults}}.
+}
+\examples{
+# Data loading:
+data(heart)
+
+# Cluster analysis without variable selection (number of clusters between 1 and 3)
+res <- VarSelCluster(heart[,-13], 2, vbleSelec = FALSE)
+
+# Get the ICL value
+fitted(res)
 }

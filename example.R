@@ -28,7 +28,6 @@ head(fitted(res_with, type="probability"))
 # Summary of the probabilities of missclassification
 plot(res_with, type="probs-class")
 
-
 # Confusion matrices and ARI (only possible because the "true" partition is known):
 # variable selection decreases the misclassification error rate
 table(ztrue, fitted(res_without))
@@ -48,18 +47,14 @@ print(res_with)
 # Print model parameter
 coef(res_with)
 
-# Opening Shiny application to easily see the results
-VarSelShiny(res_with)
-
 # Boxplot for the continuous variable MaxHeartRate
-plot(res_with, y="MaxHeartRate")
+plot(x=res_with, y="MaxHeartRate")
 
-# Empirical and theoretical distributions (to check that clustering is pertinent)
+# Empirical and theoretical distributions (to check that the distribution is well-fitted)
 plot(res_with, y="MaxHeartRate", type="cdf")
 
 # Summary of categorical variable
 plot(res_with, y="Sex")
-
 
 # Probabilities of classification for new observations 
 predict(res_with, newdata = x[1:3,])
@@ -68,3 +63,6 @@ predict(res_with, newdata = x[1:3,])
 not.imputed <- x[1,]
 imputed <- VarSelImputation(res_with, x[1,], method = "sampling")
 rbind(not.imputed, imputed)
+
+# Opening Shiny application to easily see the results
+VarSelShiny(res_with)
