@@ -94,6 +94,7 @@ NULL
 #' 
 #'  
 #' @examples 
+#' \dontrun{
 #' require(VarSelLCM)
 #'
 #' # Data loading:
@@ -120,6 +121,7 @@ NULL
 #' 
 #' # Summary of categorical variable
 #' plot(res_with, y="Sex")
+#' }
 setMethod(
   f="plot",
   signature = c("VSLCMresults", "character"),
