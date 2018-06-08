@@ -81,7 +81,6 @@ varsellcm.plot.cate  <- function(tmp, y){
 #' @param y character. The name of the variable to ploted (only used if type="boxplot" or type="cdf"). 
 #' @param type character. The type of plot ("bar": barplot of the disciminative power, "pie": pie of the discriminative power, "probs-overall": histogram of the probabilities of misclassification, "probs-class": histogram of the probabilities of misclassification per cluster, "boxplot": boxplot of a single variable per cluster, "cdf": distribution of a single variable per cluster).
 #' @param ylim numeric. Define the range of the most discriminative variables to considered (only use if type="pie" or type="bar")
-#' @param ... Additional argument list that might not ever be used.
 #' 
 #' @name plot
 #' @rdname plot-methods
@@ -89,8 +88,8 @@ varsellcm.plot.cate  <- function(tmp, y){
 #' @exportMethod plot
 NULL
 #' @rdname plot-methods
-#' @aliases plot plot,VSLCMresults,ANY-method
-#' @aliases plot plot,VSLCMresults,character,ANY-method
+#' @aliases plot plot,VSLCMresults-method
+#' @aliases plot plot,VSLCMresults,character-method
 #' 
 #'  
 #' @examples 

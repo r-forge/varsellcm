@@ -5,7 +5,7 @@
 \alias{plot}
 \alias{plot,VSLCMresults,character-method}
 \alias{plot}
-\alias{plot,VSLCMresults,ANY-method}
+\alias{plot,VSLCMresults-method}
 \title{Plots of an instance of \code{\linkS4class{VSLCMresults}}}
 \usage{
 \S4method{plot}{VSLCMresults,character}(x, y, type = "boxplot", ylim = c(1,
@@ -19,8 +19,6 @@
 \item{type}{character. The type of plot ("bar": barplot of the disciminative power, "pie": pie of the discriminative power, "probs-overall": histogram of the probabilities of misclassification, "probs-class": histogram of the probabilities of misclassification per cluster, "boxplot": boxplot of a single variable per cluster, "cdf": distribution of a single variable per cluster).}
 
 \item{ylim}{numeric. Define the range of the most discriminative variables to considered (only use if type="pie" or type="bar")}
-
-\item{...}{Additional argument list that might not ever be used.}
 }
 \description{
 This function proposes different plots of an instance of \code{\linkS4class{VSLCMresults}}.
@@ -32,6 +30,7 @@ It permits to visualize:
  }
 }
 \examples{
+\dontrun{
 require(VarSelLCM)
 
 # Data loading:
@@ -58,4 +57,5 @@ plot(res_with, y="MaxHeartRate", type="cdf")
 
 # Summary of categorical variable
 plot(res_with, y="Sex")
+}
 }
