@@ -147,11 +147,16 @@ VSLCMdata <- function(x, redquali=TRUE){
   n <- nrow(x)
   d <- ncol(x)
   # recherche des indices de variables numeric et factor
+  for (j in 1:d){
+    if (any(class(x[,j])=="ordered"))
+      x[,j] <- factor(x[,j], ordered=F)
+  }
   type <- numeric()
   for (j in 1:d) type[j] <- class(x[,j])
+  
   idxcont <- which(type=="numeric")
   idxinte <- which(type=="integer")
-  idxcat <- which(type=="factor")
+  idxcat <- which(type == "factor")
   if ((all(type %in% c("numeric", "integer", "factor"))==FALSE))
     stop("At least one variable is neither numeric, integer nor factor!")
   
@@ -241,6 +246,10 @@ VSLCMdataMixte <- function(x, redquali=TRUE){
   n <- nrow(x)
   d <- ncol(x)
   # recherche des indices de variables numeric et factor
+  for (j in 1:d){
+    if (any(class(x[,j])=="ordered"))
+      x[,j] <- factor(x[,j], ordered=F)
+  }
   type <- numeric()
   for (j in 1:d) type[j] <- class(x[,j])
   idxcont <- which(type=="numeric")

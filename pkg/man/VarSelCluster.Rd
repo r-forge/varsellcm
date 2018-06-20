@@ -54,16 +54,27 @@ ztrue <- heart[,"Class"]
 x <- heart[,-13]
 
 # Cluster analysis without variable selection
-res_without <- VarSelCluster(x, 2, vbleSelec = FALSE)
+res_without <- VarSelCluster(x, 2, vbleSelec = FALSE, crit.varsel = "BIC")
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
+res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40, crit.varsel = "BIC")
 
 # Comparison of the BIC for both models:
 # variable selection permits to improve the BIC
 BIC(res_without)
 BIC(res_with)
 
+# Confusion matrices and ARI (only possible because the "true" partition is known).
+# ARI is computed between the true partition (ztrue) and its estimators
+# ARI is an index between 0 (partitions are independent) and 1 (partitions are equals)
+# variable selection permits to improve the ARI
+# Note that ARI cannot be used for model selection in clustering, because there is no true partition
+# variable selection decreases the misclassification error rate
+table(ztrue, fitted(res_without))
+table(ztrue, fitted(res_with))
+ARI(ztrue,  fitted(res_without))
+ARI(ztrue, fitted(res_with))
+ 
 # Estimated partition
 fitted(res_with)
 
@@ -88,7 +99,8 @@ coef(res_with)
 # Boxplot for the continuous variable MaxHeartRate
 plot(x=res_with, y="MaxHeartRate")
 
-# Empirical and theoretical distributions (to check that the distribution is well-fitted)
+# Empirical and theoretical distributions of the most discriminative variable 
+# (to check that the distribution is well-fitted)
 plot(res_with, y="MaxHeartRate", type="cdf")
 
 # Summary of categorical variable

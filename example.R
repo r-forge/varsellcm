@@ -19,6 +19,13 @@ res_with <- VarSelCluster(x, 2, nbcores = 2, initModel=40)
 BIC(res_without)
 BIC(res_with)
 
+# Comparison of the partition accuracy. ARI is computed between the true partition (ztrue) and its estimators
+# ARI is an index between 0 (partitions are independent) and 1 (partitions are equals)
+# variable selection permits to improve the ARI
+# Note that ARI cannot be used for model selection in clustering, because there is no true partition
+ARI(ztrue, fitted(res_without))
+ARI(ztrue, fitted(res_with))
+
 # Estimated partition
 fitted(res_with)
 
