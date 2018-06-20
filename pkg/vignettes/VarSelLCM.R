@@ -14,7 +14,7 @@ x[1,1] <- NA
 res_without <- VarSelCluster(x, gvals = 1:3, vbleSelec = FALSE, crit.varsel = "BIC")
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 4, crit.varsel = "BIC")
+res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 2, crit.varsel = "BIC")
 
 
 ## ---- comment=""---------------------------------------------------------

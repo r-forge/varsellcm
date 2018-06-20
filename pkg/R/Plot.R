@@ -86,10 +86,9 @@ varsellcm.plot.cate  <- function(tmp, y){
 #' @rdname plot-methods
 #' @docType methods
 #' @exportMethod plot
-NULL
-#' @rdname plot-methods
-#' @aliases plot plot,VSLCMresults-method
+#' @aliases plot plot,VSLCMresults-method plot,VSLCMresults,character-method plot,VSLCMresults,ANY-method 
 #' @aliases plot plot,VSLCMresults,character-method
+#' @aliases plot plot,VSLCMresults,ANY-method 
 #' 
 #'  
 #' @examples 
