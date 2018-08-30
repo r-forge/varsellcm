@@ -6,8 +6,8 @@
 ##' \tabular{ll}{
 ##'   Package: \tab VarSelLCM\cr 
 ##'   Type: \tab Package\cr 
-##'   Version: \tab 2.1.3\cr
-##'   Date: \tab 2018-08-27\cr 
+##'   Version: \tab 2.1.4\cr
+##'   Date: \tab 2018-08-30\cr 
 ##'   License: \tab GPL-3\cr  
 ##'   LazyLoad: \tab yes\cr
 ##'   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
