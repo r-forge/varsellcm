@@ -14,7 +14,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
   
-  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, 
+               cache = TRUE,comment="",
+               cache.lazy = FALSE,out.width = "70%", fig.align = "center")
+```
   
   **References:** 
   
@@ -32,6 +36,54 @@ vignette: >
   An R-Shiny application is implemented to easily interpret the clustering results
   
   
+# Clustering for cytological diagnosis
+  This section performs the whole analysis of the Golub data set. The first column indicates the type of
+  leukemia. Clustering is made on the other (continuous) features.
+```{r, comment=""}
+library(VarSelLCM)
+# please install the package multtest to get the data
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("multtest")
+data(golub, package = "multtest")
+# one row = one individual
+golub <- t(golub)
+```
+Clustering is done with and without variable selection. Here ICL and MICL criteria are used because the
+number of observations is less than the number of features (thus, BIC is not relevant).
+```{r, comment=""}
+# Please indicate the number of cores you wan to use for parallelization
+nb.CPU <- 4
+# clustering without variable selection (about than 10/20 sec on 4 CPU)
+res.noselec <- VarSelCluster(golub,
+                             gvals = 2,
+                             crit.varsel = "ICL",
+                             vbleSelec = FALSE,
+                             nbcores = nb.CPU)
+# clustering with variable selection
+res.selec <- VarSelCluster(golub,
+                           gvals = 2,
+                           vbleSelec= TRUE,
+                           crit.varsel = "MICL",
+                           nbcores = nb.CPU)
+```
+
+Summary of the results: variable selection increases the values of information criteria
+```{r, comment=""}
+summary(res.noselec)
+summary(res.selec)
+```
+
+Evaluation of the partition accuracy: Adjusted Rand Index (ARI) is computed between the true partition (ztrue) and its estimators.
+The expectation of ARI is zero if the two partitions are independent. 
+The ARI is equal to one if the partitions are equals.
+Variable selection permits to improve the ARI.
+Note that ARI cannot be used for model selection in clustering, because there is no true partition.
+```{r, comment=""}
+ARI(golub.cl, fitted(res.noselec))
+ARI(golub.cl, fitted(res.selec))
+```
+
+
 # Mixed-type data analysis
 ## Clustering
 This section performs the whole analysis of the *Heart* data set. *Warning the univariate margin distribution are defined by class of the features: numeric columns imply Gaussian distributions, integer columns imply Poisson distribution while factor (or ordered) columns imply multinomial distribution*
@@ -50,14 +102,14 @@ x[1,1] <- NA
 Clustering is performed with variable selection. 
 Model selection is done with BIC because the number of observations is large (compared to the number of features).
 The number of components is between 1 and 3.
-Do not hesitate to use parallelization (here only two cores are used).
+Do not hesitate to use parallelization (here only four cores are used).
 
 ```{r, comment=""}
 # Cluster analysis without variable selection
 res_without <- VarSelCluster(x, gvals = 1:3, vbleSelec = FALSE, crit.varsel = "BIC")
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 2, crit.varsel = "BIC")
+res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 4, crit.varsel = "BIC")
 
 ```
 
@@ -67,8 +119,9 @@ BIC(res_without)
 BIC(res_with)
 ```
 
-Comparison of the partition accuracy. ARI is computed between the true partition (ztrue) and its estimators.
-ARI is an index between 0 (partitions are independent) and 1 (partitions are equals).
+Evaluation of the partition accuracy: Adjusted Rand Index (ARI) is computed between the true partition (ztrue) and its estimators.
+The expectation of ARI is zero if the two partitions are independent. 
+The ARI is equal to one if the partitions are equals.
 Variable selection permits to improve the ARI.
 Note that ARI cannot be used for model selection in clustering, because there is no true partition.
 ```{r, comment=""}

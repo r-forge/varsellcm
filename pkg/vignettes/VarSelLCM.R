@@ -1,5 +1,38 @@
 ## ---- comment=""---------------------------------------------------------
 library(VarSelLCM)
+# please install the package multtest to get the data
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("multtest")
+data(golub, package = "multtest")
+# one row = one individual
+golub <- t(golub)
+
+## ---- comment=""---------------------------------------------------------
+# Please indicate the number of cores you wan to use for parallelization
+nb.CPU <- 4
+# clustering without variable selection (about than 10/20 sec on 4 CPU)
+res.noselec <- VarSelCluster(golub,
+                             gvals = 2,
+                             crit.varsel = "ICL",
+                             vbleSelec = FALSE,
+                             nbcores = nb.CPU)
+# clustering with variable selection
+res.selec <- VarSelCluster(golub,
+                           gvals = 2,
+                           vbleSelec= TRUE,
+                           crit.varsel = "MICL",
+                           nbcores = nb.CPU)
+
+## ---- comment=""---------------------------------------------------------
+summary(res.noselec)
+summary(res.selec)
+
+## ---- comment=""---------------------------------------------------------
+ARI(golub.cl, fitted(res.noselec))
+ARI(golub.cl, fitted(res.selec))
+
+## ---- comment=""---------------------------------------------------------
+library(VarSelLCM)
 # Data loading:
 # x contains the observed variables
 # z the known status (i.e. 1: absence and 2: presence of heart disease)
@@ -14,7 +47,7 @@ x[1,1] <- NA
 res_without <- VarSelCluster(x, gvals = 1:3, vbleSelec = FALSE, crit.varsel = "BIC")
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 2, crit.varsel = "BIC")
+res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 4, crit.varsel = "BIC")
 
 
 ## ---- comment=""---------------------------------------------------------
@@ -70,6 +103,6 @@ imputed <- VarSelImputation(res_with, x[1,], method = "sampling")
 rbind(not.imputed, imputed)
 
 ## ---- eval=FALSE, comment="", include=TRUE-------------------------------
-#  # Start the shiny application
-#  VarSelShiny(res_with)
+# Start the shiny application
+VarSelShiny(res_with)
 
