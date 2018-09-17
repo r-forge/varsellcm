@@ -16,7 +16,9 @@ htmltools::includeHTML("doc_prefix.html")
   **References:** 
   
   * Marbac, M. and Sedki, M. (2017), [Variable selection for model-based clustering using the integrated complete-data likelihood](https://link.springer.com/article/10.1007/s11222-016-9670-1), Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.
-  * Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, to appear.
+  * Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, forthcoming.
+  * Marbac, M. and Sedki, M. (2018), [ VarSelLCM: an R/C++ package for variable selection in model-based clustering of mixed-data with missing values.
+](https://academic.oup.com/bioinformatics/advance-article-abstract/doi/10.1093/bioinformatics/bty786/5091183?redirectedFrom=fulltext), Bioinformatics, forthcoming.
   
 # Introduction
   *[VarSelLCM](https://CRAN.R-project.org/package=VarSelLCM)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
