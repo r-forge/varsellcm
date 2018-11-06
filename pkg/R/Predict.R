@@ -1,22 +1,23 @@
 proba.post <- function(object, newdata){
-
+  
   logprob <- matrix(object@param@pi, nrow(newdata), object@model@g, byrow=TRUE)
   for (nom in colnames(newdata)){
     xnotna <- newdata[,which(colnames(newdata)==nom)]
     where <- which(!is.na(xnotna))
     xnotna <- xnotna[where]
-    if (nom %in% rownames(object@param@paramContinuous@mu)){
+    if((!is.null(rownames(object@param@paramContinuous@mu))) && (nom %in% rownames(object@param@paramContinuous@mu))){
       who <- which(nom == rownames(object@param@paramContinuous@mu))
       for (k in 1:object@model@g) logprob[where,k] <- logprob[where,k] + dnorm(xnotna, object@param@paramContinuous@mu[who,k], object@param@paramContinuous@sd[who,k], log=TRUE)
-    }else if (nom %in% rownames(object@param@paramInteger@lambda)){
+    }else if ((!is.null(rownames(object@param@paramInteger@lambda))) && (nom %in% rownames(object@param@paramInteger@lambda))){
       who <- which(nom == rownames(object@param@paramInteger@lambda))
       for (k in 1:object@model@g) logprob[where,k] <- logprob[where,k] + dpois(xnotna, object@param@paramInteger@lambda[who,k], log=TRUE)
-    }else if (nom %in% names(object@param@paramCategorical@alpha))
+    }else if ((!is.null(names(object@param@paramCategorical@alpha))) && (nom %in% names(object@param@paramCategorical@alpha))){
       who <- which(nom ==  names(object@param@paramCategorical@alpha))
       for (k in 1:object@model@g){
         for (h in 1:ncol(object@param@paramCategorical@alpha[[who]]))
           logprob[where,k] <- logprob[where,k] + log(object@param@paramCategorical@alpha[[who]][k,h] ** (xnotna == colnames(object@param@paramCategorical@alpha[[who]])[h]))
       }
+    }
   }
   prob <- exp(logprob - apply(logprob, 1, max))
   prob/rowSums(prob)
