@@ -1,7 +1,7 @@
 ---
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 ---
 title: "VarSelLCM"
@@ -14,17 +14,26 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
   
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, include = TRUE, 
-               cache = TRUE,comment="",
-               cache.lazy = FALSE,out.width = "70%", fig.align = "center")
-```
+  
   
   **References:** 
   
   * Marbac, M. and Sedki, M. (2017), [Variable selection for model-based clustering using the integrated complete-data likelihood](https://link.springer.com/article/10.1007/s11222-016-9670-1), Statistics and Computing, Volume 27, Issue 4, pp 1049–1063.
   * Marbac, M., Patin, E. and Sedki, M. (2018), [Variable selection for mixed data clustering: Application in human population genomics](https://arxiv.org/abs/1703.02293), Journal of Classification, to appear.
   
+# Introduction
+  *[VarSelLCM](https://CRAN.R-project.org/package=VarSelLCM)* permits a full model selection (detection of the relevant features for clustering and selection of the number of clusters) in model-based clustering, according to classical information criteria (BIC, MICL or AIC).
+  
+  Data to analyzed can be composed of continuous, integer and/or categorical features. Moreover, missing
+  values are managed, without any pre-processing, by the model used to cluster with the assumption that
+  values are missing completely at random. 
+  Thus, VarSelLCM can also be used for data imputation via mixture models. 
+  
+  An R-Shiny application is implemented to easily interpret the clustering results
+  
+  
+# Mixed-type data analysis
+## Clustering
 This section performs the whole analysis of the *Heart* data set. *Warning the univariate margin distribution are defined by class of the features: numeric columns imply Gaussian distributions, integer columns imply Poisson distribution while factor (or ordered) columns imply multinomial distribution*
 ```{r, comment=""}
 library(VarSelLCM)
@@ -41,14 +50,14 @@ x[1,1] <- NA
 Clustering is performed with variable selection. 
 Model selection is done with BIC because the number of observations is large (compared to the number of features).
 The number of components is between 1 and 3.
-Do not hesitate to use parallelization (here only four cores are used).
+Do not hesitate to use parallelization (here only two cores are used).
 
 ```{r, comment=""}
 # Cluster analysis without variable selection
 res_without <- VarSelCluster(x, gvals = 1:3, vbleSelec = FALSE, crit.varsel = "BIC")
 
 # Cluster analysis with variable selection (with parallelisation)
-res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 4, crit.varsel = "BIC")
+res_with <- VarSelCluster(x, gvals = 1:3, nbcores = 2, crit.varsel = "BIC")
 
 ```
 
@@ -58,9 +67,8 @@ BIC(res_without)
 BIC(res_with)
 ```
 
-Evaluation of the partition accuracy: Adjusted Rand Index (ARI) is computed between the true partition (ztrue) and its estimators.
-The expectation of ARI is zero if the two partitions are independent. 
-The ARI is equal to one if the partitions are equals.
+Comparison of the partition accuracy. ARI is computed between the true partition (ztrue) and its estimators.
+ARI is an index between 0 (partitions are independent) and 1 (partitions are equals).
 Variable selection permits to improve the ARI.
 Note that ARI cannot be used for model selection in clustering, because there is no true partition.
 ```{r, comment=""}

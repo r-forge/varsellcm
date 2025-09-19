@@ -6,8 +6,8 @@
 ##' \tabular{ll}{
 ##'   Package: \tab VarSelLCM\cr 
 ##'   Type: \tab Package\cr 
-##'   Version: \tab 2.1.4\cr
-##'   Date: \tab 2018-08-30\cr 
+##'   Version: \tab 2.1.3\cr
+##'   Date: \tab 2018-08-27\cr 
 ##'   License: \tab GPL-3\cr  
 ##'   LazyLoad: \tab yes\cr
 ##'   URL:  \tab http://varsellcm.r-forge.r-project.org/\cr
@@ -130,7 +130,7 @@
 ##' 
 ##' }
 ##' 
-NULL
+"_PACKAGE"
 
 ##' Statlog (Heart) Data Set
 ##' 
@@ -380,13 +380,13 @@ BuildS4Reference <- function(x, g, initModel, vbleSelec, crit.varsel, paramEstim
     data <- VSLCMdata(x)
   else
     data <- VSLCMdataMixte(x)  
-  if (class(data) == "VSLCMdataContinuous")
+  if (inherits(data, "VSLCMdataContinuous"))
     reference <- new("VSLCMresultsContinuous", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
-  else if (class(data) == "VSLCMdataInteger")
+  else if (inherits(data, "VSLCMdataInteger"))
     reference <- new("VSLCMresultsInteger", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
-  else if (class(data) == "VSLCMdataCategorical")
+  else if (inherits(data, "VSLCMdataCategorical"))
     reference <- new("VSLCMresultsCategorical", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
-  else if (class(data) == "VSLCMdata")
+  else if (inherits(data, "VSLCMdata"))
     reference <- new("VSLCMresults", data=data, criteria=InitCriteria(), model=new("VSLCMmodel",g=g, omega=discrim), strategy=strategy)
   else
     stop("Problem in the data!")      
